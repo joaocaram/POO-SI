@@ -7,6 +7,9 @@
         static void testeBasico() {
             Hora minhaHora = new Hora();
 
+            minhaHora.hora = 22;
+            Console.WriteLine(minhaHora.hora);
+
             minhaHora.ajustar(20, 30, 29);  //válido e todos com dois dígitos
             Console.WriteLine("Hora: " + minhaHora.horaFormatada());
 
