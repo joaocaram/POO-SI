@@ -12,10 +12,15 @@ namespace Comercio {
 
             Console.WriteLine("Produto disponível: "+ primeiroProduto.ToString());
             
+            primeiroProduto.reajustar(3.25);
+          
+
+            Console.WriteLine("Produto disponível: " + primeiroProduto.ToString());
             Console.Write("Quantos você quer comprar? ");
             quantidade = int.Parse(Console.ReadLine());
 
-            Console.WriteLine(quantidade + " produtos vão custar R$ " + primeiroProduto.valorLote(quantidade));
+            Console.WriteLine(quantidade + " produtos vão custar R$ " 
+                                        + primeiroProduto.valorLote(quantidade));
         }
     }
 }
