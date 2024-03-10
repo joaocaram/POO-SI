@@ -70,6 +70,13 @@
             init(descricao, qtdExtras);
         }
 
+        /// <summary>
+        /// Construtor 'padrão': cria uma pizza com 0 adicionais.
+        /// </summary>
+        public Comida() {
+            init("pizza", 0);
+        }
+
         private void init(string descricao, int qtdExtras) {
             string tipoComida = descricao.ToLower();
             switch (tipoComida) {
