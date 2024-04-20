@@ -76,7 +76,7 @@ namespace XulambsFoods.src
             Comida novaComida = null;
             switch (tipoComida) {
                 case 1:
-                    novaComida = new Pizza(clienteQuerBorda());
+                    novaComida = new Pizza(0,clienteQuerBorda());
                     break;
                 case 2:
                     novaComida = new Sanduiche();

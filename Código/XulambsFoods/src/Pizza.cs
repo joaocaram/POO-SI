@@ -55,20 +55,16 @@ namespace XulambsFoods.src {
         /// Inicializador privado: configura as variáveis com as constantes da classe e chama o método herdado para adicionar ingredientes.
         /// Para pensar: isso poderia ser feito usando o construtor da classe mãe?
         /// </summary>
-        /// <param name="qtdExtras">Quantidade de extras da pizza (entre 0 e 8). Valores inválidos são ignorados e a pizza fica com 0 ingredientes</param>
+        /// <param name="qtdAdicionais">Quantidade de extras da pizza (entre 0 e 8). Valores inválidos são ignorados e a pizza fica com 0 ingredientes</param>
         /// <param name="bordaRecheada">Define se a pizza terá ou não sua borda recheada</param>
-        private void init(int qtdExtras, bool bordaRecheada) {
+        private void init(int qtdAdicionais, bool bordaRecheada) {
             _descricao = "Pizza";
             _precoBase = PRECO_BASE;
             _temBordaRecheada = bordaRecheada;
             _valorPorAdicional = VALOR_ADICIONAL;
             _maxAdicionais = MAX_ADICIONAIS;
-            if (_temBordaRecheada)
-            {
-                _precoBase += VALOR_BORDA;
-                _descricao += " com borda recheada";
-            }
-            adicionarIngredientes(qtdExtras);
+            setBorda(bordaRecheada);
+            adicionarIngredientes(qtdAdicionais);
         }
 
         /// <summary>
@@ -81,18 +77,18 @@ namespace XulambsFoods.src {
         /// <summary>
         /// Cria uma pizza com ingredientes adicionais e sem borda recheada.
         /// </summary>
-        /// <param name="qtdExtras">Quantidade de extras da pizza (entre 0 e 8). Valores inválidos são ignorados e a pizza fica com 0 ingredientes</param>
-        public Pizza(int qtdExtras) {
-            init(qtdExtras, false);
+        /// <param name="qtdAdicionais">Quantidade de extras da pizza (entre 0 e 8). Valores inválidos são ignorados e a pizza fica com 0 ingredientes</param>
+        public Pizza(int qtdAdicionais) {
+            init(qtdAdicionais, false);
         }
 
         /// <summary>
         /// Cria uma pizza sem ingredientes adicionais e escolhendo ter ou não borda recheada.
         /// </summary>
         /// <param name="bordaRecheada">'true' para borda recheada, 'false' caso contrário</param>
-        public Pizza(bool bordaRecheada)
+        public Pizza(int qtdAdicionais, bool bordaRecheada)
         {
-            init(0, bordaRecheada);
+            init(qtdAdicionais, bordaRecheada);
         }
         #endregion
 
@@ -123,6 +119,37 @@ namespace XulambsFoods.src {
             return desc;
 
         }
+        
+        /// <summary>
+        /// Permite escolher ou retirar a borda recheada.
+        /// </summary>
+        /// <param name="recheada">Bool indicando se terá (TRUE) ou não terá (FALSE) borda recheada</param>
+        /// <returns>Bool indicando se a pizza está ou não com borda recheada</returns>
+        public bool escolherBorda(bool recheada)
+        {
+            setBorda(recheada);
+            return _temBordaRecheada;
+        }
+
+        /// <summary>
+        /// Configura a pizza com borda recheada ou não (descrição e preço base)
+        /// </summary>
+        /// <param name="borda">Bool indicando se a pizza tem ou não borda recheada</param>
+        private void setBorda(bool borda)
+        {
+            _temBordaRecheada = borda;
+            if (_temBordaRecheada)
+            {
+                _precoBase = PRECO_BASE+VALOR_BORDA;
+                _descricao = "Pizza com borda recheada";
+            }
+            else {
+                _precoBase = PRECO_BASE;
+                _descricao = "Pizza";
+            }
+
+        }
+
         #endregion
     }
 }
