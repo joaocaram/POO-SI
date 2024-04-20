@@ -111,7 +111,7 @@ namespace XulambsFoods.src {
         /// Produz o relatório descritivo do pedido com seu id, sua data, detalhamento das comidas e preço final.
         /// </summary>
         /// <returns>String de múltiplas linhas com o relatório contendo id, data, detalhamento do pedido e preço final.</returns>
-        public string relatorio() {
+        public override string ToString() {
             StringBuilder relat = new StringBuilder();
             
             relat.AppendLine("=====================");
@@ -119,7 +119,7 @@ namespace XulambsFoods.src {
             int cont = 1;
             for (int i = 0; i < quantComidas; i++) {
                 relat.Append(cont.ToString("00") + " - ");
-                relat.AppendLine(itens[i].relatorio());
+                relat.AppendLine(itens[i].ToString());
                 cont++;
             }
             relat.AppendLine("\nTOTAL DO PEDIDO: R$ " + this.precoFinal().ToString("0.00"));
