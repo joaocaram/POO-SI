@@ -31,10 +31,9 @@ namespace XulambsFoods.src {
     /// Classe Pedido: relacionamento entre classes
     /// Um pedido contém até 10 comidas (composição)
     ///
-    public class Pedido {
+    public abstract class Pedido {
 
         #region const e static
-        private const int MAX_COMIDAS = 10;       //por enquanto, pedido limitado
         private static DateOnly hoje = DateOnly.FromDateTime(DateTime.Now); 
         private static int ultimoPedido = 0;     //para id automático
         #endregion                                         
@@ -42,25 +41,26 @@ namespace XulambsFoods.src {
         #region atributos
         private int idPedido;
         private DateOnly dataPedido;
-        private Comida[] itens;
-        private bool aberto;
-        private int quantComidas;
+        private string descricao;
+        protected Comida[] itens;
+        protected bool aberto;
+        protected int quantComidas;
         #endregion
 
         #region construtores
         /// <summary>
         /// Cria um pedido sem nenhuma comida, com a data de hoje.
         /// </summary>
-        public Pedido() {
-            init(null);
+        protected Pedido(string descricao) {
+            init(descricao, null);
         }
 
         /// <summary>
         /// Cria um pedido já com a sua primeira comida e a data de hoje. Se a comida for nula, criará um pedido vazio.
         /// </summary>
         /// <param name="primeira">A comida a ser inserida no pedido. Não deve ser nula.</param>
-        public Pedido(Comida primeira) {
-            init(primeira);
+        protected Pedido(string descricao, Comida primeira) {
+            init(descricao, primeira);
         }
 
         /// <summary>
@@ -68,10 +68,11 @@ namespace XulambsFoods.src {
         /// não seja nulo, inclui uma comida no pedido.
         /// </summary>
         /// <param name="primeira">A comida a ser incluída no pedido, ou null para pedido vazio.</param>
-        private void init(Comida primeira) {
+        private void init(string descricao, Comida primeira) {
             this.idPedido = ++ultimoPedido;
+            this.descricao = descricao;
             this.dataPedido = hoje;
-            this.itens = new Comida[MAX_COMIDAS];
+            this.itens = new Comida[1_000];
             this.quantComidas = 0;
             this.aberto = true;
             if (primeira != null)
@@ -82,64 +83,35 @@ namespace XulambsFoods.src {
         #region métodos de negócio
 
         /// <summary>
-        /// Tenta adicionar uma comida ao pedido. A operação será concretizada se o pedido estiver aberto,
-        /// não houver atingido o máximo de comidas e o parâmetro não seja nulo. Retorna TRUE ou FALSE conforme
-        /// foi possível executar ou não a operação.
+        /// Adiciona uma comida ao pedido, se possível.
         /// </summary>
-        /// <param name="nova">A comida a ser inserida no pedido. Não deve ser nula.</param>
-        /// <returns>TRUE se a comida foi adicionada, FALSE caso contrário.</returns>
-        public bool addComida(Comida nova) {
-            bool resposta = false;
-            if (nova!=null && podeAdicionarComida()) {
-                itens[quantComidas] = nova;
-                quantComidas++;
-                resposta = true;
-            }
-            return resposta;
-        }
-
-        /// <summary>
-        /// Verifica se pode adicionar uma nova comida no pedido (o pedido deve estar aberto e não ter atingido a
-        /// quantidade máxima de comidas)
-        /// </summary>
-        /// <returns>TRUE se é possível adicionar, FALSE caso contrário.</returns>
-        private bool podeAdicionarComida() {
-            return (aberto && quantComidas < MAX_COMIDAS);
-        }
-
-        /// <summary>
-        /// Produz o relatório descritivo do pedido com seu id, sua data, detalhamento das comidas e preço final.
-        /// </summary>
-        /// <returns>String de múltiplas linhas com o relatório contendo id, data, detalhamento do pedido e preço final.</returns>
-        public string relatorio() {
-            StringBuilder relat = new StringBuilder();
-            
-            relat.AppendLine("=====================");
-            relat.AppendLine("Pedido nº " + this.idPedido + " - " + this.dataPedido.ToShortDateString());
-            int cont = 1;
-            for (int i = 0; i < quantComidas; i++) {
-                relat.Append(cont.ToString("00") + " - ");
-                relat.AppendLine(itens[i].relatorio());
-                cont++;
-            }
-            relat.AppendLine("\nTOTAL DO PEDIDO: R$ " + this.precoFinal().ToString("0.00"));
-            relat.AppendLine("=====================\n");
-            return relat.ToString();
-        }
+        /// <param name="nova">Comida a ser inserida. Deve ser diferente de nulo</param>
+        /// <returns>Quantidade de comidas no pedido após a execução</returns>
+        public abstract int addComida(Comida nova);
 
         /// <summary>
         /// Calcula o preço final do pedido (soma dos preços das comidas)
         /// </summary>
         /// <returns>Double com preço final do pedido.</returns>
         public double precoFinal() {
-            double valor = 0d;
+            return valorItens() + taxa();
+        }
 
-            for (int i = 0; i < quantComidas; i++) {
+        /// <summary>
+        /// Calcula o preco somado dos itens do pedido.
+        /// </summary>
+        /// <returns>Double (não negativo) com o preço dos itens do pedido somados</returns>
+        protected double valorItens()
+        {
+            double valor = 0d;
+            for (int i = 0; i < quantComidas; i++)
+            {
                 valor += itens[i].precoFinal();
             }
-
             return valor;
         }
+
+        public abstract double taxa();
 
         /// <summary>
         /// Fecha um pedido. Um pedido com 0 itens não poderá ser fechado. Retornará TRUE se o pedido foi fechado ou 
@@ -151,6 +123,44 @@ namespace XulambsFoods.src {
                 aberto = false;
             return !aberto;
 
+        }
+        #endregion
+
+        #region override de Object
+        /// <summary>
+        /// Produz o relatório descritivo do pedido com seu id, sua data, detalhamento das comidas e preço final.
+        /// </summary>
+        /// <returns>String de múltiplas linhas com o relatório contendo id, data, detalhamento do pedido e preço final.</returns>
+        public override string ToString()
+        {
+            StringBuilder relat = new StringBuilder();
+
+            relat.AppendLine("=====================");
+            relat.AppendLine(descricao+" nº " + this.idPedido + " - " + this.dataPedido.ToShortDateString());
+            int cont = 1;
+            for (int i = 0; i < quantComidas; i++)
+            {
+                relat.Append(cont.ToString("00") + " - ");
+                relat.AppendLine(itens[i].ToString());
+                cont++;
+            }
+            relat.AppendLine("\nVALOR DOS ITENS: \tR$ " + this.valorItens().ToString("0.00"));
+            relat.AppendLine("TAXA: \t\t\tR$ " + String.Format("{0,5:f}", this.taxa()));
+            relat.AppendLine("TOTAL DO PEDIDO: \tR$ " + this.precoFinal().ToString("0.00"));
+            relat.AppendLine("=====================\n");
+            return relat.ToString();
+        }
+
+        /// <summary>
+        /// Igualdade de pedidos: se têm o mesmo ID na mesma data.
+        /// </summary>
+        /// <param name="obj">Objeto pedido a ser comparado</param>
+        /// <returns>TRUE/FALSE conforme os pedidos tenham o mesmo ID e data ou não</returns>
+        public override bool Equals(object? obj)
+        {
+            Pedido outro = (Pedido)obj;
+            return (this.idPedido == outro.idPedido &&
+                    this.dataPedido.Equals(outro.dataPedido));
         }
         #endregion
     }

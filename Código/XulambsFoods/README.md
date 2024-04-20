@@ -1,12 +1,11 @@
 ﻿# 🍕 Xulambs Foods 🍔
 
-## Segunda iteração
+## Terceira iteração
 (veja os requisitos completos no [documento de requisitos](doc/requisitos.md))
 
-Com a certeza de que o sistema pode calcular corretamente as condições e valores de vendas de pizzas e sanduíches, a _Xulambs Foods_ entendeu que é melhor agrupar as vendas em pedidos, os quais serão controlados diariamente. 
+O sistema da _Xulambs Foods_ precisa ser atualizado para refletir a nova realidade dos pedidos: eles podem ser feitos para comer no local ou para entrega. 
 
-Foram levantadas as seguintes regras para a criação dos pedidos:
-- Um pedido deve ter um identificador único.
-- Um pedido deve ter sua data armazenada.
-- Um pedido pode conter até 10 comidas. 
-- O relatório de um pedido deve mostrar suas informações de id e data, a descrição detalhada de cada uma das comidas e o valor total do pedido.
+1. Pedidos para comer no local incluirão 10% de taxa de serviço sobre o preço dos itens.
+
+1. Pedidos para entrega terão uma taxa de acordo com a distância: R$0 até 5km, R$5 para mais de 5km até 8km, R$8 acima de 8km.
+
