@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Design;
-using XulambsFoods_C_.src;
 
 namespace XulambsFoods.src
 {
