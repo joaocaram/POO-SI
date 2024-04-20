@@ -18,6 +18,10 @@
       - Cada adicional custa R$4.
     
 1. As vendas devem ser agrupadas em pedidos.
-  - Um pedido deve ter um identificador único e sua data armazenada.
-  - Um pedido pode conter até 10 comidas. 
-  - O relatório de um pedido deve mostrar a descrição de cada uma das comidas, detalhadamente, e o valor total do pedido.
+    - Um pedido deve ter um identificador único e sua data armazenada.
+    - Um pedido pode conter até 10 comidas. 
+    - O relatório de um pedido deve mostrar a descrição de cada uma das comidas, detalhadamente, e o valor total do pedido.
+
+1. As pizzas passarão a ser vendidas com a opção de borda recheada. Uma pizza com borda recheada sofre acréscimo de R$5,50.
+
+1. Procurando incentivar a adição de ingredientes na Pizza, a partir do 6º ingredientes será concedido um desconto de 50% no seu valor.

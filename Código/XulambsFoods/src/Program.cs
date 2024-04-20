@@ -1,58 +1,118 @@
-﻿namespace XulambsFoods.src
+﻿using System.ComponentModel.Design;
+
+namespace XulambsFoods.src
 {
     internal class Program
     {
-        static void testeComida() {
-            Comida comida = new Comida("Pizza", 3);
-            Console.WriteLine(comida.relatorio());      // 3 ingredientes, R$41
+        static double totalVendido;
 
-            comida.adicionarIngredientes(4);            // 7 ingredientes, R$57 
-            Console.WriteLine(comida.relatorio());
-
-            comida.adicionarIngredientes(4);
-            Console.WriteLine(comida.relatorio());      // 7 ingredientes, R$57, não pode ultrapassar o limite.
-
-            comida = new Comida("sanDUICHE");
-            Console.WriteLine(comida.relatorio());      // 0 ingredientes, R$15
-
-            comida.adicionarIngredientes(4);            // 4 ingredientes, R$23
-            Console.WriteLine(comida.relatorio());
-
-            comida.adicionarIngredientes(4);
-            Console.WriteLine(comida.relatorio());      //4 ingredientes, R$23, não pode ultrapassar o limite
-
-            comida = new Comida();
-            Console.WriteLine(comida.relatorio());      //0 ingredientes, R$29
+        static void pausa() {
+            Console.WriteLine("Tecle Enter para continuar.");
+            Console.ReadKey();
+        }
+        static void cabecalho() {
+            Console.Clear();
+            Console.WriteLine("XULAMBS FOODS - v0.21");
+            Console.WriteLine("=====================");
+        }
+        static int MenuPrincipal() {
+            int opcao;
+            cabecalho();
+            Console.WriteLine("1 - Abrir Pedido");
+            Console.WriteLine("2 - Total Vendido Hoje");
+            Console.WriteLine("0 - Sair");
+            Console.Write("Digite sua opção: ");
+            int.TryParse(Console.ReadLine(), out opcao);
+            return opcao;
         }
 
-        static void testePedido() {
-            Pedido ped = new Pedido();
-            Comida pizza = new Comida("PizzA", 3);
+        static int MenuComida() {
+            int opcao;
+            cabecalho();
+            Console.WriteLine("1 - Pizza");
+            Console.WriteLine("2 - Sanduiche");
+            Console.WriteLine("0 - Sair");
+            Console.Write("Digite sua opção: ");
+            int.TryParse(Console.ReadLine(), out opcao);
+            return opcao;
+        }
 
-            ped.addComida(pizza);
+        static void relatorioTotalVendido() {
+            cabecalho();
+            String hoje = DateOnly.FromDateTime(DateTime.Now).ToShortDateString();
+            Console.WriteLine("Total vendido hoje (" + hoje + "): R$ " + totalVendido.ToString("0.00"));
+            pausa();
+        }
 
-            for(int i=0; i<12; i++) {
-                pizza = new Comida("PIZZa", i / 2);
-                ped.addComida(pizza);
+        static Pedido criarPedido() {
+            Pedido novoPedido = new Pedido();
+            Comida novaComida = criarComida();
+
+            if (novaComida != null) {
+                do {
+                    novoPedido.addComida(novaComida);
+                    Console.WriteLine(novaComida.relatorio() + " adicionado ao pedido.");
+                    pausa();
+                    novaComida = criarComida();
+                } while (novaComida != null);
+                novoPedido.fecharPedido();
+            }
+            else
+                novoPedido = null;
+
+            return novoPedido;
+        }
+
+        
+        static bool clienteQuerBorda()
+        {
+            Console.Write("Deseja borda recheada? (s/n) ");
+            string borda = Console.ReadLine();
+            return borda.ToLower().Equals("s");
+        }
+
+        static Comida criarComida() {
+            int tipoComida = MenuComida();
+            Comida novaComida = null;
+            switch (tipoComida) {
+                case 1:
+                    novaComida = new Pizza(clienteQuerBorda());
+                    break;
+                case 2:
+                    novaComida = new Sanduiche();
+                    break;
+            }
+            
+            if (novaComida != null) {
+                Console.Write("Deseja quantos adicionais? ");
+                int adicionais = int.Parse(Console.ReadLine());
+                novaComida.adicionarIngredientes(adicionais);
             }
 
-            Console.WriteLine(ped.relatorio());     // Pedido nº1 com 10 pizzas (limite de comidas)
-
-            ped = new Pedido();
-            ped.addComida(pizza);
-            ped.fecharPedido();
-            ped.addComida(pizza);
-
-            Console.WriteLine(ped.relatorio());     // Pedido nº2 com 1 pizza, pois estava fechado
-
+            return novaComida;
         }
-
         static void Main(string[] args)
         {
-
-            testePedido();
-            Console.ReadKey();
-
+            totalVendido = 0d;
+            int opcao;
+            Pedido pedidoAtual;
+            do {
+                opcao = MenuPrincipal();
+                switch (opcao) {
+                    case 1: 
+                        pedidoAtual = criarPedido();
+                        if (pedidoAtual != null) {
+                            totalVendido += pedidoAtual.precoFinal();
+                            Console.WriteLine("Pedido fechado: ");
+                            Console.WriteLine(pedidoAtual.relatorio());
+                            pausa();
+                        }
+                        break;
+                    case 2: 
+                        relatorioTotalVendido();
+                        break;
+                }
+            } while (opcao != 0);
         }
     }
 }

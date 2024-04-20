@@ -1,12 +1,13 @@
 ﻿# 🍕 Xulambs Foods 🍔
 
-## Segunda iteração
+## Terceira iteração
 (veja os requisitos completos no [documento de requisitos](doc/requisitos.md))
 
-Com a certeza de que o sistema pode calcular corretamente as condições e valores de vendas de pizzas e sanduíches, a _Xulambs Foods_ entendeu que é melhor agrupar as vendas em pedidos, os quais serão controlados diariamente. 
+O sistema da _Xulambs Foods_ já conseguia vender pizzas e sanduíches agrupadas em um pedido, calculando corretamente o preço a ser pago. O sistema havia passado por uma refatoração de código para que este se tornasse mais modular.
 
-Foram levantadas as seguintes regras para a criação dos pedidos:
-- Um pedido deve ter um identificador único.
-- Um pedido deve ter sua data armazenada.
-- Um pedido pode conter até 10 comidas. 
-- O relatório de um pedido deve mostrar suas informações de id e data, a descrição detalhada de cada uma das comidas e o valor total do pedido.
+Agora, o restaurante gostaria de oferecer mais opções aos seus clientes que compram pizzas:
+
+1. As pizzas passarão a ser vendidas com a opção de borda recheada. Uma pizza com borda recheada sofre acréscimo de R$5,50.
+
+1. Procurando incentivar a adição de ingredientes na Pizza, a partir do 6º ingredientes será concedido um desconto de 50% no seu valor.
+

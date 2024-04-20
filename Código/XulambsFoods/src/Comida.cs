@@ -32,79 +32,22 @@
     ///
     public class Comida {
 
-        //#region constantes e controle
-        private static int MAX_ADICIONAIS_PIZZA = 8;
-        private static int MAX_ADICIONAIS_SANDUICHE = 5;
-        private static double VALOR_ADICIONAL_PIZZA = 4d;
-        private static double VALOR_ADICIONAL_SANDUICHE = 2d;
-        private static double PRECO_BASE_PIZZA = 29d;
-        private static double PRECO_BASE_SANDUICHE = 15d;
-        //#endregion
-
         #region atributos
-        private string _descricao;
-        private double _precoBase;
-        private double _valorPorAdicional;
-        private int _maxAdicionais;
-        private int _qtdAdicionais;
+        protected string _descricao;
+        protected double _precoBase;
+        protected double _valorPorAdicional;
+        protected int _maxAdicionais;
+        protected int _qtdAdicionais;
         #endregion
-
-        #region construtores
-        /// <summary>
-        /// Cria uma comida Pizza ou Sanduíche. Se for passado uma descricao inexistente,
-        /// cria uma pizza por padrão.
-        /// </summary>
-        /// <param name="descricao">"pizza" ou "sanduiche", sem importar maiúsculas ou minúsculas. 
-        /// Outros valores irão gerar uma pizza.</param>
-        public Comida(string descricao) {
-            init(descricao, 0);
-        }
-
-        /// <summary>
-        /// Cria uma comida Pizza ou Sanduíche com uma quantidade de ingredientes adicionais já definida. Se for passado uma descricao inexistente, cria uma pizza por padrão. Quantidades inválidas resultam em 0 adicionais.
-        /// </summary>
-        /// <param name="descricao">"pizza" ou "sanduiche", sem importar maiúsculas ou minúsculas. 
-        /// Outros valores irão gerar uma pizza.</param>
-        /// <param name="qtdExtras">Quantidade de adicionais (valor não negativo)</param>
-        public Comida(string descricao, int qtdExtras) {
-            init(descricao, qtdExtras);
-        }
-
-        /// <summary>
-        /// Construtor 'padrão': cria uma pizza com 0 adicionais.
-        /// </summary>
-        public Comida() {
-            init("pizza", 0);
-        }
-
-        private void init(string descricao, int qtdExtras) {
-            string tipoComida = descricao.ToLower();
-            switch (tipoComida) {
-                case "sanduiche":
-                    _descricao = "Sanduíche";
-                    _precoBase = PRECO_BASE_SANDUICHE;
-                    _valorPorAdicional = VALOR_ADICIONAL_SANDUICHE;
-                    _maxAdicionais = MAX_ADICIONAIS_SANDUICHE;
-                    break;
-                case "pizza":
-                default:
-                    _descricao = "Pizza";
-                    _precoBase = PRECO_BASE_PIZZA;
-                    _valorPorAdicional = VALOR_ADICIONAL_PIZZA;
-                    _maxAdicionais = MAX_ADICIONAIS_PIZZA;
-                    break;
-            }
-            adicionarIngredientes(qtdExtras);
-
-        }
-        #endregion
+               
 
         #region métodos de negócio
+
         /// <summary>
         /// Calcura o valor dos ingredientes adicionais.
         /// </summary>
         /// <returns>Double com o valor dos adicionais da comida</returns>
-        private double valorAdicionais() {
+        protected virtual double valorAdicionais() {
             return _qtdAdicionais * _valorPorAdicional;
         }
 
