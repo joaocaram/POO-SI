@@ -51,7 +51,7 @@ namespace XulambsFoods.src
             if (novaComida != null) {
                 do {
                     novoPedido.addComida(novaComida);
-                    Console.WriteLine(novaComida.relatorio() + " adicionado ao pedido.");
+                    Console.WriteLine(novaComida + " adicionado ao pedido.");
                     pausa();
                     novaComida = criarComida();
                 } while (novaComida != null);
@@ -104,7 +104,7 @@ namespace XulambsFoods.src
                         if (pedidoAtual != null) {
                             totalVendido += pedidoAtual.precoFinal();
                             Console.WriteLine("Pedido fechado: ");
-                            Console.WriteLine(pedidoAtual.relatorio());
+                            Console.WriteLine(pedidoAtual.ToString());
                             pausa();
                         }
                         break;

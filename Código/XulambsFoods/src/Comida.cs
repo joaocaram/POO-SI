@@ -86,9 +86,9 @@
         /// Descreve seu tipo, seu preço base, quantidade e preço dos adicionais e preço final.
         /// </summary>
         /// <returns>String/relatório com tipo, preço base, quantidade e preço dos adicionais e preço final formatado em duas casas decimais..</returns>
-        public string relatorio() {
-            return _descricao + " (preço base: R$ " + _precoBase + ") com " + _qtdAdicionais
-                                + " ingredientes (R$ " + valorAdicionais() + "): \n TOTAL: R$ "
+        public override string ToString() {
+            return _descricao + " (preço base: R$ " + _precoBase.ToString("0.00") + ") com " + _qtdAdicionais
+                                + " ingredientes (R$ " + valorAdicionais().ToString("0.00") + "): \n TOTAL: R$ "
                                 + precoFinal().ToString("0.00");
         }
         #endregion
