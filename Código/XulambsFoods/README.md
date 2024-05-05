@@ -1,12 +1,11 @@
 ﻿# 🍕 Xulambs Foods 🍔
 
-## Terceira iteração
-## Terceira iteração
+## Quarta iteração, fase 1
 (veja os requisitos completos no [documento de requisitos](doc/requisitos.md))
 
-O sistema da _Xulambs Foods_ precisa ser atualizado para refletir a nova realidade dos pedidos: eles podem ser feitos para comer no local ou para entrega. 
+A __Xulambs Foods__ já atende pessoas no restaurante e fazendo entregas. Chegou a hora de conhecer um pouco mais sobre seus clientes.
 
-1. Pedidos para comer no local incluirão 10% de taxa de serviço sobre o preço dos itens.
+1. Cada pedido deverá ser registrado para um cliente.
 
-1. Pedidos para entrega terão uma taxa de acordo com a distância: R$0 até 5km, R$5 para mais de 5km até 8km, R$8 acima de 8km.
+1. Um relatório de cliente inclui seu identificador e todos os seus pedidos.
 

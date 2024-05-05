@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.Design;
+using System.Numerics;
+using XulambsFoods_C_.src;
 
 namespace XulambsFoods.src
 {
     internal class Program
     {
         static double totalVendido;
+        static Dictionary<int, Cliente> clientes;
 
         static void pausa() {
             Console.WriteLine("Tecle Enter para continuar.");
@@ -12,7 +15,7 @@ namespace XulambsFoods.src
         }
         static void cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS - v0.32");
+            Console.WriteLine("XULAMBS FOODS - v0.41");
             Console.WriteLine("=====================");
         }
         static int MenuPrincipal() {
@@ -20,6 +23,8 @@ namespace XulambsFoods.src
             cabecalho();
             Console.WriteLine("1 - Abrir Pedido");
             Console.WriteLine("2 - Total Vendido Hoje");
+            Console.WriteLine("3 - Novo Cliente");
+            Console.WriteLine("4 - Relatório de Cliente");
             Console.WriteLine("0 - Sair");
             Console.Write("Digite sua opção: ");
             int.TryParse(Console.ReadLine(), out opcao);
@@ -115,28 +120,82 @@ namespace XulambsFoods.src
 
             return novaComida;
         }
+        private static Cliente localizarCliente() {
+            int idCli;
+            Cliente quem;
+            cabecalho();
+            Console.Write("Digite o id do cliente: ");
+            idCli = int.Parse(Console.ReadLine());
+            clientes.TryGetValue(idCli, out quem);
+            return quem;
+
+        }
+
+        private static Cliente cadastrarCliente() {
+            string nome;
+            Cliente novo; 
+            cabecalho();
+            Console.Write("Qual é o nome do novo cliente? ");
+            nome = Console.ReadLine();
+            novo = new Cliente(nome);
+            clientes.Add(novo.GetHashCode(), novo);
+            Console.WriteLine($"Cliente cadastrado:\n {novo.ToString()}");
+            pausa();
+            return novo;
+        }
+
+        static void registrarPedido(Cliente clienteAtual, Pedido pedidoAtual) {
+            clienteAtual.registrarPedido(pedidoAtual);
+            totalVendido += pedidoAtual.precoFinal();
+            Console.WriteLine("Pedido fechado: ");
+            Console.WriteLine(pedidoAtual.ToString());
+        }
         static void Main(string[] args)
         {
+            clientes = new Dictionary<int, Cliente>();
             totalVendido = 0d;
             int opcao;
             Pedido pedidoAtual;
+            Cliente clienteAtual;
             do {
                 opcao = MenuPrincipal();
                 switch (opcao) {
-                    case 1: 
+                    case 1:
+                        clienteAtual = localizarCliente();
+                        if (clienteAtual == null) {
+                            clienteAtual = cadastrarCliente();
+                        }
                         pedidoAtual = criarPedido();
                         if (pedidoAtual != null) {
-                            totalVendido += pedidoAtual.precoFinal();
-                            Console.WriteLine("Pedido fechado: ");
-                            Console.WriteLine(pedidoAtual.ToString());
+                            registrarPedido(clienteAtual, pedidoAtual);
                             pausa();
                         }
                         break;
                     case 2: 
                         relatorioTotalVendido();
                         break;
+                    case 3:
+                        clienteAtual = cadastrarCliente();
+                        pedidoAtual = criarPedido();
+                        if (pedidoAtual != null) {
+                            registrarPedido(clienteAtual, pedidoAtual);
+                            pausa();
+                        }
+                        break;
+                    case 4:
+                        clienteAtual = localizarCliente();
+                        if (clienteAtual != null) {
+                            Console.WriteLine(clienteAtual.resumoPedidos());
+                        }
+                        else {
+                            Console.WriteLine("Cliente não encontrado.");
+                        }
+                        pausa();
+                        break;
                 }
             } while (opcao != 0);
         }
+
+       
     }
 }
