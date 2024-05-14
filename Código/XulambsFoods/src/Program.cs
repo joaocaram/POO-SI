@@ -36,7 +36,7 @@ namespace XulambsFoods.src
         }
         static void cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS - v0.32");
+            Console.WriteLine("XULAMBS FOODS - v0.42");
             Console.WriteLine("=====================");
         }
         static int MenuPrincipal() {
