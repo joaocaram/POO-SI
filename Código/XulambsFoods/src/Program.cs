@@ -34,7 +34,7 @@ namespace XulambsFoods.src
         static Dictionary<int, Cliente> clientes;
 
         static void pausa() {
-            Console.WriteLine("Tecle Enter para continuar.");
+            Console.Write("\nTecle Enter para continuar.");
             Console.ReadKey();
         }
         static void cabecalho() {
@@ -104,7 +104,7 @@ namespace XulambsFoods.src
                 if (novaComida != null) {
                     do {
                         novoPedido.addComida(novaComida);
-                        Console.WriteLine(novaComida + " adicionado ao pedido.");
+                        Console.WriteLine($"\n{novaComida}  adicionado ao pedido.");
                         pausa();
                         novaComida = criarComida();
                     } while (novaComida != null);
@@ -129,9 +129,11 @@ namespace XulambsFoods.src
             Comida novaComida = null;
             switch (tipoComida) {
                 case 1:
+                    Console.WriteLine($"\nAdicionando Pizza ao pedido: ");
                     novaComida = new Pizza(0,clienteQuerBorda());
                     break;
                 case 2:
+                    Console.WriteLine($"\nAdicionando Sanduíche ao pedido: ");
                     novaComida = new Sanduiche();
                     break;
             }
@@ -163,7 +165,7 @@ namespace XulambsFoods.src
             nome = Console.ReadLine();
             novo = new Cliente(nome);
             clientes.Add(novo.GetHashCode(), novo);
-            Console.WriteLine($"Cliente cadastrado:\n {novo.ToString()}");
+            Console.WriteLine($"\nCliente cadastrado:\n {novo.ToString()}");
             pausa();
             return novo;
         }
@@ -171,7 +173,7 @@ namespace XulambsFoods.src
         static void registrarPedido(Cliente clienteAtual, Pedido pedidoAtual) {
             clienteAtual.registrarPedido(pedidoAtual);
             totalVendido += pedidoAtual.precoFinal();
-            Console.WriteLine("Pedido fechado: ");
+            Console.WriteLine("\nPedido fechado: ");
             Console.WriteLine(pedidoAtual.ToString());
         }
         static void Main(string[] args)
@@ -209,10 +211,10 @@ namespace XulambsFoods.src
                     case 4:
                         clienteAtual = localizarCliente();
                         if (clienteAtual != null) {
-                            Console.WriteLine(clienteAtual.resumoPedidos());
+                            Console.Write($"\n{clienteAtual.resumoPedidos()}");
                         }
                         else {
-                            Console.WriteLine("Cliente não encontrado.");
+                            Console.WriteLine("\nCliente não encontrado.");
                         }
                         pausa();
                         break;

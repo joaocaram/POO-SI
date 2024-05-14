@@ -147,7 +147,7 @@ namespace XulambsFoods.src {
             relat.AppendLine("\nVALOR DOS ITENS: \tR$ " + this.valorItens().ToString("0.00"));
             relat.AppendLine("TAXA: \t\t\tR$ " + this.taxa().ToString(" .00"));
             relat.AppendLine("TOTAL DO PEDIDO: \tR$ " + this.precoFinal().ToString("0.00"));
-            relat.AppendLine("=====================\n");
+            relat.AppendLine("=====================");
             return relat.ToString();
         }
 
