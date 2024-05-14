@@ -1,30 +1,30 @@
 ﻿using System.ComponentModel.Design;
 using System.Numerics;
-using XulambsFoods_C_.src;
 
 /** 
-         * MIT License
-         *
-         * Copyright(c) 2022-4 João Caram <caram@pucminas.br>
-         *
-         * Permission is hereby granted, free of charge, to any person obtaining a copy
-         * of this software and associated documentation files (the "Software"), to deal
-         * in the Software without restriction, including without limitation the rights
-         * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-         * copies of the Software, and to permit persons to whom the Software is
-         * furnished to do so, subject to the following conditions:
-         *
-         * The above copyright notice and this permission notice shall be included in all
-         * copies or substantial portions of the Software.
-         *
-         * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-         * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-         * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-         * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-         * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-         * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-         * SOFTWARE.
-         */
+        * MIT License
+        *
+        * Copyright(c) 2022-4 João Caram <caram@pucminas.br>
+        *
+        * Permission is hereby granted, free of charge, to any person obtaining a copy
+        * of this software and associated documentation files (the "Software"), to deal
+        * in the Software without restriction, including without limitation the rights
+        * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        * copies of the Software, and to permit persons to whom the Software is
+        * furnished to do so, subject to the following conditions:
+        *
+        * The above copyright notice and this permission notice shall be included in all
+        * copies or substantial portions of the Software.
+        *
+        * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        * SOFTWARE.
+        */
+
 
 namespace XulambsFoods.src
 {
@@ -49,6 +49,8 @@ namespace XulambsFoods.src
             Console.WriteLine("2 - Total Vendido Hoje");
             Console.WriteLine("3 - Novo Cliente");
             Console.WriteLine("4 - Relatório de Cliente");
+            Console.WriteLine("5 - Resumo dos Clientes");
+            Console.WriteLine("6 - Atualizar Fidelidade");
             Console.WriteLine("0 - Sair");
             Console.Write("Digite sua opção: ");
             int.TryParse(Console.ReadLine(), out opcao);
@@ -104,7 +106,7 @@ namespace XulambsFoods.src
                 if (novaComida != null) {
                     do {
                         novoPedido.addComida(novaComida);
-                        Console.WriteLine($"\n{novaComida}  adicionado ao pedido.");
+                        Console.WriteLine($"\n{novaComida} adicionado ao pedido.");
                         pausa();
                         novaComida = criarComida();
                     } while (novaComida != null);
@@ -129,11 +131,11 @@ namespace XulambsFoods.src
             Comida novaComida = null;
             switch (tipoComida) {
                 case 1:
-                    Console.WriteLine($"\nAdicionando Pizza ao pedido: ");
+                    Console.WriteLine("\nAdicionando Pizza ao pedido:");
                     novaComida = new Pizza(0,clienteQuerBorda());
                     break;
                 case 2:
-                    Console.WriteLine($"\nAdicionando Sanduíche ao pedido: ");
+                    Console.WriteLine("\nAdicionando Sanduíche ao pedido:");
                     novaComida = new Sanduiche();
                     break;
             }
@@ -172,14 +174,30 @@ namespace XulambsFoods.src
 
         static void registrarPedido(Cliente clienteAtual, Pedido pedidoAtual) {
             clienteAtual.registrarPedido(pedidoAtual);
-            totalVendido += pedidoAtual.precoFinal();
+            double valorAPagar = clienteAtual.valorAPagar(pedidoAtual);
+            totalVendido += valorAPagar;
             Console.WriteLine("\nPedido fechado: ");
             Console.WriteLine(pedidoAtual.ToString());
+            Console.WriteLine("Cliente pagou R$ " + valorAPagar.ToString("0.00"));
+            Console.WriteLine("Registrado para "+clienteAtual);
+            
         }
+
+        static void gerarClientes() {
+            String[] nomes = {"Everson", "Renzo", "Rodrigo", "Jemerson", "Guilherme",
+                               "Otávio", "Givanildo", "Matías", "Gustavo",
+                                "Paulinho", "Alan" };
+            foreach(String nome in nomes) {
+                Cliente novo = new Cliente(nome);
+                clientes.Add(novo.GetHashCode(), novo);
+            }
+        }
+
         static void Main(string[] args)
         {
             clientes = new Dictionary<int, Cliente>();
             totalVendido = 0d;
+            gerarClientes();
             int opcao;
             Pedido pedidoAtual;
             Cliente clienteAtual;
@@ -211,14 +229,31 @@ namespace XulambsFoods.src
                     case 4:
                         clienteAtual = localizarCliente();
                         if (clienteAtual != null) {
-                            Console.Write($"\n{clienteAtual.resumoPedidos()}");
+                            Console.WriteLine($"\n{clienteAtual.resumoPedidos()}");
                         }
                         else {
-                            Console.WriteLine("\nCliente não encontrado.");
+                            Console.WriteLine("Cliente não encontrado.");
                         }
                         pausa();
                         break;
-                }
+                    case 5:
+                        cabecalho();
+                        Console.WriteLine("Relatório resumido dos clientes:\n ");
+                        foreach (Cliente cliente in clientes.Values)
+                        {
+                            Console.WriteLine(cliente+"\n");
+                        }
+                        pausa();
+                        break;
+                    case 6:
+                        cabecalho();
+                        foreach (Cliente cliente in clientes.Values) {
+                            cliente.verificarCategoria();
+                        }
+                        Console.WriteLine("Categorias atualizadas.");
+                        pausa();
+                        break;
+            }
             } while (opcao != 0);
         }
 

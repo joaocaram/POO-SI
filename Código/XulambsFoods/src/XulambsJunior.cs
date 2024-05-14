@@ -28,58 +28,35 @@ using System.Threading.Tasks;
         * SOFTWARE.
         */
 
-namespace XulambsFoods.src
-{
 
-    public class PedidoLocal : Pedido
-    {
-        #region constantes
-        private const double TAXA_SERVICO = 0.1;
-        #endregion
+namespace XulambsFoods.src {
+    internal class XulambsJunior : IFidelidade {
+        private const double PCT_DESC = 0d;
+        private Queue<Pedido> pedidos;
 
-        #region construtores
         /// <summary>
-        /// Cria um pedido para comer no local, vazio.
+        /// Cria uma nova fidelidade Junior, com a fila de pedidos a ser observada.
         /// </summary>
-        public PedidoLocal():base("Pedido local ")
-        { 
+        /// <param name="pedidos">Fila de pedidos do cliente com esta fidelidade</param>
+        public XulambsJunior(Queue<Pedido> pedidos) {
+            this.pedidos = pedidos;
         }
 
         /// <summary>
-        /// Cria um pedido para comer no local, com uma comida.
+        /// Verifica se o cliente mudou de categoria de fidelidade. Retorna a categoria correta depois da análise.
         /// </summary>
-        /// <param name="nova">A comida que abre o pedido. Não deve ser nula</param>
-        public PedidoLocal(Comida nova) : base("Pedido local ", nova)
-        {
-
-        }
-        #endregion
-
-        #region métodos de negócio
-
-        /// <summary>
-        /// Tenta adicionar uma comida ao pedido (poderá adicionar se o pedido estiver aberto). Retorna a quantidade de comidas do pedido após a execução.
-        /// </summary>
-        /// <param name="nova">A comida a ser adicionada. Não deve ser nula</param>
-        /// <returns>A quantidade de comidas no pedido após a execução</returns>
-        public override int addComida(Comida nova)
-        {
-            if (aberto && nova!=null)
-            {
-                itens[quantComidas] = nova;
-                quantComidas++;
-            }
-            return quantComidas;
+        /// <returns>Uma categoria de fidelidade, de acordo com os pedidos já realizados pelo cliente</returns>
+        public IFidelidade atualizarCategoria() {
+            return new XulambsPleno(pedidos).atualizarCategoria();
         }
 
         /// <summary>
-        /// Calcula a taxa de serviço do pedido, correspondente a 10% do valor dos itens
+        /// Retorna o desconto concedido ao cliente neste pedido, de acordo com a categoria de fidelidade.
         /// </summary>
-        /// <returns>Double com a taxa de serviço do pedido (não negativa)</returns>
-        public override double taxa()
-        {
-            return valorItens() * TAXA_SERVICO;
+        /// <param name="pedido">Pedido original</param>
+        /// <returns>Desconto obtido pelo cliente</returns>
+        public double desconto(Pedido pedido) {
+            return pedido.precoFinal() * PCT_DESC;
         }
-        #endregion
     }
 }
