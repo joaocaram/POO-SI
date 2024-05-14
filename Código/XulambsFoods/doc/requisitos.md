@@ -26,4 +26,7 @@
 
 1. Procurando incentivar a adição de ingredientes na Pizza, a partir do 6º ingredientes será concedido um desconto de 50% no seu valor.
 
-1. Podemos ter pedidos para entrega ou pedidos para comer no local. Os pedidos para entrega terão uma taxa de entrega de acordo com a distância. Os pedidos para comer no local têm 10% de taxa de serviço sobre o valor das comidas.
+1. Cada pedido deverá ser registrado para um cliente.
+
+1. Um relatório de cliente inclui seu identificador e todos os seus pedidos.
+
