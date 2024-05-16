@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 namespace XulambsFoods.src {
     internal class XulambsPleno : IFidelidade {
         private const double PCT_DESCONTO = 0.1;
-        private const int MIN_PEDIDOS = 10;
+        private const int MIN_PEDIDOS = 2;
         private const double MEDIA_MIN = 26;
         private Queue<Pedido> pedidos;
 
@@ -59,8 +59,6 @@ namespace XulambsFoods.src {
                 media = valor / pedidos.Count;
                 if (media >= MEDIA_MIN)
                     novaCategoria = new XulambsSenior(pedidos).atualizarCategoria();
-                else
-                    novaCategoria = this;
             }
             return novaCategoria;             
         }

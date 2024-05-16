@@ -30,7 +30,7 @@ namespace XulambsFoods.src {
     ///
     /// Classe Pedido: relacionamento entre classes
     /// Um pedido contém até 10 comidas (composição)
-    ///
+    ///  
     public abstract class Pedido {
 
         #region const e static

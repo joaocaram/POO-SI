@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.Design;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 /** 
         * MIT License
@@ -39,7 +42,7 @@ namespace XulambsFoods.src
         }
         static void cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS - v0.42");
+            Console.WriteLine("XULAMBS FOODS - v0.51");
             Console.WriteLine("=====================");
         }
         static int MenuPrincipal() {
@@ -100,6 +103,7 @@ namespace XulambsFoods.src
         }
         static Pedido criarPedido() {
             Pedido novoPedido = escolherTipoDePedido();
+
             if (novoPedido != null) { 
                 Comida novaComida = criarComida();
 
@@ -193,6 +197,44 @@ namespace XulambsFoods.src
             }
         }
 
+        static void relatorioResumidoClientes(Comparison<Cliente> comparador) {
+            Cliente[] clientesOrdenados = clientes.Values.ToArray();
+                            
+            Array.Sort(clientesOrdenados, comparador);
+            
+            Console.WriteLine("Relatório resumido dos clientes:\n "); 
+            foreach (Cliente cliente in clientesOrdenados) {
+                Console.WriteLine(cliente + "\n");
+            }
+        }
+
+        static Comparison<Cliente>? escolherComparadorCliente() {
+            int opcaoComparador = MenuComparadores();
+            Comparison<Cliente> comparadorEscolhido; ;
+            Comparison<Cliente> compPedidos = ( 
+                                                (cli1, cli2) => 
+                                                 cli1.totalEmPedidos() >= cli2.totalEmPedidos() ? -1 : 1
+                                               );
+            comparadorEscolhido = opcaoComparador switch {
+                2 => new ComparadorClienteId().Compare,
+                3 => compPedidos,
+                _ => Comparer<Cliente>.Default.Compare
+            }; 
+            return comparadorEscolhido;
+           
+        }
+
+        private static int MenuComparadores() {
+            int opcao;
+            cabecalho();
+            Console.WriteLine("1 - Ordem alfabética (padrão)");
+            Console.WriteLine("2 - Ordem de identificador");
+            Console.WriteLine("3 - Ordenação crescente por gastos");
+            Console.Write("Digite sua opção: ");
+            int.TryParse(Console.ReadLine(), out opcao);
+            return opcao;
+        }
+
         static void Main(string[] args)
         {
             clientes = new Dictionary<int, Cliente>();
@@ -237,12 +279,8 @@ namespace XulambsFoods.src
                         pausa();
                         break;
                     case 5:
-                        cabecalho();
-                        Console.WriteLine("Relatório resumido dos clientes:\n ");
-                        foreach (Cliente cliente in clientes.Values)
-                        {
-                            Console.WriteLine(cliente+"\n");
-                        }
+                        Comparison<Cliente> comparador = escolherComparadorCliente();
+                        relatorioResumidoClientes(comparador);
                         pausa();
                         break;
                     case 6:
@@ -253,6 +291,7 @@ namespace XulambsFoods.src
                         Console.WriteLine("Categorias atualizadas.");
                         pausa();
                         break;
+               
             }
             } while (opcao != 0);
         }

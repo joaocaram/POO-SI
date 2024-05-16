@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 /** 
@@ -31,7 +32,8 @@ using System.Threading.Tasks;
 
 
 namespace XulambsFoods.src {
-    public class Cliente {
+    public class Cliente : IComparable<Cliente>{
+        
         private static int ultimoId = 0;
         private int id;
         private IFidelidade categoria;
@@ -89,7 +91,7 @@ namespace XulambsFoods.src {
         /// Calcula o valor total pago pelo cliente em todos os seus pedidos.
         /// </summary>
         /// <returns>Double com o valor total pago pelo cliente em todos os seus pedidos</returns>
-        private double totalEmPedidos() {
+        public double totalEmPedidos() {
             double valor = 0d;
             foreach (Pedido pedido in pedidos) {
                 valor += pedido.precoFinal();
@@ -124,6 +126,8 @@ namespace XulambsFoods.src {
             return id;
         }
 
-
+        public int CompareTo(Cliente other) {
+            return this.nome.CompareTo(other.nome);
+        }
     }
 }

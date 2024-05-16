@@ -75,7 +75,7 @@ namespace XulambsFoods.src {
             double desconto = PCT_DESCONTO * precoOriginal;
             if (pedidos.Count % PEDIDOS_DESC_ADIC == 0)
                 desconto += VALOR_DESC_ADIC;
-            desconto = desconto > precoOriginal ? precoOriginal : desconto;
+            desconto = (desconto > precoOriginal) ? precoOriginal : desconto;
             return desconto;
         }
     }
