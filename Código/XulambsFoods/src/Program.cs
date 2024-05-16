@@ -34,7 +34,7 @@ namespace XulambsFoods.src
     internal class Program
     {
         static double totalVendido;
-        static Dictionary<int, Cliente> clientes;
+        static BaseClientes clientes;
 
         static void pausa() {
             Console.Write("\nTecle Enter para continuar.");
@@ -42,7 +42,7 @@ namespace XulambsFoods.src
         }
         static void cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS - v0.51");
+            Console.WriteLine("XULAMBS FOODS - v0.52");
             Console.WriteLine("=====================");
         }
         static int MenuPrincipal() {
@@ -158,7 +158,7 @@ namespace XulambsFoods.src
             cabecalho();
             Console.Write("Digite o id do cliente: ");
             idCli = int.Parse(Console.ReadLine());
-            clientes.TryGetValue(idCli, out quem);
+            quem = clientes.localizar(idCli);
             return quem;
 
         }
@@ -170,7 +170,7 @@ namespace XulambsFoods.src
             Console.Write("Qual é o nome do novo cliente? ");
             nome = Console.ReadLine();
             novo = new Cliente(nome);
-            clientes.Add(novo.GetHashCode(), novo);
+            clientes.adicionar(novo);
             Console.WriteLine($"\nCliente cadastrado:\n {novo.ToString()}");
             pausa();
             return novo;
@@ -193,19 +193,13 @@ namespace XulambsFoods.src
                                 "Paulinho", "Alan" };
             foreach(String nome in nomes) {
                 Cliente novo = new Cliente(nome);
-                clientes.Add(novo.GetHashCode(), novo);
+                clientes.adicionar(novo);
             }
         }
 
         static void relatorioResumidoClientes(Comparison<Cliente> comparador) {
-            Cliente[] clientesOrdenados = clientes.Values.ToArray();
-                            
-            Array.Sort(clientesOrdenados, comparador);
-            
-            Console.WriteLine("Relatório resumido dos clientes:\n "); 
-            foreach (Cliente cliente in clientesOrdenados) {
-                Console.WriteLine(cliente + "\n");
-            }
+            clientes.ordenar(comparador);
+            Console.WriteLine(clientes.relatorioResumido());
         }
 
         static Comparison<Cliente>? escolherComparadorCliente() {
@@ -237,7 +231,7 @@ namespace XulambsFoods.src
 
         static void Main(string[] args)
         {
-            clientes = new Dictionary<int, Cliente>();
+            clientes = new BaseClientes(100);
             totalVendido = 0d;
             gerarClientes();
             int opcao;
@@ -285,10 +279,10 @@ namespace XulambsFoods.src
                         break;
                     case 6:
                         cabecalho();
-                        foreach (Cliente cliente in clientes.Values) {
-                            cliente.verificarCategoria();
-                        }
-                        Console.WriteLine("Categorias atualizadas.");
+                        //foreach (Cliente cliente in clientes.Values) {
+                        //    cliente.verificarCategoria();
+                        //}
+                        //Console.WriteLine("Categorias atualizadas.");
                         pausa();
                         break;
                
