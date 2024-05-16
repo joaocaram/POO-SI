@@ -162,6 +162,10 @@ namespace XulambsFoods.src {
             return (this.idPedido == outro.idPedido &&
                     this.dataPedido.Equals(outro.dataPedido));
         }
+
+        public override int GetHashCode() {
+            return idPedido;
+        }
         #endregion
     }
 }

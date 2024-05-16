@@ -34,7 +34,8 @@ namespace XulambsFoods.src
     internal class Program
     {
         static double totalVendido;
-        static BaseClientes clientes;
+        static BaseDados<string, Cliente> clientes;
+        static BaseDados<int, Pedido> pedidos;
 
         static void pausa() {
             Console.Write("\nTecle Enter para continuar.");
@@ -50,10 +51,13 @@ namespace XulambsFoods.src
             cabecalho();
             Console.WriteLine("1 - Abrir Pedido");
             Console.WriteLine("2 - Total Vendido Hoje");
+            Console.WriteLine("------------------------");
             Console.WriteLine("3 - Novo Cliente");
             Console.WriteLine("4 - Relatório de Cliente");
             Console.WriteLine("5 - Resumo dos Clientes");
             Console.WriteLine("6 - Atualizar Fidelidade");
+            Console.WriteLine("------------------------");
+            Console.WriteLine("7 - Resumo dos Pedidos");
             Console.WriteLine("0 - Sair");
             Console.Write("Digite sua opção: ");
             int.TryParse(Console.ReadLine(), out opcao);
@@ -74,6 +78,7 @@ namespace XulambsFoods.src
         static void relatorioTotalVendido() {
             cabecalho();
             String hoje = DateOnly.FromDateTime(DateTime.Now).ToShortDateString();
+            totalVendido = pedidos.totalizar( ped => ped.precoFinal() ); 
             Console.WriteLine("Total vendido hoje (" + hoje + "): R$ " + totalVendido.ToString("0.00"));
             pausa();
         }
@@ -122,7 +127,6 @@ namespace XulambsFoods.src
             return novoPedido;
         }
 
-        
         static bool clienteQuerBorda()
         {
             Console.Write("Deseja borda recheada? (s/n) ");
@@ -153,12 +157,12 @@ namespace XulambsFoods.src
             return novaComida;
         }
         private static Cliente localizarCliente() {
-            int idCli;
+            String nome;
             Cliente quem;
             cabecalho();
-            Console.Write("Digite o id do cliente: ");
-            idCli = int.Parse(Console.ReadLine());
-            quem = clientes.localizar(idCli);
+            Console.Write("Digite o nome do cliente: ");
+            nome = Console.ReadLine();
+            quem = clientes.localizar(nome);
             return quem;
 
         }
@@ -170,7 +174,7 @@ namespace XulambsFoods.src
             Console.Write("Qual é o nome do novo cliente? ");
             nome = Console.ReadLine();
             novo = new Cliente(nome);
-            clientes.adicionar(novo);
+            clientes.adicionar(nome, novo);
             Console.WriteLine($"\nCliente cadastrado:\n {novo.ToString()}");
             pausa();
             return novo;
@@ -178,8 +182,9 @@ namespace XulambsFoods.src
 
         static void registrarPedido(Cliente clienteAtual, Pedido pedidoAtual) {
             clienteAtual.registrarPedido(pedidoAtual);
+            pedidos.adicionar(pedidoAtual.GetHashCode(), pedidoAtual);
             double valorAPagar = clienteAtual.valorAPagar(pedidoAtual);
-            totalVendido += valorAPagar;
+           
             Console.WriteLine("\nPedido fechado: ");
             Console.WriteLine(pedidoAtual.ToString());
             Console.WriteLine("Cliente pagou R$ " + valorAPagar.ToString("0.00"));
@@ -193,45 +198,68 @@ namespace XulambsFoods.src
                                 "Paulinho", "Alan" };
             foreach(String nome in nomes) {
                 Cliente novo = new Cliente(nome);
-                clientes.adicionar(novo);
+                clientes.adicionar(nome, novo);
             }
         }
 
-        static void relatorioResumidoClientes(Comparison<Cliente> comparador) {
-            clientes.ordenar(comparador);
-            Console.WriteLine(clientes.relatorioResumido());
+        private static int MenuComparadoresClientes() {
+            int opcao;
+            cabecalho();
+            Console.WriteLine("1 - Ordem alfabética (padrão)");
+            Console.WriteLine("2 - Ordem de identificador");
+            Console.WriteLine("3 - Ordenação decrescente por gastos");
+            Console.Write("Digite sua opção: ");
+            int.TryParse(Console.ReadLine(), out opcao);
+            return opcao;
         }
 
         static Comparison<Cliente>? escolherComparadorCliente() {
-            int opcaoComparador = MenuComparadores();
-            Comparison<Cliente> comparadorEscolhido; ;
-            Comparison<Cliente> compPedidos = ( 
-                                                (cli1, cli2) => 
+            int opcaoComparador = MenuComparadoresClientes();
+            Comparison<Cliente> comparadorEscolhido;
+            Comparison<Cliente> compPedidos = (
+                                                (cli1, cli2) =>
                                                  cli1.totalEmPedidos() >= cli2.totalEmPedidos() ? -1 : 1
                                                );
             comparadorEscolhido = opcaoComparador switch {
                 2 => new ComparadorClienteId().Compare,
                 3 => compPedidos,
                 _ => Comparer<Cliente>.Default.Compare
+            };
+            return comparadorEscolhido;
+
+        }
+
+        static Comparison<Pedido> escolherComparadorPedido() {
+            int opcaoComparador = MenuComparadoresPedidos();
+            Comparison<Pedido> comparadorEscolhido; 
+            comparadorEscolhido = opcaoComparador switch {
+                2 => (ped1, ped2) => ped1.precoFinal() >= ped2.precoFinal() ? -1 : 1,
+                _ => (ped1, ped2) => ped1.GetHashCode() - ped2.GetHashCode(),
             }; 
             return comparadorEscolhido;
            
         }
 
-        private static int MenuComparadores() {
+        private static int MenuComparadoresPedidos() {
             int opcao;
             cabecalho();
-            Console.WriteLine("1 - Ordem alfabética (padrão)");
-            Console.WriteLine("2 - Ordem de identificador");
-            Console.WriteLine("3 - Ordenação crescente por gastos");
+            Console.WriteLine("1 - Ordem de identificador (padrão)");
+            Console.WriteLine("2 - Ordem de decrescente de valor");
             Console.Write("Digite sua opção: ");
             int.TryParse(Console.ReadLine(), out opcao);
             return opcao;
         }
 
+        static void relatorioResumido<K,T>(BaseDados<K,T> dados, Comparison<T> comparador) {
+            dados.ordenar(comparador);
+            Console.WriteLine(dados.relatorioResumido());
+        }
+        
+
         static void Main(string[] args)
         {
-            clientes = new BaseClientes(100);
+            clientes = new BaseDados<string, Cliente>(100);
+            pedidos = new BaseDados<int, Pedido>(1000);
             totalVendido = 0d;
             gerarClientes();
             int opcao;
@@ -273,20 +301,23 @@ namespace XulambsFoods.src
                         pausa();
                         break;
                     case 5:
+                        cabecalho();
                         Comparison<Cliente> comparador = escolherComparadorCliente();
-                        relatorioResumidoClientes(comparador);
+                        relatorioResumido(clientes, comparador);
                         pausa();
                         break;
                     case 6:
                         cabecalho();
-                        //foreach (Cliente cliente in clientes.Values) {
-                        //    cliente.verificarCategoria();
-                        //}
-                        //Console.WriteLine("Categorias atualizadas.");
+                        clientes.processar( cli => cli.verificarCategoria() );
                         pausa();
                         break;
-               
-            }
+                    case 7:
+                        cabecalho();
+                        Comparison<Pedido> compPedido = escolherComparadorPedido();
+                        relatorioResumido(pedidos, compPedido);
+                        pausa();
+                        break;
+                }
             } while (opcao != 0);
         }
 
