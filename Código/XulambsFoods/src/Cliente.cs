@@ -33,13 +33,16 @@ using System.Threading.Tasks;
 
 namespace XulambsFoods.src {
     public class Cliente : IComparable<Cliente>{
-        
+
+        #region atributos
         private static int ultimoId = 0;
         private int id;
         private IFidelidade categoria;
         private string nome;
         private Queue<Pedido> pedidos;
+        #endregion
 
+        #region construtores
         /// <summary>
         /// Construtor do cliente: id automático e fila para até 100 pedidos. Um cliente recém criado será da categoria Xulambs Junior
         /// </summary>
@@ -50,14 +53,15 @@ namespace XulambsFoods.src {
             this.id = ++ultimoId;
             categoria = new XulambsJunior(pedidos);
         }
+        #endregion
 
+        #region métodos de negócio
         /// <summary>
         /// Verifica/atualiza a categoria de fidelidade do cliente (chamada delegada ao objeto da interface IFidelidade.
         /// </summary>
         public void verificarCategoria() {
             categoria = categoria.atualizarCategoria();
         }
-
 
         /// <summary>
         /// Registra um pedido para um cliente: coloca-o na fila.
@@ -109,7 +113,9 @@ namespace XulambsFoods.src {
             precoAPagar -= categoria.desconto(pedido);
             return precoAPagar;
         }
+        #endregion
 
+        #region override de Object
         /// <summary>
         /// Representação simplificada do cliente em string: id, nome e valor total gasto em pedidos.
         /// </summary>
@@ -126,8 +132,26 @@ namespace XulambsFoods.src {
             return id;
         }
 
+        /// <summary>
+        /// Igualdade de cliente: identificadores iguais
+        /// </summary>
+        /// <param name="obj">O cliente a ser comparado</param>
+        /// <returns>TRUE se tem o mesmo identificador, FALSE caso contrário</returns>
+        public override bool Equals(object? obj) {
+            Cliente outro = (Cliente)obj;
+            return this.id == outro.id;
+        }
+        #endregion
+
+        #region IComparable
+        /// <summary>
+        /// Comparador padrão do cliente: ordem alfabética de nome
+        /// </summary>
+        /// <param name="other">O cliente a ser comparado</param>
+        /// <returns>Regra padrão do comparador: -1, 0, 1 conforme seja menor, igual ou maior ao outro</returns>
         public int CompareTo(Cliente other) {
             return this.nome.CompareTo(other.nome);
         }
+        #endregion
     }
 }

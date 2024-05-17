@@ -111,6 +111,10 @@ namespace XulambsFoods.src {
             return valor;
         }
 
+        /// <summary>
+        /// Um pedido tem uma taxa a ser incluída ao preço dos itens. Esta taxa depende do tipo de pedido e deve ser não negativa, podendo ser 0.
+        /// </summary>
+        /// <returns>O valor da taxa do pedido.</returns>
         public abstract double taxa();
 
         /// <summary>
@@ -163,6 +167,10 @@ namespace XulambsFoods.src {
                     this.dataPedido.Equals(outro.dataPedido));
         }
 
+        /// <summary>
+        /// Código identificador do cliente (gerado automaticamente, sequencialmente)
+        /// </summary>
+        /// <returns>Int positivo representando o código do cliente.</returns>
         public override int GetHashCode() {
             return idPedido;
         }
