@@ -6,6 +6,7 @@
     <RootNamespace>XulambsFoods</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <StartupObject>XulambsFoods.src.CollectionsLinqDemo</StartupObject>
   </PropertyGroup>
 
 </Project>

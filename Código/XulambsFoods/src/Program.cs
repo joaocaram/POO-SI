@@ -29,10 +29,8 @@ using System.Text.Json.Nodes;
         */
 
 
-namespace XulambsFoods.src
-{
-    internal class Program
-    {
+namespace XulambsFoods.src {
+    internal class Program {
         static double totalVendido;
         static BaseDados<string, Cliente> clientes;
         static BaseDados<int, Pedido> pedidos;
@@ -78,13 +76,12 @@ namespace XulambsFoods.src
         static void relatorioTotalVendido() {
             cabecalho();
             String hoje = DateOnly.FromDateTime(DateTime.Now).ToShortDateString();
-            totalVendido = pedidos.totalizar( ped => ped.precoFinal() ); 
+            totalVendido = pedidos.totalizar(ped => ped.precoFinal());
             Console.WriteLine("Total vendido hoje (" + hoje + "): R$ " + totalVendido.ToString("0.00"));
             pausa();
         }
 
-        static Pedido escolherTipoDePedido()
-        {
+        static Pedido escolherTipoDePedido() {
             cabecalho();
             int opcao = 0;
             Pedido novo = null;
@@ -93,9 +90,9 @@ namespace XulambsFoods.src
             Console.WriteLine("0 - Sair");
             Console.Write("Digite sua opção: ");
             int.TryParse(Console.ReadLine(), out opcao);
-            switch (opcao)
-            {
-                case 1: novo = new PedidoLocal();
+            switch (opcao) {
+                case 1:
+                    novo = new PedidoLocal();
                     break;
                 case 2:
                     double dist;
@@ -109,7 +106,7 @@ namespace XulambsFoods.src
         static Pedido criarPedido() {
             Pedido novoPedido = escolherTipoDePedido();
 
-            if (novoPedido != null) { 
+            if (novoPedido != null) {
                 Comida novaComida = criarComida();
 
                 if (novaComida != null) {
@@ -127,8 +124,7 @@ namespace XulambsFoods.src
             return novoPedido;
         }
 
-        static bool clienteQuerBorda()
-        {
+        static bool clienteQuerBorda() {
             Console.Write("Deseja borda recheada? (s/n) ");
             string borda = Console.ReadLine();
             return borda.ToLower().Equals("s");
@@ -140,14 +136,14 @@ namespace XulambsFoods.src
             switch (tipoComida) {
                 case 1:
                     Console.WriteLine("\nAdicionando Pizza ao pedido:");
-                    novaComida = new Pizza(0,clienteQuerBorda());
+                    novaComida = new Pizza(0, clienteQuerBorda());
                     break;
                 case 2:
                     Console.WriteLine("\nAdicionando Sanduíche ao pedido:");
                     novaComida = new Sanduiche();
                     break;
             }
-            
+
             if (novaComida != null) {
                 Console.Write("Deseja quantos adicionais? ");
                 int adicionais = int.Parse(Console.ReadLine());
@@ -169,7 +165,7 @@ namespace XulambsFoods.src
 
         private static Cliente cadastrarCliente() {
             string nome;
-            Cliente novo; 
+            Cliente novo;
             cabecalho();
             Console.Write("Qual é o nome do novo cliente? ");
             nome = Console.ReadLine();
@@ -184,19 +180,19 @@ namespace XulambsFoods.src
             clienteAtual.registrarPedido(pedidoAtual);
             pedidos.adicionar(pedidoAtual.GetHashCode(), pedidoAtual);
             double valorAPagar = clienteAtual.valorAPagar(pedidoAtual);
-           
+
             Console.WriteLine("\nPedido fechado: ");
             Console.WriteLine(pedidoAtual.ToString());
             Console.WriteLine("Cliente pagou R$ " + valorAPagar.ToString("0.00"));
-            Console.WriteLine("Registrado para "+clienteAtual);
-            
+            Console.WriteLine("Registrado para " + clienteAtual);
+
         }
 
         static void gerarClientes() {
             String[] nomes = {"Everson", "Renzo", "Rodrigo", "Jemerson", "Guilherme",
                                "Otávio", "Givanildo", "Matías", "Gustavo",
                                 "Paulinho", "Alan" };
-            foreach(String nome in nomes) {
+            foreach (String nome in nomes) {
                 Cliente novo = new Cliente(nome);
                 clientes.adicionar(nome, novo);
             }
@@ -231,13 +227,13 @@ namespace XulambsFoods.src
 
         static Comparison<Pedido> escolherComparadorPedido() {
             int opcaoComparador = MenuComparadoresPedidos();
-            Comparison<Pedido> comparadorEscolhido; 
+            Comparison<Pedido> comparadorEscolhido;
             comparadorEscolhido = opcaoComparador switch {
                 2 => (ped1, ped2) => ped1.precoFinal() >= ped2.precoFinal() ? -1 : 1,
                 _ => (ped1, ped2) => ped1.GetHashCode() - ped2.GetHashCode(),
-            }; 
+            };
             return comparadorEscolhido;
-           
+
         }
 
         private static int MenuComparadoresPedidos() {
@@ -250,14 +246,13 @@ namespace XulambsFoods.src
             return opcao;
         }
 
-        static void relatorioResumido<K,T>(BaseDados<K,T> dados, Comparison<T> comparador) {
+        static void relatorioResumido<K, T>(BaseDados<K, T> dados, Comparison<T> comparador) {
             dados.ordenar(comparador);
             Console.WriteLine(dados.relatorioResumido());
         }
-        
 
-        static void Main(string[] args)
-        {
+
+        static void Main(string[] args) {
             clientes = new BaseDados<string, Cliente>(100);
             pedidos = new BaseDados<int, Pedido>(1000);
             totalVendido = 0d;
@@ -279,7 +274,7 @@ namespace XulambsFoods.src
                             pausa();
                         }
                         break;
-                    case 2: 
+                    case 2:
                         relatorioTotalVendido();
                         break;
                     case 3:
@@ -308,7 +303,7 @@ namespace XulambsFoods.src
                         break;
                     case 6:
                         cabecalho();
-                        clientes.processar( cli => cli.verificarCategoria() );
+                        clientes.processar(cli => cli.verificarCategoria());
                         pausa();
                         break;
                     case 7:
@@ -321,6 +316,6 @@ namespace XulambsFoods.src
             } while (opcao != 0);
         }
 
-       
+
     }
 }

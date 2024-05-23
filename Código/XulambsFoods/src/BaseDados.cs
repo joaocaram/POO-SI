@@ -36,7 +36,7 @@ namespace XulambsFoods.src {
     /// <typeparam name="K">Tipo da chave identificadora dos dados</typeparam>
     /// <typeparam name="T">Tipo de dados a ser armazenado</typeparam>
     internal class BaseDados<K, T> {
-        
+
         #region atributos
         private Dictionary<K, T> dados;
         private List<T> dadosOrdenados;     //para listagens
@@ -109,12 +109,13 @@ namespace XulambsFoods.src {
         /// <returns>Double com a totalização de todos os objetos armazenados.</returns>
         public double totalizar(Func<T, double> metodo) {
             double total = 0;
-            foreach (T dado in dados.Values)
-            {
+            foreach (T dado in dados.Values) {
                 total += metodo.Invoke(dado);
             }
             return total;
         }
+              
+
 
         /// <summary>
         /// Realiza uma ação genérica, passada por parâmetro, para cada objeto armazenado na base.
@@ -125,6 +126,10 @@ namespace XulambsFoods.src {
                 metodo.Invoke(dado);
             }
         }
+
+        
+
+
         #endregion
     }
 }

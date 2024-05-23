@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 
 
 namespace XulambsFoods.src {
-    public class Cliente : IComparable<Cliente>{
+    public class Cliente : IComparable<Cliente>, IEquatable<Cliente> {
 
         #region atributos
         private static int ultimoId = 0;
@@ -84,8 +84,8 @@ namespace XulambsFoods.src {
         public string resumoPedidos() {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(this.ToString());
-            foreach (Pedido pedido in pedidos)
-            {
+
+            foreach (Pedido pedido in pedidos) {
                 sb.AppendLine(pedido.ToString());
             }
             return sb.ToString();
@@ -95,13 +95,21 @@ namespace XulambsFoods.src {
         /// Calcula o valor total pago pelo cliente em todos os seus pedidos.
         /// </summary>
         /// <returns>Double com o valor total pago pelo cliente em todos os seus pedidos</returns>
-        public double totalEmPedidos() {
+        public double totalEmPedidos() {            
+
             double valor = 0d;
             foreach (Pedido pedido in pedidos) {
                 valor += pedido.precoFinal();
             }
             return valor;
         }
+
+        public double valorMedioPorPedido()
+        {
+            return totalEmPedidos() / pedidos.Count;
+        }
+
+        
 
         /// <summary>
         /// Retorna o valor pago pelo cliente para este pedido, considerando os possíveis descontos de sua categoria de fidelidade
@@ -143,7 +151,8 @@ namespace XulambsFoods.src {
         }
         #endregion
 
-        #region IComparable
+
+        #region Interfaces
         /// <summary>
         /// Comparador padrão do cliente: ordem alfabética de nome
         /// </summary>
@@ -151,6 +160,11 @@ namespace XulambsFoods.src {
         /// <returns>Regra padrão do comparador: -1, 0, 1 conforme seja menor, igual ou maior ao outro</returns>
         public int CompareTo(Cliente other) {
             return this.nome.CompareTo(other.nome);
+        }
+
+        public bool Equals(Cliente? other)
+        {
+            return this.nome.Equals(other.nome);
         }
         #endregion
     }
