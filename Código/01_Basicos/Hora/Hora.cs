@@ -41,15 +41,25 @@ namespace Hora {
         /// <summary>
         /// Representa o componente Hora (entre 0 e 23)
         /// </summary>
-        public int horas;
+        private int horas;
         /// <summary>
         /// Representa o componente Minuto (entre 0 e 59)
         /// </summary>
-        public int minutos;
+        private int minutos;
         /// <summary>
         /// Representa o componente Segundo (entre 0 e 59)
         /// </summary>
-        public int segundos;
+        private int segundos;
+        #endregion
+
+        #region Construtores
+        public Hora(){
+            horas = minutos = segundos = 0;
+        }
+
+        public Hora(int horas, int minutos, int segundos){
+            Ajustar(horas, minutos, segundos);
+        }   
         #endregion
 
         #region Métodos de negócio
@@ -73,7 +83,7 @@ namespace Hora {
         /// Faz a validação da horas atribuída. Em caso de horas, minutos ou segundos inválidos, sem reverter o horário em caso de não-validação.
         /// </summary>
         /// <returns>TRUE ou FALSE conforme a horas atual é válida ou não </returns>
-        public bool Validar() {
+        private bool Validar() {
             //TODO: revisar o código para melhorá-lo
             bool resposta = false;
             if ((horas >= 0 && horas <= 23) && 
