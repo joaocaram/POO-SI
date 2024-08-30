@@ -1,155 +1,125 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Net.WebRequestMethods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace XulambsFoods.src {
-
+namespace XulambsFoods_2024_2.src {
     /** 
-         * MIT License
-         *
-         * Copyright(c) 2022-4 João Caram <caram@pucminas.br>
-         *
-         * Permission is hereby granted, free of charge, to any person obtaining a copy
-         * of this software and associated documentation files (the "Software"), to deal
-         * in the Software without restriction, including without limitation the rights
-         * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-         * copies of the Software, and to permit persons to whom the Software is
-         * furnished to do so, subject to the following conditions:
-         *
-         * The above copyright notice and this permission notice shall be included in all
-         * copies or substantial portions of the Software.
-         *
-         * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-         * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-         * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-         * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-         * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-         * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-         * SOFTWARE.
-         */
+    * MIT License
+    *
+    * Copyright(c) 2024 João Caram <caram@pucminas.br>
+    *
+    * Permission is hereby granted, free of charge, to any person obtaining a copy
+    * of this software and associated documentation files (the "Software"), to deal
+    * in the Software without restriction, including without limitation the rights
+    * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the Software is
+    * furnished to do so, subject to the following conditions:
+    *
+    * The above copyright notice and this permission notice shall be included in all
+    * copies or substantial portions of the Software.
+    *
+    * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    * SOFTWARE.
+    */
 
+    /// <summary>
+    /// Classe Pizza para a Xulambs Pizza. Uma pizza tem um preço base e pode ter até 8 ingredientes adicionais. Cada ingrediente tem custo fixo.
+    /// A pizza deve emitir uma nota de compra com os seus detalhes.
+    /// </summary>
+    public class Pizza {
 
-    /// Classe Pizza: especialização de Comida pela herança.
-    /// No momento, classe de dados: sua única responsabilidade é o construtor
-    public class Pizza : Comida {
-
-        #region constantes
-        private const int MAX_ADICIONAIS = 8;
-        private const double VALOR_ADICIONAL = 4d;
-        private const double PRECO_BASE = 29d;
-        
-        private const int MIN_ADICIONAIS_DESC = 5;
-        private const double DESC_ADICIONAIS = 0.5;
-        private const double VALOR_BORDA = 5.5d;
-        #endregion
-
-        #region atributos
-        private bool _temBordaRecheada;
-        #endregion
-
-        #region construtores
+        private const int MaxIngredientes = 8;
+        private const string Descricao = "Pizza";
+	    private const double PrecoBase = 29d;
+        private const double ValorAdicional = 5d;
+        private int _quantidadeIngredientes;
 
         /// <summary>
-        /// Inicializador privado: configura as variáveis com as constantes da classe e chama o método herdado para adicionar ingredientes.
-        /// Para pensar: isso poderia ser feito usando o construtor da classe mãe?
+        /// Inicializador privado da pizza: valida a quantidade de adicionais. Em caso de não validação, a pizza será criada sem adicionais.
         /// </summary>
-        /// <param name="qtdAdicionais">Quantidade de extras da pizza (entre 0 e 8). Valores inválidos são ignorados e a pizza fica com 0 ingredientes</param>
-        /// <param name="bordaRecheada">Define se a pizza terá ou não sua borda recheada</param>
-        private void init(int qtdAdicionais, bool bordaRecheada) {
-            _descricao = "Pizza";
-            _precoBase = PRECO_BASE;
-            _temBordaRecheada = bordaRecheada;
-            _valorPorAdicional = VALOR_ADICIONAL;
-            _maxAdicionais = MAX_ADICIONAIS;
-            setBorda(bordaRecheada);
-            adicionarIngredientes(qtdAdicionais);
+        /// <param name="quantosAdicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
+        private void init(int quantosAdicionais) {
+            if (PodeAdicionar(quantosAdicionais))
+                _quantidadeIngredientes = quantosAdicionais;
         }
 
-        /// <summary>
-        /// Cria uma pizza sem ingredientes adicionais nem borda recheada.
-        /// </summary>
+       /// <summary>
+       /// Construtor padrão.Cria uma pizza sem adicionais.
+       /// </summary>
         public Pizza() {
-            init(0, false);
+            init(0);            
         }
 
         /// <summary>
-        /// Cria uma pizza com ingredientes adicionais e sem borda recheada.
+        /// Cria uma pizza com a quantidade de adicionais pré-definida.Em caso de valor inválido, a pizza será criada sem adicionais.
         /// </summary>
-        /// <param name="qtdAdicionais">Quantidade de extras da pizza (entre 0 e 8). Valores inválidos são ignorados e a pizza fica com 0 ingredientes</param>
-        public Pizza(int qtdAdicionais) {
-            init(qtdAdicionais, false);
+        /// <param name="quantosAdicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
+        public Pizza(int quantosAdicionais) {
+            init(quantosAdicionais);
         }
 
         /// <summary>
-        /// Cria uma pizza sem ingredientes adicionais e escolhendo ter ou não borda recheada.
+        /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
         /// </summary>
-        /// <param name="bordaRecheada">'true' para borda recheada, 'false' caso contrário</param>
-        public Pizza(int qtdAdicionais, bool bordaRecheada)
-        {
-            init(qtdAdicionais, bordaRecheada);
-        }
-        #endregion
-
-        #region métodos de negócio
-        /// <summary>
-        /// Calcula o valor dos adicionais considerando a regra da pizza: a partir do 6º adicional, cada
-        /// um recebe 50% de desconto. Sobrescreve o método da classe mãe.
-        /// </summary>
-        /// <returns>Valor dos adicionais já considerando o desconto (double não negativo)</returns>
-        protected override double valorAdicionais()
-        {   
-            return base.valorAdicionais() - descontoAdicionais();
+        /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
+        private double ValorAdicionais() {
+            return _quantidadeIngredientes * ValorAdicional;
         }
 
         /// <summary>
-        /// Calcula o valor do possível desconto aplicado ao valor dos adicionais. Haverá desconto se a quantidade de adicionais passar o mínimo definido pela constante MIN_ADICIONAIS_DESC.
+        /// Retorna o valor final da pizza, incluindo seus adicionais.
         /// </summary>
-        /// <returns>Valor do desconto para os adicionais (double não negativo)</returns>
-        private double descontoAdicionais()
-        {
-            double desc = 0d;
-            int ingredComDesconto = _qtdAdicionais - MIN_ADICIONAIS_DESC;
+        /// <returns>Double com o valor final da pizza.</returns>
+        public double ValorFinal() {
+            return PrecoBase + ValorAdicionais();
+        }
 
-            if(ingredComDesconto > 0)
-            {
-                desc = ingredComDesconto * VALOR_ADICIONAL * DESC_ADICIONAIS;
+        /// <summary>
+        /// Tenta adicionar ingredientes na pizza.Caso a adição seja inválida(ultrapassando limites ou com valores negativos), mantém
+        /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
+        /// </summary>
+        /// <param name="quantos">Quantos ingredientes a serem adicionados (>0)</param>
+        /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
+        public int AdicionarIngredientes(int quantos) {
+            if (PodeAdicionar(quantos)) {
+                _quantidadeIngredientes += quantos;
             }
-            return desc;
-
-        }
-        
-        /// <summary>
-        /// Permite escolher ou retirar a borda recheada.
-        /// </summary>
-        /// <param name="recheada">Bool indicando se terá (TRUE) ou não terá (FALSE) borda recheada</param>
-        /// <returns>Bool indicando se a pizza está ou não com borda recheada</returns>
-        public bool escolherBorda(bool recheada)
-        {
-            setBorda(recheada);
-            return _temBordaRecheada;
+            return _quantidadeIngredientes;
         }
 
         /// <summary>
-        /// Configura a pizza com borda recheada ou não (descrição e preço base)
+        ///Faz a verificação de limites para adicionar ingredientes na pizza.Retorna TRUE/FALSE conforme seja possível ou não adicionar 
+        ///esta quantidade de ingredientes.
         /// </summary>
-        /// <param name="borda">Bool indicando se a pizza tem ou não borda recheada</param>
-        private void setBorda(bool borda)
-        {
-            _temBordaRecheada = borda;
-            if (_temBordaRecheada)
-            {
-                _precoBase = PRECO_BASE+VALOR_BORDA;
-                _descricao = "Pizza com borda recheada";
-            }
-            else {
-                _precoBase = PRECO_BASE;
-                _descricao = "Pizza";
-            }
-
+        /// <param name="quantos">Quantidade de ingredientes a adicionar.</param>
+        /// <returns>TRUE/FALSE conforme seja possível ou não adicionar esta quantidade de ingredientes.</returns>
+        private bool PodeAdicionar(int quantos) {
+            return (quantos > 0 && quantos + _quantidadeIngredientes <= MaxIngredientes);
         }
 
-        #endregion
+       
+        /// <summary>
+        /// Nota simplificada de compra: descrição da pizza, dos ingredientes e do preço.
+        /// </summary>
+        /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
+        public string NotaDeCompra() {
+            return $"{Descricao} ({PrecoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor de {ValorFinal():C2}";
+        }
+
     }
+
 }
