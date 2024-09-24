@@ -5,9 +5,9 @@
 Xulambs Pizza é uma pizzaria que será inaugurada em breve, com grandes expectativas. Inicialmente, o negócio precisa automatizar o cálculo do preço de venda das pizzas. O modelo de vendas segue uma lógica simplificada:
 
 1. Não existem pizzas de sabores pré-definidos.
-1. A pizza tem preço inicial de R$29.
-1. A pizza pode ter até 8 ingredientes adicionais.
-1. Os adicionais têm custo fixo: cada um custa R$5.
+1. A pizza tem preço inicial de `R$29`.
+1. A pizza pode ter até `8` ingredientes adicionais.
+1. Os adicionais têm custo fixo: cada um custa `R$5`.
 
 O **Sistema Xulambs Pizza** precisa permitir registrar vendas de pizzas isoladas e emitir um cupom de venda (relatório) para cada uma, contendo sua descrição e valores a serem pagos.
 
@@ -19,3 +19,13 @@ A pizzaria percebeu que é melhor agrupar as vendas de pizzas em pedidos. Foram 
 1. Um pedido deve ter sua data armazenada.
 1. Um pedido aceitará novos itens até que seja fechado.
 1. O relatório de um pedido deve mostrar a descrição de cada uma das pizzas, detalhadamente, e o valor total do pedido.
+
+## Versão 0.3 - Pedidos para entrega
+
+A pizzaria quer ampliar seus negócios realizando _pedidos para entrega_ de pizzas.
+
+  - Um **pedido local** continua com as regras atuais, porém passando a cobrar uma taxa de `10%`  de serviço para os atendentes.
+  - Um **pedido para entrega** tem um limite de `6` pizzas. Ele não tem taxa de serviço, mas sim taxa de entrega de acordo com a distância:
+    - Até `4km`: isento.
+    - De `4,01` até `8km`: `R$5`
+    - Acima de `8km`: `R$8`
