@@ -5,7 +5,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace XulambsFoods_2024_2.src {
     /// <summary>
-    /// Classe Pedido: composição com classe Pizza. Um pedido pode conter diversas pizzas. Elas  podem ser adicionadas desde que o pedido esteja aberto.Um pedido tem um identificador único e armazena sua data.Ele deve calcular o preço a ser pago por ele e emitir um relatório detalhando suas pizzas e o valor a pagar.
+    /// Classe Pedido: composição com classe Comida. Um pedido pode conter diversas pizzas. Elas  podem ser adicionadas desde que o pedido esteja aberto.Um pedido tem um identificador único e armazena sua data.Ele deve calcular o preço a ser pago por ele e emitir um relatório detalhando suas pizzas e o valor a pagar.
     /// </summary>
     public class PedidoXulambs {
 
@@ -27,7 +27,7 @@ namespace XulambsFoods_2024_2.src {
         #region atributos
         private int _idPedido;
         private DateOnly _data;
-        private Pizza[] _pizzas;
+        private Comida[] _pizzas;
         private int _quantPizzas;
         private double _distanciaEntrega;
         private bool _paraEntrega;
@@ -45,7 +45,7 @@ namespace XulambsFoods_2024_2.src {
         public PedidoXulambs(bool paraEntrega, double distancia) {
             _quantPizzas = 0;
             _aberto = true;
-            _pizzas = new Pizza[MaxPizzas];
+            _pizzas = new Comida[MaxPizzas];
             _data = DateOnly.FromDateTime(DateTime.Now);
             _idPedido = ++_ultimoPedido;
             _paraEntrega = paraEntrega;
@@ -86,9 +86,9 @@ namespace XulambsFoods_2024_2.src {
         /// <summary>
         /// Adiciona uma pizza ao pedido, se for possível. Caso não seja, a operação é ignorada.Retorna a quantidade de pizzas do pedido após a execução. 
         /// </summary>
-        /// <param name="pizza">Pizza a ser adicionada</param>
+        /// <param name="pizza">Comida a ser adicionada</param>
         /// <returns>A quantidade de pizzas do pedido após a execução.</returns>
-        public int Adicionar(Pizza pizza) {
+        public int Adicionar(Comida pizza) {
             if (PodeAdicionar()) {
                 _pizzas[_quantPizzas] = pizza;
                 _quantPizzas++;

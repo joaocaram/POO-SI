@@ -6,7 +6,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace XulambsFoods_2024_2.src
 {
     /// <summary>
-    /// Classe Pedido: composição com classe Pizza. Um pedido pode conter diversas pizzas. Elas  podem ser adicionadas desde que o pedido esteja aberto.Um pedido tem um identificador único e armazena sua data.Ele deve calcular o preço a ser pago por ele e emitir um relatório detalhando suas pizzas e o valor a pagar.
+    /// Classe Pedido: composição com classe Comida. Um pedido pode conter diversas pizzas. Elas  podem ser adicionadas desde que o pedido esteja aberto.Um pedido tem um identificador único e armazena sua data.Ele deve calcular o preço a ser pago por ele e emitir um relatório detalhando suas pizzas e o valor a pagar.
     /// </summary>
     public abstract class Pedido
     {
@@ -19,11 +19,11 @@ namespace XulambsFoods_2024_2.src
         #endregion
 
         #region atributos
-        protected int _maxPizzas;
+        protected int _maxComidas;
         protected int _idPedido;
         protected DateOnly _data;
-        protected Pizza[] _pizzas;
-        protected int _quantPizzas;
+        protected Comida[] _comidas;
+        protected int _quantComidas;
         protected bool _aberto;
         #endregion
 
@@ -39,10 +39,10 @@ namespace XulambsFoods_2024_2.src
         protected Pedido(int maxPizzas)
         {
             if (maxPizzas < 1) maxPizzas = 1;
-            _maxPizzas = maxPizzas;
-            _quantPizzas = 0;
+            _maxComidas = maxPizzas;
+            _quantComidas = 0;
             _aberto = true;
-            _pizzas = new Pizza[maxPizzas];
+            _comidas = new Comida[maxPizzas];
             _data = DateOnly.FromDateTime(DateTime.Now);
             _idPedido = ++_ultimoPedido;
         }
@@ -57,25 +57,30 @@ namespace XulambsFoods_2024_2.src
         protected double ValorItens()
         {
             double preco = 0d;
-            for (int i = 0; i < _quantPizzas; i++)
+            for (int i = 0; i < _quantComidas; i++)
             {
-                preco += _pizzas[i].ValorFinal();
+                preco += _comidas[i].ValorFinal();
             }
             return preco;
+        }
+
+        [Obsolete]
+        public int Adicionar(Pizza pizza) {
+            return Adicionar(pizza);
         }
         /// <summary>
         /// Adiciona uma pizza ao pedido, se for possível. Caso não seja, a operação é ignorada.Retorna a quantidade de pizzas do pedido após a execução. 
         /// </summary>
-        /// <param name="pizza">Pizza a ser adicionada</param>
+        /// <param name="pizza">Comida a ser adicionada</param>
         /// <returns>A quantidade de pizzas do pedido após a execução.</returns>
-        public int Adicionar(Pizza pizza)
+        public int Adicionar(Comida comida)
         {
             if (PodeAdicionar())
             {
-                _pizzas[_quantPizzas] = pizza;
-                _quantPizzas++;
+                _comidas[_quantComidas] = comida;
+                _quantComidas++;
             }
-            return _quantPizzas;
+            return _quantComidas;
         }
 
         /// <summary>
@@ -83,7 +88,7 @@ namespace XulambsFoods_2024_2.src
         /// </summary>
         public void FecharPedido()
         {
-            if (_quantPizzas > 0)
+            if (_quantComidas > 0)
                 _aberto = false;
         }
 

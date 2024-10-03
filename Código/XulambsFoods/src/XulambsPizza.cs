@@ -66,29 +66,29 @@ namespace XulambsFoods_2024_2.src {
             String escolha = "n";
             do {
                 RelatorioPedido(procurado);
-                Pizza novaPizza = ComprarPizza();
+                Comida novaPizza = ComprarPizza();
                 procurado.Adicionar(novaPizza);
                 Console.Write("\nDeseja outra pizza? (s/n) ");
                 escolha = Console.ReadLine();
             } while (escolha.ToLower().Equals("s"));
         }
 
-        static Pizza ComprarPizza() {
+        static Comida ComprarPizza() {
             Console.WriteLine("\nComprando uma nova pizza:");
-            Pizza novaPizza = new Pizza();
+            Comida novaPizza = new Pizza();
             EscolherIngredientes(novaPizza);
             MostrarNota(novaPizza);
             
             return novaPizza;
         }
 
-        static void EscolherIngredientes(Pizza pizza) {
+        static void EscolherIngredientes(Comida pizza) {
             Console.Write("Quantos adicionais você deseja? (máx. 8): ");
             int adicionais = int.Parse(Console.ReadLine());
             pizza.AdicionarIngredientes(adicionais);
         }
 
-        static void MostrarNota(Pizza pizza) {
+        static void MostrarNota(Comida pizza) {
             Console.WriteLine("\n"+pizza.NotaDeCompra());
         }
         static void RelatorioPedido(Pedido pedido)
