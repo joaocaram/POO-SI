@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace XulambsFoods_2024_2.src
 {
-    public class PedidoLocal : Pedido
+    internal class PedidoLocal : Pedido
     {
         /// <summary>
         /// Para criar um vetor de pizzas de tamanho grande

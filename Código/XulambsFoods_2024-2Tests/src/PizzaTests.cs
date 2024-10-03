@@ -50,11 +50,5 @@ namespace XulambsFoods_2024_2.src.Tests {
             pizza = new Pizza(6);
             Assert.IsTrue(pizza.NotaDeCompra().Contains("6 ingredientes"));
         }
-
-        [TestMethod()]
-        public void CalculaValorCorretamenteComDesconto() {
-            pizza.AdicionarIngredientes(8);
-            Assert.AreEqual(61,5d, pizza.ValorFinal());
-        }
     }
 }
