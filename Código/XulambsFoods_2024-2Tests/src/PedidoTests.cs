@@ -10,13 +10,13 @@ namespace XulambsFoods_2024_2.src.Tests {
     [TestClass()]
     public class PedidoTests {
         static Pedido pedido;
-        static Pizza pizzaCom2Ingredientes;
-        static Pizza pizzaSemIngredientes;
+        static Comida pizzaCom2Ingredientes;
+        static Comida pizzaSemIngredientes;
 
         [TestInitialize]
         public void SetUp() {
-            pizzaCom2Ingredientes = new Pizza(2);
-            pizzaSemIngredientes = new Pizza();
+            pizzaCom2Ingredientes = new Comida(2);
+            pizzaSemIngredientes = new Comida();
             pedido = new PedidoLocal();
         }
 

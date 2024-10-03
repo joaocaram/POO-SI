@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 namespace XulambsFoods_2024_2.src.Tests {
     [TestClass()]
     public class PizzaTests {
-        static Pizza pizza;
+        static Comida pizza;
 
         [TestInitialize]
         public void SetUp() {
-            pizza = new Pizza();
+            pizza = new Comida();
         }
 
         [TestMethod()]
@@ -23,7 +23,7 @@ namespace XulambsFoods_2024_2.src.Tests {
 
         [TestMethod()]
         public void CriarPizzarComIngredientes() {
-            pizza = new Pizza(2);
+            pizza = new Comida(2);
             Assert.IsTrue(pizza.NotaDeCompra().Contains("2 ingredientes"));
         }
 
@@ -35,19 +35,19 @@ namespace XulambsFoods_2024_2.src.Tests {
 
         [TestMethod()]
         public void AdicionaIngredientesCorretamente() {
-            pizza = new Pizza();
+            pizza = new Comida();
             Assert.AreEqual(3, pizza.AdicionarIngredientes(3));
         }
 
         [TestMethod()]
         public void NaoPodeAdicionarIngredientesAlemDoMaximo() {
-            pizza = new Pizza(6);
+            pizza = new Comida(6);
             Assert.AreEqual(6, pizza.AdicionarIngredientes(3));
         }
 
         [TestMethod()]
         public void GeraNotaDeCompraComDetalhes() {
-            pizza = new Pizza(6);
+            pizza = new Comida(6);
             Assert.IsTrue(pizza.NotaDeCompra().Contains("6 ingredientes"));
         }
 
