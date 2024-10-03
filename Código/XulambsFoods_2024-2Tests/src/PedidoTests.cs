@@ -17,7 +17,7 @@ namespace XulambsFoods_2024_2.src.Tests {
         public void SetUp() {
             pizzaCom2Ingredientes = new Pizza(2);
             pizzaSemIngredientes = new Pizza();
-            pedido = new Pedido();
+            pedido = new PedidoLocal();
         }
 
         [TestMethod()]
