@@ -21,7 +21,7 @@ namespace XulambsFoods_2024_2.src
         }
         protected  override bool PodeAdicionar()
         {
-            return _aberto && (_quantComidas < MaxEntrega);
+            return _aberto && (_quantPizzas < MaxEntrega);
         }
        
         protected override double ValorTaxa()
@@ -41,9 +41,9 @@ namespace XulambsFoods_2024_2.src
             relat.AppendLine($"{_idPedido:D2} - {_data.ToShortDateString()} - ENTREGA");
             relat.AppendLine("=============================");
 
-            for (int i = 0; i < _quantComidas; i++)
+            for (int i = 0; i < _quantPizzas; i++)
             {
-                relat.AppendLine($"{(i + 1):D2} - {_comidas[i].NotaDeCompra()}");
+                relat.AppendLine($"{(i + 1):D2} - {_pizzas[i].NotaDeCompra()}");
             }
             relat.AppendLine($"\nTAXA ENTREGA : {ValorTaxa():C2}");
             relat.AppendLine($"TOTAL A PAGAR: {PrecoAPagar():C2}");

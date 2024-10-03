@@ -48,8 +48,8 @@ namespace XulambsFoods_2024_2.src
             relat.AppendLine($"{_idPedido:D2} - {_data.ToShortDateString()}");
             relat.AppendLine("=============================");
 
-            for (int i = 0; i < _quantComidas; i++) {
-                relat.AppendLine($"{(i + 1):D2} - {_comidas[i].NotaDeCompra()}");
+            for (int i = 0; i < _quantPizzas; i++) {
+                relat.AppendLine($"{(i + 1):D2} - {_pizzas[i].NotaDeCompra()}");
             }
             relat.AppendLine($"\nTAXA SERVIÇO : {ValorTaxa():C2}");
             relat.AppendLine($"TOTAL A PAGAR: {PrecoAPagar():C2}");
