@@ -67,8 +67,6 @@ namespace XulambsFoods_2024_2.src {
             do {
                 RelatorioPedido(procurado);
                 Comida novaPizza = ComprarPizza();
-                EscolherIngredientes(novaPizza);
-                MostrarNota(novaPizza);
                 procurado.Adicionar(novaPizza);
                 Console.Write("\nDeseja outra pizza? (s/n) ");
                 escolha = Console.ReadLine();
@@ -78,6 +76,9 @@ namespace XulambsFoods_2024_2.src {
         static Comida ComprarPizza() {
             Console.WriteLine("\nComprando uma nova pizza:");
             Comida novaPizza = new Pizza();
+            EscolherIngredientes(novaPizza);
+            MostrarNota(novaPizza);
+            
             return novaPizza;
         }
 
