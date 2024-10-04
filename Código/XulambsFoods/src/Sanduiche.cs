@@ -34,28 +34,41 @@ namespace XulambsFoods_2024_2.src {
         private const double ValorCombo = 5;
         private bool _comboFritas;
 
-        public Sanduiche() {
-
+        public Sanduiche() : base(Descricao, MaxIngredientes, PrecoBase, ValorAdicional) {
+            _comboFritas = false;
         }
 
-        public Sanduiche(int quantosAdicionais) {
-
+        public Sanduiche(int quantosAdicionais) :
+            base(Descricao, MaxIngredientes, PrecoBase, ValorAdicional) 
+        {
+            _comboFritas = false;
+            AdicionarIngredientes(quantosAdicionais);
         }
 
-        public Sanduiche(bool combo) {
-
+        public Sanduiche(bool combo) :
+            base(Descricao, MaxIngredientes, PrecoBase, ValorAdicional) 
+        {
+            _comboFritas = combo;
         }
 
-        public Sanduiche(int quantosAdicionais, bool combo) {
-
+        public Sanduiche(int quantosAdicionais, bool combo) :
+            base(Descricao, MaxIngredientes, PrecoBase, ValorAdicional) 
+        {
+            _comboFritas = combo;
+            AdicionarIngredientes(quantosAdicionais);
         }
 
-        public double ValorFinal() {
-
+        public override double ValorFinal() {
+            double valorInicial = PrecoBase + ValorAdicionais();
+            return (_comboFritas) ? valorInicial + ValorCombo: valorInicial;
         }
 
-        public string NotaDeCompra() {
-
+        public override string NotaDeCompra() {
+            string notinha = base.NotaDeCompra();
+            if(_comboFritas)
+                notinha += $"\tCombo com fritas: {ValorCombo:C2}\n";
+            notinha += $"VALOR A PAGAR: {ValorFinal():C2}";
+            return notinha;
         }
     }
 }
