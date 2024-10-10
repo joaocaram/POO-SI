@@ -6,20 +6,27 @@ using System.Threading.Tasks;
 
 namespace XulambsFoods_2024_2.src
 {
-    public class PedidoLocal : Pedido
+    public class PedidoLocal : IPedido
     {
         /// <summary>
         /// Para criar um vetor de pizzas de tamanho grande
         /// </summary>
         private const int MaxPizzas = 100;
         private const double TaxaServico = 0.1;
-
-        public PedidoLocal() : base(MaxPizzas)
-        { }
+        private List<Comida> _comidas;
+        public PedidoLocal(List<Comida> comidas) 
+        {
+            _comidas = comidas;
+        }
         
-        
+        private double ValorItens() {
+            double preco = 0d;
+            foreach(Comida comida in _comidas)
+                preco +=  comida.ValorFinal();
+            return preco;
+        }
 
-        protected override double ValorTaxa() {
+        public double ValorTaxa() {
             return ValorItens() * TaxaServico;
         }
 
@@ -27,8 +34,8 @@ namespace XulambsFoods_2024_2.src
         /// Verifica se uma pizza pode ser adicionada ao pedido, ou seja, se o pedido está aberto e há espaço na memória.
         /// </summary>
         /// <returns>TRUE se puder adicionar, FALSE caso contrário</returns>
-        protected override bool PodeAdicionar() {
-            return (_aberto);
+        public  bool PodeAdicionar() {
+            return true;
         }
 
         /// <summary>
@@ -43,18 +50,16 @@ namespace XulambsFoods_2024_2.src
         ///
 	    ///TOTAL A PAGAR: R$ VALOR
 	    ///</pre></returns>
-        public override string Relatorio() {
-            StringBuilder relat = new StringBuilder("XULAMBS PIZZA - Pedido ");
-            relat.AppendLine($"{_idPedido:D2} - {_data.ToShortDateString()}");
-            relat.AppendLine("=============================");
-
-            for (int i = 0; i < _quantComidas; i++) {
-                relat.AppendLine($"{(i + 1):D2} - {_comidas[i].NotaDeCompra()}\n");
+        public string Relatorio() {
+            StringBuilder sb = new StringBuilder(" - LOCAL\n");
+            sb.AppendLine("=============================");
+            int i = 1;
+            foreach (Comida comida in _comidas) {
+                sb.AppendLine($"{(i):D2} - {comida.NotaDeCompra()}\n");
+                i++;
             }
-            relat.AppendLine($"TAXA SERVIÇO : {ValorTaxa():C2}");
-            relat.AppendLine($"TOTAL A PAGAR: {PrecoAPagar():C2}");
-            relat.AppendLine("=============================");
-            return relat.ToString();
+            sb.AppendLine($"TAXA SERVIÇO : {ValorTaxa():C2}");
+            return sb.ToString();
         }
 
     }

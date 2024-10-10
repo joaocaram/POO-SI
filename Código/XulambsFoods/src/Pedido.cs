@@ -8,7 +8,7 @@ namespace XulambsFoods_2024_2.src
     /// <summary>
     /// Classe Pedido: composição com classe Pizza. Um pedido pode conter diversas pizzas. Elas  podem ser adicionadas desde que o pedido esteja aberto.Um pedido tem um identificador único e armazena sua data.Ele deve calcular o preço a ser pago por ele e emitir um relatório detalhando suas pizzas e o valor a pagar.
     /// </summary>
-    public abstract class Pedido
+    public class Pedido
     {
 
         #region static/const
@@ -19,12 +19,12 @@ namespace XulambsFoods_2024_2.src
         #endregion
 
         #region atributos
-        protected int _maxComidas;
-        protected int _idPedido;
-        protected DateOnly _data;
-        protected Comida[] _comidas;
-        protected int _quantComidas;
-        protected bool _aberto;
+        private IPedido modalidade;
+        private int _idPedido;
+        private  DateOnly _data;
+        private List<Comida> _comidas;
+        private int _quantComidas;
+        private bool _aberto;
         #endregion
 
         #region construtores
@@ -36,23 +36,23 @@ namespace XulambsFoods_2024_2.src
         /// <summary>
         /// Cria um pedido com a data de hoje. Identificador é gerado automaticamente a partir do último identificador armazenado.
         /// </summary>
-        protected Pedido(int maxPizzas)
+        public Pedido(double distancia)
         {
-            if (maxPizzas < 1) maxPizzas = 1;
-            _maxComidas = maxPizzas;
+            
             _quantComidas = 0;
             _aberto = true;
-            _comidas = new Comida[maxPizzas];
+            _comidas = new List<Comida>();
             _data = DateOnly.FromDateTime(DateTime.Now);
             _idPedido = ++_ultimoPedido;
+            setModalidade(distancia);
+        }
+
+        private void setModalidade(double distancia) {
+            modalidade = (distancia > 0) ? new PedidoEntrega(_comidas, distancia) : new PedidoLocal(_comidas);
         }
         #endregion
 
         #region métodos de negócio
-
-        protected abstract bool PodeAdicionar();
-        protected abstract double ValorTaxa();
-        public abstract string Relatorio();
 
         protected double ValorItens()
         {
@@ -63,6 +63,7 @@ namespace XulambsFoods_2024_2.src
             }
             return preco;
         }
+
         /// <summary>
         /// Adiciona uma pizza ao pedido, se for possível. Caso não seja, a operação é ignorada.Retorna a quantidade de pizzas do pedido após a execução. 
         /// </summary>
@@ -74,8 +75,8 @@ namespace XulambsFoods_2024_2.src
         }
 
         public int Adicionar(Comida comida) {
-            if (PodeAdicionar()) {
-                _comidas[_quantComidas] = comida;
+            if (_aberto && modalidade.PodeAdicionar()) {
+                _comidas.Add(comida);
                 _quantComidas++;
             }
             return _quantComidas;
@@ -96,10 +97,29 @@ namespace XulambsFoods_2024_2.src
         /// <returns>Double com o valor a ser pago pelo pedido(> 0)</returns>
         public double PrecoAPagar()
         {
-            return ValorItens() + ValorTaxa();
+            return ValorItens() + modalidade.ValorTaxa();
         }
 
-        
+        public string Relatorio() {
+            StringBuilder relat = new StringBuilder("XULAMBS PIZZA - Pedido ");
+            relat.Append($"{_idPedido:D2} - {_data.ToShortDateString()}");
+            relat.AppendLine(modalidade.Relatorio());
+            relat.AppendLine($"TOTAL A PAGAR: {PrecoAPagar():C2}");
+            relat.AppendLine("=============================");
+            return relat.ToString();
+
+        }
+
+        public override bool Equals(object? obj) {
+            Pedido outro = (Pedido)obj;
+            return _idPedido == outro._idPedido && _data.Equals(outro._data);
+        }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(_idPedido, _data);
+        }
+
+
         #endregion
     }
 }

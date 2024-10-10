@@ -39,8 +39,8 @@ namespace XulambsFoods_2024_2.src {
 
             novoPedido = escolha switch {
                 2 => CriarPedidoEntrega(),
-                1 or _ => new PedidoLocal()
-           };
+                1 or _ => new Pedido(0)
+            }; 
 
             return novoPedido;
 
@@ -51,7 +51,7 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("\nPedido para Entrega.");
             Console.Write("Qual a distância da entrega? ");
             dist = double.Parse(Console.ReadLine());
-            return new PedidoEntrega(dist);
+            return new Pedido(dist);
         }
 
         static Pedido AbrirPedido() {

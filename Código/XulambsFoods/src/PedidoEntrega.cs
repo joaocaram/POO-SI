@@ -6,25 +6,29 @@ using System.Threading.Tasks;
 
 namespace XulambsFoods_2024_2.src
 {
-    internal class PedidoEntrega : Pedido
+    internal class PedidoEntrega : IPedido
     {
         private const int MaxEntrega = 6;
         private readonly double[] TaxasEntrega = { 0, 5, 8 };
         private readonly double[] DistanciasEntrega = { 4, 8, double.MaxValue };
 
         private double _distanciaEntrega;
+        private List<Comida> _comidas;
 
-        public PedidoEntrega(double distancia) : base(MaxEntrega)
+        public PedidoEntrega(List<Comida> comidas, double distancia) 
         {
+
             if (distancia < 0.1) distancia = 0.1;
             _distanciaEntrega = distancia;
+            _comidas = comidas;
         }
-        protected  override bool PodeAdicionar()
+        
+        public  bool PodeAdicionar()
         {
-            return _aberto && (_quantComidas < MaxEntrega);
+            return (_comidas.Count < MaxEntrega);
         }
        
-        protected override double ValorTaxa()
+        public double ValorTaxa()
         {
             double taxa = 0d;
             for (int i = DistanciasEntrega.Length - 1; i >= 0; i--)
@@ -35,20 +39,18 @@ namespace XulambsFoods_2024_2.src
             return taxa;
         }
 
-        public override string Relatorio()
+        public string Relatorio()
         {
-            StringBuilder relat = new StringBuilder("XULAMBS PIZZA - Pedido ");
-            relat.AppendLine($"{_idPedido:D2} - {_data.ToShortDateString()} - ENTREGA");
-            relat.AppendLine("=============================");
-
-            for (int i = 0; i < _quantComidas; i++)
+            StringBuilder sb = new StringBuilder(" - ENTREGA\n");
+            sb.AppendLine("=============================");
+            int i = 1;
+            foreach (Comida comida in _comidas)
             {
-                relat.AppendLine($"{(i + 1):D2} - {_comidas[i].NotaDeCompra()}\n");
+                sb.AppendLine($"{(i):D2} - {comida.NotaDeCompra()}\n");
+                i++;
             }
-            relat.AppendLine($"TAXA ENTREGA : {ValorTaxa():C2}");
-            relat.AppendLine($"TOTAL A PAGAR: {PrecoAPagar():C2}");
-            relat.AppendLine("=============================");
-            return relat.ToString();
+            sb.AppendLine($"TAXA ENTREGA : {ValorTaxa():C2}");
+            return sb.ToString();
         }
     }
 }
