@@ -91,7 +91,7 @@ namespace XulambsFoods_2024_2.src {
         /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
         public override string NotaDeCompra() {
             string notinha = base.NotaDeCompra();
-            notinha += $"\tDesconto: {DescontoAdicionais():C2}\n";
+            notinha += $"\n\tDesconto: {DescontoAdicionais():C2}\n";
             notinha += $"VALOR A PAGAR: {ValorFinal():C2}";
             return notinha;
         }
