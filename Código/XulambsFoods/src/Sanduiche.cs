@@ -66,8 +66,8 @@ namespace XulambsFoods_2024_2.src {
         public override string NotaDeCompra() {
             string notinha = base.NotaDeCompra();
             if(_comboFritas)
-                notinha += $"\n\tCombo com fritas: {ValorCombo:C2}\n";
-            notinha += $"VALOR A PAGAR: {ValorFinal():C2}";
+                notinha += $"\n\tCombo com fritas: {ValorCombo:C2}";
+            notinha += $"\nVALOR A PAGAR: {ValorFinal():C2}";
             return notinha;
         }
     }
