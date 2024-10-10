@@ -2,11 +2,11 @@
 using System.Reflection.PortableExecutable;
 
 namespace XulambsFoods_2024_2.src {
-    internal class XulambsPizza {
+    internal class XulambsFoods {
 
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA");
+            Console.WriteLine("XULAMBS FOODS");
             Console.WriteLine("=============");
         }
 
@@ -25,6 +25,7 @@ namespace XulambsFoods_2024_2.src {
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
         }
+
         static Pedido EscolherTipoPedido() {
             Pedido novoPedido;
             int escolha;
@@ -56,46 +57,67 @@ namespace XulambsFoods_2024_2.src {
         static Pedido AbrirPedido() {
             Cabecalho();
             Pedido novoPedido = EscolherTipoPedido();   
-            Console.WriteLine(novoPedido.Relatorio());
+            Console.WriteLine("\n"+novoPedido.Relatorio());
             Pausa();
-            AdicionarPizzas(novoPedido);
+            AdicionarComidas(novoPedido);
             return novoPedido;
         }
 
-        private static void AdicionarPizzas(Pedido procurado) {
-            String escolha = "n";
+        private static void AdicionarComidas(Pedido procurado) {
+            string escolha;
             do {
                 RelatorioPedido(procurado);
-                Pizza novaPizza = ComprarPizza();
-                procurado.Adicionar(novaPizza);
-                Console.Write("\nDeseja outra pizza? (s/n) ");
+                Comida novaComida = ComprarComida();
+                EscolherIngredientes(novaComida);
+                MostrarNota(novaComida);
+                procurado.Adicionar(novaComida);
+                Console.Write("\nDeseja outra comida? (s/n) ");
                 escolha = Console.ReadLine();
             } while (escolha.ToLower().Equals("s"));
+        }
+
+        private static Comida ComprarComida() {
+            Console.WriteLine("Escolha sua opção: ");
+            Console.WriteLine("1 - Pizza ");
+            Console.WriteLine("2 - Sanduíche");
+            Console.Write("Opção: ");
+            int escolha = int.Parse(Console.ReadLine());
+            return escolha switch {
+                1 => ComprarPizza(),
+                2 or _ => ComprarSanduiche(),
+            };
         }
 
         static Pizza ComprarPizza() {
             Console.WriteLine("\nComprando uma nova pizza:");
             Pizza novaPizza = new Pizza();
-            EscolherIngredientes(novaPizza);
-            MostrarNota(novaPizza);
-            
             return novaPizza;
         }
 
-        static void EscolherIngredientes(Pizza pizza) {
-            Console.Write("Quantos adicionais você deseja? (máx. 8): ");
-            int adicionais = int.Parse(Console.ReadLine());
-            pizza.AdicionarIngredientes(adicionais);
+        static Sanduiche ComprarSanduiche() {
+            Console.WriteLine("\nComprando um novo sanduíche:");
+            Console.Write("Deseja combo com fritas? (s/n) ");
+            string escolha = Console.ReadLine();
+            bool querCombo = (escolha.ToLower().Equals("s")) ? true : false;
+            return new Sanduiche(querCombo);
         }
 
-        static void MostrarNota(Pizza pizza) {
-            Console.WriteLine("\n"+pizza.NotaDeCompra());
+        static void EscolherIngredientes(Comida comida) {
+            Console.Write("Quantos adicionais você deseja? ");
+            int adicionais = int.Parse(Console.ReadLine());
+            comida.AdicionarIngredientes(adicionais);
         }
+
+        static void MostrarNota(Comida comida) {
+            Console.WriteLine("\n"+comida.NotaDeCompra());
+        }
+        
         static void RelatorioPedido(Pedido pedido)
         {
             Cabecalho();
             Console.WriteLine(pedido.Relatorio() + "\n");
         }
+
         static Pedido LocalizarPedido(List<Pedido> pedidos) {
             Cabecalho();
             int id;
@@ -111,9 +133,8 @@ namespace XulambsFoods_2024_2.src {
             return null;
         }
 
-
-
         static void Main(string[] args) {
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
             List<Pedido> todosOsPedidos = new List<Pedido>();
             Pedido pedido;
             int opcao = -1;
@@ -129,7 +150,7 @@ namespace XulambsFoods_2024_2.src {
                     case 2:
                         pedido = LocalizarPedido(todosOsPedidos);
                         if (pedido!= null)
-                            AdicionarPizzas(pedido);
+                            AdicionarComidas(pedido);
                         else
                             Console.WriteLine("Pedido não existente.");
                         break;
