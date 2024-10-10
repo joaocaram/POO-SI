@@ -42,7 +42,7 @@ namespace XulambsFoods_2024_2.src
             _maxComidas = maxPizzas;
             _quantComidas = 0;
             _aberto = true;
-            _comidas = new Pizza[maxPizzas];
+            _comidas = new Comida[maxPizzas];
             _data = DateOnly.FromDateTime(DateTime.Now);
             _idPedido = ++_ultimoPedido;
         }

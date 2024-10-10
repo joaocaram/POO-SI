@@ -49,9 +49,9 @@ namespace XulambsFoods_2024_2.src
             relat.AppendLine("=============================");
 
             for (int i = 0; i < _quantComidas; i++) {
-                relat.AppendLine($"{(i + 1):D2} - {_comidas[i].NotaDeCompra()}");
+                relat.AppendLine($"{(i + 1):D2} - {_comidas[i].NotaDeCompra()}\n");
             }
-            relat.AppendLine($"\nTAXA SERVIÇO : {ValorTaxa():C2}");
+            relat.AppendLine($"TAXA SERVIÇO : {ValorTaxa():C2}");
             relat.AppendLine($"TOTAL A PAGAR: {PrecoAPagar():C2}");
             relat.AppendLine("=============================");
             return relat.ToString();
