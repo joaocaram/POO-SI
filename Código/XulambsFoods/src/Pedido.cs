@@ -19,11 +19,11 @@ namespace XulambsFoods_2024_2.src
         #endregion
 
         #region atributos
-        protected int _maxPizzas;
+        protected int _maxComidas;
         protected int _idPedido;
         protected DateOnly _data;
-        protected Pizza[] _pizzas;
-        protected int _quantPizzas;
+        protected Comida[] _comidas;
+        protected int _quantComidas;
         protected bool _aberto;
         #endregion
 
@@ -39,10 +39,10 @@ namespace XulambsFoods_2024_2.src
         protected Pedido(int maxPizzas)
         {
             if (maxPizzas < 1) maxPizzas = 1;
-            _maxPizzas = maxPizzas;
-            _quantPizzas = 0;
+            _maxComidas = maxPizzas;
+            _quantComidas = 0;
             _aberto = true;
-            _pizzas = new Pizza[maxPizzas];
+            _comidas = new Pizza[maxPizzas];
             _data = DateOnly.FromDateTime(DateTime.Now);
             _idPedido = ++_ultimoPedido;
         }
@@ -57,9 +57,9 @@ namespace XulambsFoods_2024_2.src
         protected double ValorItens()
         {
             double preco = 0d;
-            for (int i = 0; i < _quantPizzas; i++)
+            for (int i = 0; i < _quantComidas; i++)
             {
-                preco += _pizzas[i].ValorFinal();
+                preco += _comidas[i].ValorFinal();
             }
             return preco;
         }
@@ -70,12 +70,15 @@ namespace XulambsFoods_2024_2.src
         /// <returns>A quantidade de pizzas do pedido após a execução.</returns>
         public int Adicionar(Pizza pizza)
         {
-            if (PodeAdicionar())
-            {
-                _pizzas[_quantPizzas] = pizza;
-                _quantPizzas++;
+            return Adicionar(pizza);
+        }
+
+        public int Adicionar(Comida comida) {
+            if (PodeAdicionar()) {
+                _comidas[_quantComidas] = comida;
+                _quantComidas++;
             }
-            return _quantPizzas;
+            return _quantComidas;
         }
 
         /// <summary>
@@ -83,7 +86,7 @@ namespace XulambsFoods_2024_2.src
         /// </summary>
         public void FecharPedido()
         {
-            if (_quantPizzas > 0)
+            if (_quantComidas > 0)
                 _aberto = false;
         }
 
