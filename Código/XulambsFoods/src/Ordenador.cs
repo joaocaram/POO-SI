@@ -19,9 +19,11 @@ namespace XulambsFoods_2024_2.src {
         }
 
         private IComparable[] QuickSort(IComparable[] dados, int inicio, int fim) {
-            int particao = Particao(dados, inicio, fim);
-            dados = QuickSort(dados, inicio, particao);
-            dados = QuickSort(dados, particao+1, fim);
+            if(fim > inicio) { 
+                int particao = Particao(dados, inicio, fim);
+                dados = QuickSort(dados, inicio, particao-1);
+                dados = QuickSort(dados, particao+1, fim);
+            }
             return dados;
         }
 
