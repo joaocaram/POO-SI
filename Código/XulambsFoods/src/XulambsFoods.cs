@@ -1,9 +1,11 @@
 
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography.X509Certificates;
 
 namespace XulambsFoods_2024_2.src {
     internal class XulambsFoods {
-
+        
+        
         static void Cabecalho() {
             Console.Clear();
             Console.WriteLine("XULAMBS FOODS");
@@ -21,6 +23,7 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Encerrar Pedido");
+            Console.WriteLine("5 - Relatório geral de pedidos");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -134,7 +137,7 @@ namespace XulambsFoods_2024_2.src {
         }
 
         static void Main(string[] args) {
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            
             List<Pedido> todosOsPedidos = new List<Pedido>();
             Pedido pedido;
             int opcao = -1;
@@ -170,6 +173,15 @@ namespace XulambsFoods_2024_2.src {
                         }
                         else
                             Console.WriteLine("Pedido não existente.");
+                        break;
+                    case 5:
+                        IComparable[] pedidosOrd = todosOsPedidos.ToArray();
+                        Ordenador qs = new Ordenador(pedidosOrd);
+                        pedidosOrd = qs.ordenar();
+                        foreach (IComparable item in pedidosOrd)
+                        {
+                            Console.WriteLine(item);
+                        }
                         break;
                         
                 }
