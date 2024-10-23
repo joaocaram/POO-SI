@@ -55,5 +55,21 @@ namespace XulambsFoods_2024_2.src
         {
             return _pedidos.Sum(ped => ped.PrecoAPagar());
         }
+
+        public override int GetHashCode() {
+            return _id;
+        }
+
+        public override bool Equals(object? obj) {
+            bool resposta = false;
+            Cliente outro = obj as Cliente;
+            if (obj != null)
+                resposta = (_id == outro._id);
+            return resposta;
+        }
+
+        public override string ToString() {
+            return $"{_nome} ({_id}) já gastou {TotalGasto():C2} no Xulambs Foods.";
+        }
     }
 }
