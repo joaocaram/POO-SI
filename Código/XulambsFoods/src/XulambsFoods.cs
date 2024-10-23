@@ -243,7 +243,7 @@ namespace XulambsFoods_2024_2.src {
                         Ordenador qsCliente = new Ordenador(clientesOrd);
                         clientesOrd= qsCliente.ordenar();
                         Cabecalho();
-                        Console.WriteLine("Pedidos:");
+                        Console.WriteLine("Clientes:");
                         foreach (IComparable item in clientesOrd) {
                             Console.WriteLine(item);
                         }

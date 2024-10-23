@@ -53,6 +53,10 @@ namespace XulambsFoods_2024_2.src
 
         public double TotalGasto()
         {
+            //double valor = 0d;
+            //foreach (Pedido p in _pedidos)
+            //    valor += p.PrecoAPagar();
+            //return valor;
             return _pedidos.Sum(ped => ped.PrecoAPagar());
         }
 
