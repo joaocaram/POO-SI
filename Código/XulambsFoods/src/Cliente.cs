@@ -8,29 +8,32 @@ namespace XulambsFoods_2024_2.src
 {
     public class Cliente : IComparable
     {
+        private static int _ultimoID = 0;
         private int _id;
         private string _nome;
         private Queue<Pedido> _pedidos;
 
-        public Cliente(string nome, int id)
+        public Cliente(string nome)
         {
+            if (nome.Length == 0)
+                nome = "Cliente anônimo";
             _nome = nome;
-            _id = id;
+            _id = ++_ultimoID;
+            _pedidos = new Queue<Pedido>();
         }
 
         public int CompareTo(object? obj)
         {
-            int resposta = 0;
-            Cliente outro = (Cliente)obj;
-            double dif = TotalGasto() - outro.TotalGasto();
-            if (dif < 0)
-                resposta = -1;
-            else if (dif > 0)
-                resposta = 1;
-
+            int resposta = -1;
+            Cliente outro = obj as Cliente; // outro = (Cliente)obj;
+            if (outro != null) { 
+                double diferencaGastos = TotalGasto() - outro.TotalGasto();
+                if (diferencaGastos == 0)
+                    resposta = 0;
+                else if (diferencaGastos > 0)
+                    resposta = 1;
+            }
             return resposta;
-
-            
         }
 
         public int RegistrarPedido(Pedido novo)
@@ -41,10 +44,10 @@ namespace XulambsFoods_2024_2.src
 
         public string RelatorioPedidos()
         {
-            StringBuilder relat = new StringBuilder(_nome);
+            StringBuilder relat = new StringBuilder($"Cliente {_nome} - {_id}");
             foreach (Pedido p in _pedidos)
                 relat.AppendLine(p.ToString());
-            relat.AppendLine($"{TotalGasto():C2}");
+            relat.Append($"\nTotal gasto pelo cliente: {TotalGasto():C2}");
             return relat.ToString();
         }
 
