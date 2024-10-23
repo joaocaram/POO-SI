@@ -38,7 +38,6 @@ namespace XulambsFoods_2024_2.src
         /// </summary>
         public Pedido(double distancia)
         {
-            
             _quantComidas = 0;
             _aberto = true;
             _comidas = new List<Comida>();
@@ -107,7 +106,6 @@ namespace XulambsFoods_2024_2.src
             relat.AppendLine($"TOTAL A PAGAR: {PrecoAPagar():C2}");
             relat.AppendLine("=============================");
             return relat.ToString();
-
         }
 
         public override bool Equals(object? obj) {
