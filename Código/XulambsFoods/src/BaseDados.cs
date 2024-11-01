@@ -37,8 +37,8 @@ namespace XulambsFoods_2024_2.src
         public string relatorioOrdenado()
         {
             StringBuilder relat = new StringBuilder();
-            IComparable[] dadosOrd = new IComparable[1];
-            Array.Copy(dados.Values.ToArray(), dadosOrd, dados.Count);
+            T[] dadosOrd = dados.Values.ToArray();
+            
             Ordenador qsCliente = new Ordenador(dadosOrd);
             dadosOrd = qsCliente.ordenar();
 
