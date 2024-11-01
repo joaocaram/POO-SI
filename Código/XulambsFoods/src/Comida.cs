@@ -26,7 +26,7 @@ using System.Text;
     */
 
 namespace XulambsFoods_2024_2.src {
-    public abstract class Comida {
+    public abstract class Comida : IComparable {
         private int _maxIngredientes;
         private string _descricao;
         private double _precoBase;
@@ -76,6 +76,13 @@ namespace XulambsFoods_2024_2.src {
 
         public virtual string NotaDeCompra() {
             return $"{_descricao} ({_precoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}).";
+        }
+
+        public int CompareTo(object? obj)
+        {
+            Comida outra = (Comida)obj;
+            int comparacaoDescricao = _descricao.CompareTo(outra._descricao);
+            return (comparacaoDescricao == 0) ? _quantidadeIngredientes.CompareTo(outra._quantidadeIngredientes) : comparacaoDescricao;
         }
     }
 }

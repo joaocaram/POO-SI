@@ -1,8 +1,12 @@
 
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography.X509Certificates;
 
 namespace XulambsFoods_2024_2.src {
     internal class XulambsFoods {
+
+        static List<Pedido> todosOsPedidos;
+        static Dictionary<int, Cliente> todosOsClientes;
 
         static void Cabecalho() {
             Console.Clear();
@@ -21,6 +25,8 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Encerrar Pedido");
+            Console.WriteLine("5 - Relatório geral de pedidos");
+            Console.WriteLine("6 - Relatório geral de clientes");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -132,11 +138,61 @@ namespace XulambsFoods_2024_2.src {
             }
             return null;
         }
+        static void config() {
+            gerarClientes();
+            gerarPedidos();
+        }
+
+        private static void gerarClientes() {
+            string[] nomes = File.ReadAllLines("medalhistas.txt"); ;
+            foreach (string nome in nomes) {
+                Cliente cliente = new Cliente(nome);
+                todosOsClientes.Add(cliente.GetHashCode(), cliente);
+            }
+        }
+
+        private static void gerarPedidos() {
+            Random aleat = new Random(42);
+            int quantos = todosOsClientes.Count * 13;
+            for (int i = 0; i < quantos; i++)
+            {
+                Pedido novoPedido;
+                int tipoPedido = aleat.Next(100)%2;
+                
+                novoPedido = tipoPedido switch {
+                    0 => new Pedido(0),
+                    1 => new Pedido(aleat.NextDouble() * 12),
+                };
+                int quantasComidas = aleat.Next(1, 7);
+                for (int j = 0; j < quantasComidas; j++)
+                {
+                    Comida novaComida;
+                    int tipoComida = aleat.Next(1, 4);
+                    int ingredientes = aleat.Next(6);
+                    novaComida = tipoComida switch {
+                        1 => new Pizza(ingredientes),
+                        2 => new Sanduiche(ingredientes, true),
+                        3 => new Sanduiche(ingredientes, false)
+                    };
+                    novoPedido.Adicionar(novaComida);
+                }
+
+                novoPedido.FecharPedido();
+                int id = aleat.Next(1, todosOsClientes.Count+1);
+                todosOsPedidos.Add(novoPedido);
+                Cliente cliente = todosOsClientes.GetValueOrDefault(id);
+                cliente.RegistrarPedido(novoPedido);
+            }           
+        }
 
         static void Main(string[] args) {
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
-            List<Pedido> todosOsPedidos = new List<Pedido>();
+            
+            todosOsPedidos = new List<Pedido>();
+            todosOsClientes = new Dictionary<int, Cliente>();
+            config();
+
             Pedido pedido;
+            Cliente cliente;
             int opcao = -1;
             do {
                 opcao = ExibirMenu();
@@ -171,7 +227,28 @@ namespace XulambsFoods_2024_2.src {
                         else
                             Console.WriteLine("Pedido não existente.");
                         break;
-                        
+                    case 5:
+                        IComparable[] pedidosOrd = todosOsPedidos.ToArray();
+                        Ordenador qs = new Ordenador(pedidosOrd);
+                        pedidosOrd = qs.ordenar();
+                        Cabecalho();
+                        Console.WriteLine("Pedidos:");
+                        foreach (IComparable item in pedidosOrd)
+                        {
+                            Console.WriteLine(item);
+                        }
+                        break;
+                    case 6:
+                        IComparable[] clientesOrd = todosOsClientes.Values.ToArray();
+                        Ordenador qsCliente = new Ordenador(clientesOrd);
+                        clientesOrd= qsCliente.ordenar();
+                        Cabecalho();
+                        Console.WriteLine("Clientes:");
+                        foreach (IComparable item in clientesOrd) {
+                            Console.WriteLine(item);
+                        }
+                        break;
+
                 }
                 Pausa();
             } while (opcao != 0);

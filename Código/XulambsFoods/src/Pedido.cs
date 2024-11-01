@@ -8,7 +8,7 @@ namespace XulambsFoods_2024_2.src
     /// <summary>
     /// Classe Pedido: composição com classe Pizza. Um pedido pode conter diversas pizzas. Elas  podem ser adicionadas desde que o pedido esteja aberto.Um pedido tem um identificador único e armazena sua data.Ele deve calcular o preço a ser pago por ele e emitir um relatório detalhando suas pizzas e o valor a pagar.
     /// </summary>
-    public class Pedido
+    public class Pedido : IComparable, IEquatable<int>
     {
 
         #region static/const
@@ -108,16 +108,39 @@ namespace XulambsFoods_2024_2.src
             return relat.ToString();
         }
 
+        public override string ToString() {
+            return Relatorio();
+        }
+       
         public override bool Equals(object? obj) {
             Pedido outro = (Pedido)obj;
             return _idPedido == outro._idPedido && _data.Equals(outro._data);
+        }
+
+        public bool Equals(int other) {
+            return _idPedido == other;
         }
 
         public override int GetHashCode() {
             return HashCode.Combine(_idPedido, _data);
         }
 
-
+        public int CompareTo(object? other) {
+            Pedido outro = (Pedido)other;
+            int resposta = 0;
+            double meuValor = PrecoAPagar();
+            double valorDoOutro = outro.PrecoAPagar();
+            
+            double diferenca = meuValor - valorDoOutro;
+           
+            if(diferenca < 0) {
+                resposta = -1;
+            }
+            else if(diferenca > 0) {
+                resposta = 1;
+            }
+            return resposta;
+        }
         #endregion
     }
 }
