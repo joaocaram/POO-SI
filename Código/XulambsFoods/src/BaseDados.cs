@@ -9,6 +9,8 @@ namespace XulambsFoods_2024_2.src
     internal class BaseDados<T> where T : IComparable
     {
         private Dictionary<int, T> dados;
+        
+
 
         public BaseDados()
         {
@@ -22,19 +24,22 @@ namespace XulambsFoods_2024_2.src
 
         public void Add(T novoDado)
         {
+            
             dados.Add(novoDado.GetHashCode(), novoDado);
         }
 
         public T localizar(int id)
         {
+            
             return dados.GetValueOrDefault(id);
         }
 
         public string relatorioOrdenado()
         {
             StringBuilder relat = new StringBuilder();
-            T[] dadosOrd = dados.Values.ToArray();
-            Ordenador<T> qsCliente = new Ordenador<T>(dadosOrd);
+            IComparable[] dadosOrd = new IComparable[1];
+            Array.Copy(dados.Values.ToArray(), dadosOrd, dados.Count);
+            Ordenador qsCliente = new Ordenador(dadosOrd);
             dadosOrd = qsCliente.ordenar();
 
             relat.AppendLine("Relatório ordenado:");
