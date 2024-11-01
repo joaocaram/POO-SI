@@ -22,11 +22,10 @@ namespace XulambsFoods_2024_2.src
             _pedidos = new Queue<Pedido>();
         }
 
-        public int CompareTo(object? obj)
-        {
+        public int compararGasto(Cliente obj) {
             int resposta = -1;
             Cliente outro = obj as Cliente; // outro = (Cliente)obj;
-            if (outro != null) { 
+            if (outro != null) {
                 double diferencaGastos = TotalGasto() - outro.TotalGasto();
                 if (diferencaGastos == 0)
                     resposta = 0;
@@ -34,6 +33,12 @@ namespace XulambsFoods_2024_2.src
                     resposta = 1;
             }
             return resposta;
+        }
+
+        public int CompareTo(object? obj)
+        {
+            Cliente outro = obj as Cliente;
+            return _nome.CompareTo(outro._nome);   
         }
 
         public int RegistrarPedido(Pedido novo)

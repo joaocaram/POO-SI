@@ -34,7 +34,7 @@ namespace XulambsFoods_2024_2.src
         {
             StringBuilder relat = new StringBuilder();
             T[] dadosOrd = dados.Values.ToArray();
-            Ordenador qsCliente = new Ordenador(dadosOrd);
+            Ordenador<T> qsCliente = new Ordenador<T>(dadosOrd);
             dadosOrd = qsCliente.ordenar();
 
             relat.AppendLine("Relatório ordenado:");
