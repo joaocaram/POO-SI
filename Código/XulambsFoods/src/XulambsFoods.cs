@@ -5,8 +5,8 @@ using System.Security.Cryptography.X509Certificates;
 namespace XulambsFoods_2024_2.src {
     internal class XulambsFoods {
 
-        static List<Pedido> todosOsPedidos;
-        static Dictionary<int, Cliente> todosOsClientes;
+        static BaseDados<Pedido> todosOsPedidos;
+        static BaseDados<Cliente> baseClientes;
 
         static void Cabecalho() {
             Console.Clear();
@@ -124,19 +124,13 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine(pedido.Relatorio() + "\n");
         }
 
-        static Pedido LocalizarPedido(List<Pedido> pedidos) {
+        static Pedido LocalizarPedido(BaseDados<Pedido> pedidos) {
             Cabecalho();
             int id;
             Console.WriteLine("Localizando um pedido.");
             Console.Write("ID do pedido: ");
             id = int.Parse(Console.ReadLine());
-            
-            foreach (Pedido ped in pedidos)
-            {
-                if (ped.Relatorio().Contains("Pedido "+ id.ToString("D2")))
-                    return ped;
-            }
-            return null;
+            return todosOsPedidos.localizar(id);
         }
         static void config() {
             gerarClientes();
@@ -147,13 +141,14 @@ namespace XulambsFoods_2024_2.src {
             string[] nomes = File.ReadAllLines("medalhistas.txt"); ;
             foreach (string nome in nomes) {
                 Cliente cliente = new Cliente(nome);
-                todosOsClientes.Add(cliente.GetHashCode(), cliente);
+                baseClientes.Add(cliente);
+                
             }
         }
 
         private static void gerarPedidos() {
             Random aleat = new Random(42);
-            int quantos = todosOsClientes.Count * 13;
+            int quantos = baseClientes.Quantidade() * 13;
             for (int i = 0; i < quantos; i++)
             {
                 Pedido novoPedido;
@@ -178,17 +173,17 @@ namespace XulambsFoods_2024_2.src {
                 }
 
                 novoPedido.FecharPedido();
-                int id = aleat.Next(1, todosOsClientes.Count+1);
+                int id = aleat.Next(1, baseClientes.Quantidade()+1);
                 todosOsPedidos.Add(novoPedido);
-                Cliente cliente = todosOsClientes.GetValueOrDefault(id);
+                Cliente cliente = baseClientes.localizar(id);
                 cliente.RegistrarPedido(novoPedido);
             }           
         }
 
         static void Main(string[] args) {
             
-            todosOsPedidos = new List<Pedido>();
-            todosOsClientes = new Dictionary<int, Cliente>();
+            todosOsPedidos = new BaseDados<Pedido>();
+            baseClientes = new BaseDados<Cliente>();
             config();
 
             Pedido pedido;
@@ -228,25 +223,12 @@ namespace XulambsFoods_2024_2.src {
                             Console.WriteLine("Pedido não existente.");
                         break;
                     case 5:
-                        IComparable[] pedidosOrd = todosOsPedidos.ToArray();
-                        Ordenador qs = new Ordenador(pedidosOrd);
-                        pedidosOrd = qs.ordenar();
                         Cabecalho();
-                        Console.WriteLine("Pedidos:");
-                        foreach (IComparable item in pedidosOrd)
-                        {
-                            Console.WriteLine(item);
-                        }
+                        Console.WriteLine(todosOsPedidos.relatorioOrdenado());
                         break;
                     case 6:
-                        IComparable[] clientesOrd = todosOsClientes.Values.ToArray();
-                        Ordenador qsCliente = new Ordenador(clientesOrd);
-                        clientesOrd= qsCliente.ordenar();
                         Cabecalho();
-                        Console.WriteLine("Clientes:");
-                        foreach (IComparable item in clientesOrd) {
-                            Console.WriteLine(item);
-                        }
+                        Console.WriteLine(baseClientes.relatorioOrdenado());
                         break;
 
                 }
