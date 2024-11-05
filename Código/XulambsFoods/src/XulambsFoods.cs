@@ -209,7 +209,6 @@ namespace XulambsFoods_2024_2.src {
                     case 1:
                         pedido = AbrirPedido();
                         todosOsPedidos.Add(pedido);
-                        
                         RelatorioPedido(pedido);
                         RegistrarParaCliente(pedido);
                         break;
