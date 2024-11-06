@@ -130,13 +130,13 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("Localizando um pedido.");
             Console.Write("ID do pedido: ");
             id = int.Parse(Console.ReadLine());
-            return todosOsPedidos.localizar(id);
+            return todosOsPedidos.Localizar(id);
         }
 
         private static void RegistrarParaCliente(Pedido pedido) {
             Console.Write("Digite id do cliente para registrar o pedido: ");
             int id = int.Parse(Console.ReadLine());
-            Cliente cliente = todosOsClientes.GetValueOrDefault(id);
+            Cliente cliente = baseClientes.Localizar(id);
             string mensagem = "Cliente não encontrado. Pedido registrado sem cliente.";
             if (cliente != null) {
                 cliente.RegistrarPedido(pedido);
@@ -189,7 +189,7 @@ namespace XulambsFoods_2024_2.src {
                 novoPedido.FecharPedido();
                 int id = aleat.Next(1, baseClientes.Quantidade()+1);
                 todosOsPedidos.Add(novoPedido);
-                Cliente cliente = baseClientes.localizar(id);
+                Cliente cliente = baseClientes.Localizar(id);
                 cliente.RegistrarPedido(novoPedido);
             }           
         }
@@ -238,11 +238,11 @@ namespace XulambsFoods_2024_2.src {
                         break;
                     case 5:
                         Cabecalho();
-                        Console.WriteLine(todosOsPedidos.relatorioOrdenado());
+                        Console.WriteLine(todosOsPedidos.RelatorioOrdenado());
                         break;
                     case 6:
                         Cabecalho();
-                        Console.WriteLine(baseClientes.relatorioOrdenado());
+                        Console.WriteLine(baseClientes.RelatorioOrdenado());
                         break;
                 }
                 Pausa();

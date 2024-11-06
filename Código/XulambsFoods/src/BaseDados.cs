@@ -28,16 +28,17 @@ namespace XulambsFoods_2024_2.src
             dados.Add(novoDado.GetHashCode(), novoDado);
         }
 
-        public T localizar(int id)
+        public T Localizar(int id)
         {
             
             return dados.GetValueOrDefault(id);
         }
 
-        public string relatorioOrdenado()
+        public string RelatorioOrdenado()
         {
             StringBuilder relat = new StringBuilder();
-            T[] dadosOrd = dados.Values.ToArray();
+            IComparable[] dadosOrd = new IComparable[dados.Count];
+            Array.Copy(dados.Values.ToArray(), dadosOrd, dados.Count);
             
             Ordenador qsCliente = new Ordenador(dadosOrd);
             dadosOrd = qsCliente.ordenar();
