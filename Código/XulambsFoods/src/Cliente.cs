@@ -67,5 +67,9 @@ namespace XulambsFoods_2024_2.src
         public override string ToString() {
             return $"{_nome} ({_id}) já gastou {TotalGasto():C2} no Xulambs Foods.";
         }
+
+        public void fidelizarCliente(string nomePrograma) {
+            _nome += " " + nomePrograma;
+        }
     }
 }

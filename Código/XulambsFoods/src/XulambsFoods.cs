@@ -1,5 +1,6 @@
 
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace XulambsFoods_2024_2.src {
@@ -7,7 +8,7 @@ namespace XulambsFoods_2024_2.src {
 
         static BaseDados<Pedido> todosOsPedidos;
         static BaseDados<Cliente> baseClientes;
-
+        static List<Pedido> pedidosLista;
         static void Cabecalho() {
             Console.Clear();
             Console.WriteLine("XULAMBS FOODS");
@@ -28,6 +29,7 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("5 - Relatório geral de pedidos");
             Console.WriteLine("6 - Relatório geral de clientes (nome)");
             Console.WriteLine("7 - Relatório geral de clientes (gasto)");
+            Console.WriteLine("8 - Total vendido em pedidos");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -247,25 +249,39 @@ namespace XulambsFoods_2024_2.src {
                     case 7:
                         Cabecalho();
                         //IComparable
-                        //Comparer
+                        /*Comparer
                         ComparadorDeGastos compGasto = new ComparadorDeGastos();
-                        
+                        Console.WriteLine(baseClientes.RelatorioOrdenado(compGasto));
+                        */
                         //Comparison 
                         Comparison<Cliente> comparacao = (cli1, cli2)
                                         => (cli1.TotalGasto()-cli2.TotalGasto()>0) ? 1 : -1 ;
 
                         Console.WriteLine(baseClientes.RelatorioOrdenado(comparacao));
-                            
+
+                        /*FUNÇÃO LAMBDA
                         Console.WriteLine(baseClientes.RelatorioOrdenado(
-                                (cli1, cli2)=> (cli1.TotalGasto() - cli2.TotalGasto() > 0) ? 1 : -1 
+                                (cli1, cli2) => (cli1.TotalGasto() - cli2.TotalGasto() > 0) ? 1 : -1 
                                )
                           );
-                        //FUNÇÃO LAMBDA
+                        */
+                        break;
+                    case 8:
+                        Cabecalho();
+                        Func<Pedido, double> somaValorPedidos = (ped) => ped.PrecoAPagar();
+                        double valorTotal = todosOsPedidos.Totalizador(somaValorPedidos);
+                        Console.WriteLine($"Valor total vendido no Xulambs Foods: {valorTotal:C2}");
+                        break;
+                    case 9:
+                        Cabecalho();
+                        baseClientes.Processar((cli) => cli.fidelizarCliente("Xulambs"));
+                        Console.WriteLine(baseClientes.RelatorioOrdenado());
                         break;
                 }
                 Pausa();
             } while (opcao != 0);
-
+            
+            
         }
 
        
