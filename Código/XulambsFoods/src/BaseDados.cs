@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace XulambsFoods_2024_2.src
 {
+    //LINQ - Language-Integrated Query 
+
     public class BaseDados<T> 
     {
         private Dictionary<int, T> dados;
@@ -39,7 +42,6 @@ namespace XulambsFoods_2024_2.src
         }
 
         public string RelatorioOrdenado(Comparer<T> comparador) {
-
             StringBuilder relat = new StringBuilder();
             T[] dadosOrd = new T[dados.Count];
 
@@ -53,7 +55,20 @@ namespace XulambsFoods_2024_2.src
             }
             relat.Append("==================");
             return relat.ToString();
+        }
+    
+        public double Totalizador(Func<T, double> funcaoSomadora) {
+            double valor = 0d;
+            foreach(T dado in dados.Values) {
+                valor += funcaoSomadora.Invoke(dado);
+            }
+            return valor;
+        }
 
+        public void Processar(Action<T> acao) {
+            foreach (T dado in dados.Values) {
+                acao.Invoke(dado);
+            }
         }
     }
 }
