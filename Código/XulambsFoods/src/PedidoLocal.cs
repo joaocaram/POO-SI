@@ -54,7 +54,7 @@ namespace XulambsFoods_2024_2.src
             StringBuilder sb = new StringBuilder(" - LOCAL\n");
             sb.AppendLine("=============================");
             int i = 1;
-            Ordenador qs = new Ordenador(_comidas.ToArray());
+            Ordenador<Comida> qs = new Ordenador<Comida>(_comidas.ToArray());
             foreach (Comida comida in qs.ordenar()) {
                 sb.AppendLine($"{(i):D2} - {comida.NotaDeCompra()}\n");
                 i++;

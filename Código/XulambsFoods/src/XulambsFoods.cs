@@ -26,7 +26,8 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Encerrar Pedido");
             Console.WriteLine("5 - Relatório geral de pedidos");
-            Console.WriteLine("6 - Relatório geral de clientes");
+            Console.WriteLine("6 - Relatório geral de clientes (nome)");
+            Console.WriteLine("7 - Relatório geral de clientes (gasto)");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -130,13 +131,13 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("Localizando um pedido.");
             Console.Write("ID do pedido: ");
             id = int.Parse(Console.ReadLine());
-            return todosOsPedidos.localizar(id);
+            return todosOsPedidos.Localizar(id);
         }
 
         private static void RegistrarParaCliente(Pedido pedido) {
             Console.Write("Digite id do cliente para registrar o pedido: ");
             int id = int.Parse(Console.ReadLine());
-            Cliente cliente = todosOsClientes.GetValueOrDefault(id);
+            Cliente cliente = baseClientes.Localizar(id);
             string mensagem = "Cliente não encontrado. Pedido registrado sem cliente.";
             if (cliente != null) {
                 cliente.RegistrarPedido(pedido);
@@ -157,7 +158,6 @@ namespace XulambsFoods_2024_2.src {
                 baseClientes.Add(cliente);
                 
             }
-
         }
 
         private static void gerarPedidos() {
@@ -189,7 +189,7 @@ namespace XulambsFoods_2024_2.src {
                 novoPedido.FecharPedido();
                 int id = aleat.Next(1, baseClientes.Quantidade()+1);
                 todosOsPedidos.Add(novoPedido);
-                Cliente cliente = baseClientes.localizar(id);
+                Cliente cliente = baseClientes.Localizar(id);
                 cliente.RegistrarPedido(novoPedido);
             }           
         }
@@ -238,11 +238,29 @@ namespace XulambsFoods_2024_2.src {
                         break;
                     case 5:
                         Cabecalho();
-                        Console.WriteLine(todosOsPedidos.relatorioOrdenado());
+                        Console.WriteLine(todosOsPedidos.RelatorioOrdenado());
                         break;
                     case 6:
                         Cabecalho();
-                        Console.WriteLine(baseClientes.relatorioOrdenado());
+                        Console.WriteLine(baseClientes.RelatorioOrdenado());
+                        break;
+                    case 7:
+                        Cabecalho();
+                        //IComparable
+                        //Comparer
+                        ComparadorDeGastos compGasto = new ComparadorDeGastos();
+                        
+                        //Comparison 
+                        Comparison<Cliente> comparacao = (cli1, cli2)
+                                        => (cli1.TotalGasto()-cli2.TotalGasto()>0) ? 1 : -1 ;
+
+                        Console.WriteLine(baseClientes.RelatorioOrdenado(comparacao));
+                            
+                        Console.WriteLine(baseClientes.RelatorioOrdenado(
+                                (cli1, cli2)=> (cli1.TotalGasto() - cli2.TotalGasto() > 0) ? 1 : -1 
+                               )
+                          );
+                        //FUNÇÃO LAMBDA
                         break;
                 }
                 Pausa();
