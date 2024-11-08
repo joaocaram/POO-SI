@@ -13,17 +13,14 @@ namespace XulambsFoods_2024_2.src
         /// </summary>
         private const int MaxPizzas = 100;
         private const double TaxaServico = 0.1;
-        private List<Comida> _comidas;
-        public PedidoLocal(List<Comida> comidas) 
+        private BaseDados<Comida> _comidas;
+        public PedidoLocal(BaseDados<Comida> comidas) 
         {
             _comidas = comidas;
         }
         
         private double ValorItens() {
-            double preco = 0d;
-            foreach(Comida comida in _comidas)
-                preco +=  comida.ValorFinal();
-            return preco;
+            return _comidas.Totalizador((comida) => comida.ValorFinal());
         }
 
         public double ValorTaxa() {
@@ -53,12 +50,9 @@ namespace XulambsFoods_2024_2.src
         public string Relatorio() {
             StringBuilder sb = new StringBuilder(" - LOCAL\n");
             sb.AppendLine("=============================");
-            int i = 1;
-            Ordenador<Comida> qs = new Ordenador<Comida>(_comidas.ToArray());
-            foreach (Comida comida in qs.ordenar()) {
-                sb.AppendLine($"{(i):D2} - {comida.NotaDeCompra()}\n");
-                i++;
-            }
+
+            sb.AppendLine(_comidas.RelatorioOrdenado());
+
             sb.AppendLine($"TAXA SERVIÇO : {ValorTaxa():C2}");
             return sb.ToString();
         }

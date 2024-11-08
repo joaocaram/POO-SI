@@ -22,7 +22,7 @@ namespace XulambsFoods_2024_2.src
         private IPedido modalidade;
         private int _idPedido;
         private  DateOnly _data;
-        private List<Comida> _comidas;
+        private BaseDados<Comida> _comidas;
         private int _quantComidas;
         private bool _aberto;
         #endregion
@@ -40,7 +40,7 @@ namespace XulambsFoods_2024_2.src
         {
             _quantComidas = 0;
             _aberto = true;
-            _comidas = new List<Comida>();
+            _comidas = new BaseDados<Comida>();
             _data = DateOnly.FromDateTime(DateTime.Now);
             _idPedido = ++_ultimoPedido;
             setModalidade(distancia);
@@ -55,12 +55,7 @@ namespace XulambsFoods_2024_2.src
 
         protected double ValorItens()
         {
-            double preco = 0d;
-            for (int i = 0; i < _quantComidas; i++)
-            {
-                preco += _comidas[i].ValorFinal();
-            }
-            return preco;
+            return _comidas.Totalizador((comida) => comida.ValorFinal());
         }
 
         /// <summary>

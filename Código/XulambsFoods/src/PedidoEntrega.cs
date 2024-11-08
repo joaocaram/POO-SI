@@ -13,9 +13,9 @@ namespace XulambsFoods_2024_2.src
         private readonly double[] DistanciasEntrega = { 4, 8, double.MaxValue };
 
         private double _distanciaEntrega;
-        private List<Comida> _comidas;
+        private BaseDados<Comida> _comidas;
 
-        public PedidoEntrega(List<Comida> comidas, double distancia) 
+        public PedidoEntrega(BaseDados<Comida> comidas, double distancia) 
         {
 
             if (distancia < 0.1) distancia = 0.1;
@@ -25,7 +25,7 @@ namespace XulambsFoods_2024_2.src
         
         public  bool PodeAdicionar()
         {
-            return (_comidas.Count < MaxEntrega);
+            return (_comidas.Quantidade() < MaxEntrega);
         }
        
         public double ValorTaxa()
@@ -44,11 +44,9 @@ namespace XulambsFoods_2024_2.src
             StringBuilder sb = new StringBuilder(" - ENTREGA\n");
             sb.AppendLine("=============================");
             int i = 1;
-            Ordenador<Comida> qs = new Ordenador<Comida>(_comidas.ToArray());
-            foreach (Comida comida in qs.ordenar()) {
-                sb.AppendLine($"{(i):D2} - {comida.NotaDeCompra()}\n");
-                i++;
-            }
+
+            sb.AppendLine(_comidas.RelatorioOrdenado());
+            
             sb.AppendLine($"TAXA ENTREGA : {ValorTaxa():C2}");
             return sb.ToString();
         }
