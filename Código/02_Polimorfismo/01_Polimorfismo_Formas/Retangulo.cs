@@ -12,15 +12,15 @@ namespace PoliFiguras {
         }
 
         public override double area() {
-            return basePoligono * alturaPoligono;
+            return _basePoligono * _alturaPoligono;
         }
 
         public override double perimetro() {
-            return 2 * basePoligono + 2 * alturaPoligono;
+            return 2 * _basePoligono + 2 * _alturaPoligono;
         }
 
         public override string ToString() {
-            return $"{base.ToString()}  | Base: {basePoligono:F2} | Altura: {alturaPoligono:F2}";
+            return $"{base.ToString()}  | Base: {_basePoligono:F2} | Altura: {_alturaPoligono:F2}";
         }
     }
 }

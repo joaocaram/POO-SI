@@ -6,33 +6,33 @@ using System.Threading.Tasks;
 
 namespace PoliFiguras {
     internal class Circulo : FormaGeometrica{
-        private double raio;
+        private double _raio;
 
         public Circulo(double raio): base("Círculo")
         {
-            this.raio = 0.1;
+            this._raio = 0.1;
             if (raio > 0.1)
-                this.raio = raio;
+                this._raio = raio;
         }
 
         public override double area() {
-            return Math.PI * Math.Pow(raio, 2);
+            return Math.PI * Math.Pow(_raio, 2);
         }
 
         public override double perimetro() {
-            return 2 * Math.PI * raio;
+            return 2 * Math.PI * _raio;
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()}  | Raio: {raio:F2}";
+            return $"{base.ToString()}  | Raio: {_raio:F2}";
         }
 
         public override bool Equals(object? obj)
         {
             try { 
                 Circulo outro = (Circulo)obj;
-                return (this.raio == outro.raio);
+                return (this._raio == outro._raio);
             }catch(InvalidCastException ic)
             {
                 return false;

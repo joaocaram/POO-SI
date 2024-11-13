@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 
 namespace PoliFiguras {
     internal abstract class FormaGeometrica{
-        
-        protected string descricao;
+        static int ordinal = 1;
+        protected string _descricao;
+        protected int _ordinal;
 
         protected FormaGeometrica(string desc) {
-            descricao = desc;
+            _descricao = desc;
+            _ordinal = ordinal++;
         }
 
         public override string ToString() {
-            return $"{descricao,19} -> Área: {area():00.00} | Perímetro: {perimetro():F2}";
+            return $"{_descricao,19} -> Área: {area():00.00} | Perímetro: {perimetro():F2}";
+        }
+
+        public override int GetHashCode() {
+            return _ordinal;
         }
 
         public abstract double area();

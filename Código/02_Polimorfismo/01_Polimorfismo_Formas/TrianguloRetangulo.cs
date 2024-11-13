@@ -13,19 +13,19 @@ namespace PoliFiguras {
         }
 
         public override double area() {
-            return basePoligono * alturaPoligono / 2;
+            return _basePoligono * _alturaPoligono / 2;
         }
 
         public override double perimetro() {
-            return basePoligono + alturaPoligono + hipotenusa();
+            return _basePoligono + _alturaPoligono + hipotenusa();
         }
 
         private double hipotenusa() {
-            return Math.Sqrt(Math.Pow(basePoligono, 2) + Math.Pow(alturaPoligono, 2));
+            return Math.Sqrt(Math.Pow(_basePoligono, 2) + Math.Pow(_alturaPoligono, 2));
         }
 
         public override string ToString() {
-            return $"{base.ToString()}  | Base: {basePoligono:F2} | Altura: {alturaPoligono:F2} | Hipotenusa: {hipotenusa():F2}";
+            return $"{base.ToString()}  | Base: {_basePoligono:F2} | Altura: {_alturaPoligono:F2} | Hipotenusa: {hipotenusa():F2}";
         }
     }
 }
