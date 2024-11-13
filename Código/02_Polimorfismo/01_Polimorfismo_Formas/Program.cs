@@ -1,6 +1,28 @@
 ﻿namespace PoliFiguras {
     internal class Program {
-        static void testeConjunto()
+        static Random aleatorio = new Random(42);
+
+        static FormaGeometrica gerarForma() {
+            int tipo = aleatorio.Next(1, 4);
+            double dimensao1 = 2 + aleatorio.NextDouble() * 7.9;
+            double dimensao2 = 2 + aleatorio.NextDouble() * 7.9;
+            return tipo switch {
+                1 => new Circulo(dimensao1),
+                2 => new Retangulo(dimensao1, dimensao2),
+                3 or _ => new TrianguloRetangulo(dimensao1, dimensao2)
+            };
+        }
+
+        static IEnumerable<FormaGeometrica> gerarConjunto(int quantas) {
+            IEnumerable<FormaGeometrica> formas = new LinkedList<FormaGeometrica>();
+            for (int i = 0; i < quantas; i++) {
+                FormaGeometrica n = gerarForma();
+                formas = formas.Append(n);
+            }
+            return formas;
+
+        }
+        static void testeConjuntoFixo()
         {
             ConjuntoGeometrico conj = new ConjuntoGeometrico(10);
 
@@ -24,7 +46,17 @@
         }
 
         static void Main(string[] args) {
-            testeConjunto();
+            int quantidade = 20;
+            
+
+            foreach (FormaGeometrica forma in gerarConjunto(quantidade)) {
+            
+            }
+
+            
+            
+
+
         }
     }
 }
