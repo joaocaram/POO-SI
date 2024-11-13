@@ -23,5 +23,9 @@ namespace PoliFiguras {
         private double hipotenusa() {
             return Math.Sqrt(Math.Pow(basePoligono, 2) + Math.Pow(alturaPoligono, 2));
         }
+
+        public override string ToString() {
+            return $"{base.ToString()}  | Base: {basePoligono:F2} | Altura: {alturaPoligono:F2} | Hipotenusa: {hipotenusa():F2}";
+        }
     }
 }

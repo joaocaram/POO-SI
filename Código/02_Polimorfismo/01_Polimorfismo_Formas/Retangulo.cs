@@ -18,5 +18,9 @@ namespace PoliFiguras {
         public override double perimetro() {
             return 2 * basePoligono + 2 * alturaPoligono;
         }
+
+        public override string ToString() {
+            return $"{base.ToString()}  | Base: {basePoligono:F2} | Altura: {alturaPoligono:F2}";
+        }
     }
 }

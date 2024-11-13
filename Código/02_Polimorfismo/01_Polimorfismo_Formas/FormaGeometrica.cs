@@ -14,7 +14,7 @@ namespace PoliFiguras {
         }
 
         public override string ToString() {
-            return $"{descricao} com área de {area().ToString("F2")} e perimetro {perimetro().ToString("F2")}";
+            return $"{descricao,19} -> Área: {area():00.00} | Perímetro: {perimetro():F2}";
         }
 
         public abstract double area();

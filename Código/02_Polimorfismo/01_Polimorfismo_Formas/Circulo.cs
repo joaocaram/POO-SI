@@ -25,7 +25,7 @@ namespace PoliFiguras {
 
         public override string ToString()
         {
-            return base.ToString() + " e raio de "+raio.ToString("0.00");
+            return $"{base.ToString()}  | Raio: {raio:F2}";
         }
 
         public override bool Equals(object? obj)
