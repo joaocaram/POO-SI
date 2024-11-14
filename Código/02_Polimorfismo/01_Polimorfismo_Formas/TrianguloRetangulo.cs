@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal class TrianguloRetangulo : Poligono{
+    internal class TrianguloRetangulo : PoligonoReto{
 
         public TrianguloRetangulo(double cateto1, double cateto2):
                 base("Triângulo Retângulo", cateto1, cateto2) {
