@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal abstract class Poligono : FormaGeometrica {
+    internal abstract class PoligonoReto : FormaGeometrica {
        
         protected double _basePoligono;
         protected double _alturaPoligono;
 
-        protected Poligono(string desc, double b, double h): base(desc) {
+        protected PoligonoReto(string desc, double b, double h): base(desc) {
             _basePoligono = _alturaPoligono = 0.1;
             if (b > 0.1)
                 _basePoligono = b;
@@ -21,10 +21,10 @@ namespace PoliFiguras {
         public override bool Equals(object? obj)
         {
             try { 
-            Poligono outro = (Poligono)obj;
-            return (this._basePoligono == outro._basePoligono
-                    && this._alturaPoligono == outro._alturaPoligono
-                    && this._descricao.Equals(outro._descricao));
+            PoligonoReto outro = (PoligonoReto)obj;
+            return (_basePoligono == outro._basePoligono
+                    && _alturaPoligono == outro._alturaPoligono
+                    && _descricao.Equals(outro._descricao));
             }
             catch(InvalidCastException ic)
             {
