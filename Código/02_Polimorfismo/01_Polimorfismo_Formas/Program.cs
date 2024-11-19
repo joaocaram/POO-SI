@@ -8,6 +8,7 @@
             Console.WriteLine("1 - Criar novo conjunto");
             Console.WriteLine("2 - Adicionar forma fixa");
             Console.WriteLine("3 - Listar todas as formas");
+            Console.WriteLine("4 - Pegar um elemento");
             Console.WriteLine("0 - Sair");
             Console.Write("Sua opção: ");
             return int.Parse(Console.ReadLine());
@@ -60,23 +61,51 @@
         static void Main(string[] args) {
             int quantidade;
             int opcao = menuPrincipal();
-            List<FormaGeometrica> formas = new List<FormaGeometrica>();
+            LinkedList<FormaGeometrica> formas = new LinkedList<FormaGeometrica>();
+            PriorityQueue<FormaGeometrica, double> filaPrio = new PriorityQueue<FormaGeometrica, double>();
 
             while (opcao != 0) {
                 switch (opcao) {
                     case 1:
                         Console.Write("Tamanho do conjunto: ");
                         quantidade = int.Parse(Console.ReadLine());
-                        formas = new List<FormaGeometrica>(gerarConjunto(quantidade));
+                        formas = new LinkedList<FormaGeometrica>(gerarConjunto(quantidade));
+                        foreach(FormaGeometrica f in formas) {
+                            filaPrio.Enqueue(f, f.area());
+                        }
                         break;
                     case 2:
                         FormaGeometrica quadradinhoDe8 = new Quadrado(8);
-                        formas.Add(quadradinhoDe8);
+                        formas.AddLast(quadradinhoDe8);
+                        formas.AddFirst(quadradinhoDe8);
+                        FormaGeometrica quem = new Quadrado(3.8532488206649429);
+                        formas.AddAfter(formas.Find(quem), quadradinhoDe8);
                         break;
                     case 3:
-
+                       foreach (FormaGeometrica f in formas)
+                           Console.WriteLine(f);
+                        
+                        Console.WriteLine("===================");
+                        
+                        while(filaPrio.Count > 0) {
+                            Console.WriteLine(filaPrio.Dequeue());
+                        }
+                        
+                        break;
+                    case 4:
+                        Console.Write($"Escolha a posição (menor que) {formas.Count}: ");
+                        int posicao = int.Parse(Console.ReadLine());
+                        FormaGeometrica escolhida = formas.ElementAt(posicao);
+                        Console.WriteLine(escolhida);
+                        break;
+                    case 5:
+                        FormaGeometrica forma = new Quadrado(8);
+                        formas.Remove(forma);
                         break;
                 }
+                Console.ReadKey();
+                opcao = menuPrincipal();
+
             }
         }
     }
