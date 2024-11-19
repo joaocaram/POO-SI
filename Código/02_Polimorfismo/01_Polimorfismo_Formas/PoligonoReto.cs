@@ -22,9 +22,9 @@ namespace PoliFiguras {
         {
             try { 
             PoligonoReto outro = (PoligonoReto)obj;
-            return (this._basePoligono == outro._basePoligono
-                    && this._alturaPoligono == outro._alturaPoligono
-                    && this._descricao.Equals(outro._descricao));
+            return (_basePoligono == outro._basePoligono
+                    && _alturaPoligono == outro._alturaPoligono
+                    && _descricao.Equals(outro._descricao));
             }
             catch(InvalidCastException ic)
             {

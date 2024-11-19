@@ -15,6 +15,10 @@ namespace PoliFiguras {
             _ordinal = ordinal++;
         }
 
+        public string nome() {
+            return _descricao;
+        }
+
         public override string ToString() {
             return $"{_descricao,19} -> Área: {area():00.00} | Perímetro: {perimetro():F2}";
         }
