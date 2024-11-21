@@ -24,7 +24,7 @@ namespace PoliFiguras {
         }
 
         public override int GetHashCode() {
-            return _ordinal;
+            return _ordinal; 
         }
 
         public abstract double area();
