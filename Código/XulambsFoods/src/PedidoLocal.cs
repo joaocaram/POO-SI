@@ -13,18 +13,17 @@ namespace XulambsFoods_2024_2.src
         /// </summary>
         private const int MaxPizzas = 100;
         private const double TaxaServico = 0.1;
-        private List<Comida> _comidas;
-        public PedidoLocal(List<Comida> comidas) 
+        private LinkedList<Comida> _comidas;
+        public PedidoLocal() 
         {
-            _comidas = comidas;
+            _comidas = new LinkedList<Comida>();
         }
         
-        private double ValorItens() {
-            double preco = 0d;
-            foreach(Comida comida in _comidas)
-                preco +=  comida.ValorFinal();
-            return preco;
+        
+        public double ValorItens() {
+            return _comidas.Sum(c => c.ValorFinal());
         }
+        
 
         public double ValorTaxa() {
             return ValorItens() * TaxaServico;
@@ -34,8 +33,9 @@ namespace XulambsFoods_2024_2.src
         /// Verifica se uma pizza pode ser adicionada ao pedido, ou seja, se o pedido está aberto e há espaço na memória.
         /// </summary>
         /// <returns>TRUE se puder adicionar, FALSE caso contrário</returns>
-        public  bool PodeAdicionar() {
-            return true;
+        public int Adicionar(Comida comida) {
+            _comidas.AddLast(comida);
+            return _comidas.Count;
         }
 
         /// <summary>
