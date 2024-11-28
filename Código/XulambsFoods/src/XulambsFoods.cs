@@ -14,6 +14,21 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("=============");
         }
 
+        static int lerInteiro(string mensagem)
+        {
+            int opcao;
+            Console.Write($"{mensagem}: ");
+            try
+            {
+                opcao = int.Parse(Console.ReadLine());
+            }
+            catch (FormatException fex)
+            {
+                opcao = -1;
+                Console.WriteLine("Favor digitar somente números.");
+            }
+            return opcao;
+        }
         static void Pausa()
         {
             Console.WriteLine("\nDigite ENTER para continuar.");
@@ -28,8 +43,12 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("5 - Relatório geral de pedidos");
             Console.WriteLine("6 - Relatório geral de clientes");
             Console.WriteLine("0 - Finalizar");
-            Console.Write("Digite sua escolha: ");
-            return int.Parse(Console.ReadLine());
+
+            return  lerInteiro("Digite sua escolha");
+            
+            
+            
+
         }
 
         static Pedido EscolherTipoPedido() {
@@ -40,10 +59,11 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("Abrindo um novo Pedido.");
             Console.WriteLine("1 - Pedido Local.");
             Console.WriteLine("2 - Pedido para Entrega.");
-            Console.Write("Escolha um tipo de pedido: ");
-            escolha = int.Parse(Console.ReadLine());
+
+            escolha = lerInteiro("Escolha um tipo de pedido");
 
             novoPedido = escolha switch {
+                -1 => null,
                 2 => CriarPedidoEntrega(),
                 1 or _ => new Pedido(0)
             }; 
@@ -76,7 +96,15 @@ namespace XulambsFoods_2024_2.src {
                 Comida novaComida = ComprarComida();
                 EscolherIngredientes(novaComida);
                 MostrarNota(novaComida);
-                procurado.Adicionar(novaComida);
+                try
+                {
+                    procurado.Adicionar(novaComida);
+                }
+                catch (ArgumentNullException anex)
+                {
+                    Console.WriteLine(anex.Message);
+                }
+                
                 Console.Write("\nDeseja outra comida? (s/n) ");
                 escolha = Console.ReadLine();
             } while (escolha.ToLower().Equals("s"));
@@ -86,8 +114,8 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("Escolha sua opção: ");
             Console.WriteLine("1 - Pizza ");
             Console.WriteLine("2 - Sanduíche");
-            Console.Write("Opção: ");
-            int escolha = int.Parse(Console.ReadLine());
+
+            int escolha = lerInteiro("Opção");
             return escolha switch {
                 1 => ComprarPizza(),
                 2 or _ => ComprarSanduiche(),
@@ -109,8 +137,8 @@ namespace XulambsFoods_2024_2.src {
         }
 
         static void EscolherIngredientes(Comida comida) {
-            Console.Write("Quantos adicionais você deseja? ");
-            int adicionais = int.Parse(Console.ReadLine());
+
+            int adicionais = lerInteiro("Quantos adicionais você deseja?") ;
             comida.AdicionarIngredientes(adicionais);
         }
 
@@ -128,8 +156,8 @@ namespace XulambsFoods_2024_2.src {
             Cabecalho();
             int id;
             Console.WriteLine("Localizando um pedido.");
-            Console.Write("ID do pedido: ");
-            id = int.Parse(Console.ReadLine());
+            
+            id = lerInteiro("ID do pedido");
             
             foreach (Pedido ped in pedidos)
             {
@@ -174,7 +202,13 @@ namespace XulambsFoods_2024_2.src {
                         2 => new Sanduiche(ingredientes, true),
                         3 => new Sanduiche(ingredientes, false)
                     };
-                    novoPedido.Adicionar(novaComida);
+                    try
+                    {
+                        novoPedido.Adicionar(novaComida);
+                    } catch(ArgumentNullException anex)
+                    {
+                        Console.WriteLine(anex.Message);
+                    }
                 }
 
                 novoPedido.FecharPedido();

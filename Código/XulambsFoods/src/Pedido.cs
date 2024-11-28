@@ -73,7 +73,15 @@ namespace XulambsFoods_2024_2.src
             return Adicionar(pizza);
         }
 
+        /// <summary>
+        /// Adiciona uma comida ao pedido. A comida não pode ser um objeto nulo.
+        /// </summary>
+        /// <param name="comida">Comida a ser adicionada. Não pode ser um objeto nulo </param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">ArgumentNullException se a comida for inválida</exception>
         public int Adicionar(Comida comida) {
+            if (comida == null)
+                throw new ArgumentNullException("Comida não pode ser vazia");
             if (_aberto && modalidade.PodeAdicionar()) {
                 _comidas.Add(comida);
                 _quantComidas++;
