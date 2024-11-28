@@ -116,7 +116,7 @@ namespace XulambsFoods_2024_2.src
         }
 
         public override int GetHashCode() {
-            return HashCode.Combine(_idPedido, _data);
+            return _idPedido;
         }
 
         public int CompareTo(object? other) {

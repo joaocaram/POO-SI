@@ -24,16 +24,8 @@ namespace XulambsFoods_2024_2.src
 
         public int CompareTo(object? obj)
         {
-            int resposta = -1;
-            Cliente outro = obj as Cliente; // outro = (Cliente)obj;
-            if (outro != null) { 
-                double diferencaGastos = TotalGasto() - outro.TotalGasto();
-                if (diferencaGastos == 0)
-                    resposta = 0;
-                else if (diferencaGastos > 0)
-                    resposta = 1;
-            }
-            return resposta;
+            Cliente outro = obj as Cliente;
+            return _nome.CompareTo(outro._nome);   
         }
 
         public int RegistrarPedido(Pedido novo)
@@ -74,6 +66,10 @@ namespace XulambsFoods_2024_2.src
 
         public override string ToString() {
             return $"{_nome} ({_id}) já gastou {TotalGasto():C2} no Xulambs Foods.";
+        }
+
+        public void fidelizarCliente(string nomePrograma) {
+            _nome += " " + nomePrograma;
         }
     }
 }

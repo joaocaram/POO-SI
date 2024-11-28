@@ -1,13 +1,14 @@
 
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace XulambsFoods_2024_2.src {
     internal class XulambsFoods {
 
-        static List<Pedido> todosOsPedidos;
-        static Dictionary<int, Cliente> todosOsClientes;
-
+        static BaseDados<Pedido> todosOsPedidos;
+        static BaseDados<Cliente> baseClientes;
+        static List<Pedido> pedidosLista;
         static void Cabecalho() {
             Console.Clear();
             Console.WriteLine("XULAMBS FOODS");
@@ -41,7 +42,9 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Encerrar Pedido");
             Console.WriteLine("5 - Relatório geral de pedidos");
-            Console.WriteLine("6 - Relatório geral de clientes");
+            Console.WriteLine("6 - Relatório geral de clientes (nome)");
+            Console.WriteLine("7 - Relatório geral de clientes (gasto)");
+            Console.WriteLine("8 - Total vendido em pedidos");
             Console.WriteLine("0 - Finalizar");
 
             return  lerInteiro("Digite sua escolha");
@@ -146,28 +149,23 @@ namespace XulambsFoods_2024_2.src {
             Console.WriteLine(pedido.Relatorio() + "\n");
         }
 
-        static Pedido LocalizarPedido(List<Pedido> pedidos) {
+        static Pedido LocalizarPedido(BaseDados<Pedido> pedidos) {
             Cabecalho();
             int id;
             Console.WriteLine("Localizando um pedido.");
             
             id = lerInteiro("ID do pedido");
-            
-            foreach (Pedido ped in pedidos)
-            {
-                if (ped.Relatorio().Contains("Pedido "+ id.ToString("D2")))
-                    return ped;
-            }
-            return null;
+
+            return pedidos.Localizar(id);
         }
 
-        static Cliente LocalizarCliente(Dictionary<int, Cliente> clientes) {
+        static Cliente LocalizarCliente(BaseDados<Cliente> clientes) {
             Cabecalho();
             int id;
             
             id = lerInteiro("ID do Cliente");
 
-            return clientes.GetValueOrDefault(id);
+            return clientes.Localizar(id);
         }
 
         static void config() {
@@ -179,13 +177,14 @@ namespace XulambsFoods_2024_2.src {
             string[] nomes = File.ReadAllLines("medalhistas.txt"); ;
             foreach (string nome in nomes) {
                 Cliente cliente = new Cliente(nome);
-                todosOsClientes.Add(cliente.GetHashCode(), cliente);
+                baseClientes.Add(cliente);
+                
             }
         }
 
         private static void gerarPedidos() {
             Random aleat = new Random(42);
-            int quantos = todosOsClientes.Count * 13;
+            int quantos = baseClientes.Quantidade() * 13;
             for (int i = 0; i < quantos; i++)
             {
                 Pedido novoPedido;
@@ -216,17 +215,17 @@ namespace XulambsFoods_2024_2.src {
                 }
 
                 novoPedido.FecharPedido();
-                int id = aleat.Next(1, todosOsClientes.Count+1);
+                int id = aleat.Next(1, baseClientes.Quantidade()+1);
                 todosOsPedidos.Add(novoPedido);
-                Cliente cliente = todosOsClientes.GetValueOrDefault(id);
+                Cliente cliente = baseClientes.Localizar(id);
                 cliente.RegistrarPedido(novoPedido);
             }           
         }
 
         static void Main(string[] args) {
             
-            todosOsPedidos = new List<Pedido>();
-            todosOsClientes = new Dictionary<int, Cliente>();
+            todosOsPedidos = new BaseDados<Pedido>();
+            baseClientes = new BaseDados<Cliente>();
             config();
 
             Pedido pedido;
@@ -240,7 +239,7 @@ namespace XulambsFoods_2024_2.src {
                             pedido = AbrirPedido();
                             todosOsPedidos.Add(pedido);
                             RelatorioPedido(pedido);
-                            Cliente quem = LocalizarCliente(todosOsClientes);
+                            Cliente quem = LocalizarCliente(baseClientes);
                             string mensagem = "Cliente não existente. Pedido registrado como anônimo";
                             if (quem != null) {
                                 quem.RegistrarPedido(pedido);
@@ -323,33 +322,51 @@ namespace XulambsFoods_2024_2.src {
                     //    Console.WriteLine("Pedido não existente.");
                     //break;
                     case 5:
-                        IComparable[] pedidosOrd = todosOsPedidos.ToArray();
-                        Ordenador qs = new Ordenador(pedidosOrd);
-                        pedidosOrd = qs.ordenar();
                         Cabecalho();
-                        Console.WriteLine("Pedidos:");
-                        foreach (IComparable item in pedidosOrd)
-                        {
-                            Console.WriteLine(item);
-                        }
+                        Console.WriteLine(todosOsPedidos.RelatorioOrdenado());
                         break;
                     case 6:
-                        IComparable[] clientesOrd = todosOsClientes.Values.ToArray();
-                        Ordenador qsCliente = new Ordenador(clientesOrd);
-                        clientesOrd= qsCliente.ordenar();
                         Cabecalho();
-                        Console.WriteLine("Clientes:");
-                        foreach (IComparable item in clientesOrd) {
-                            Console.WriteLine(item);
-                        }
+                        Console.WriteLine(baseClientes.RelatorioOrdenado());
                         break;
+                    case 7:
+                        Cabecalho();
+                        //IComparable
+                        /*Comparer
+                        ComparadorDeGastos compGasto = new ComparadorDeGastos();
+                        Console.WriteLine(baseClientes.RelatorioOrdenado(compGasto));
+                        */
+                        //Comparison 
+                        Comparison<Cliente> comparacao = (cli1, cli2)
+                                        => (cli1.TotalGasto()-cli2.TotalGasto()>0) ? 1 : -1 ;
 
+                        Console.WriteLine(baseClientes.RelatorioOrdenado(comparacao));
+
+                        /*FUNÇÃO LAMBDA
+                        Console.WriteLine(baseClientes.RelatorioOrdenado(
+                                (cli1, cli2) => (cli1.TotalGasto() - cli2.TotalGasto() > 0) ? 1 : -1 
+                               )
+                          );
+                        */
+                        break;
+                    case 8:
+                        Cabecalho();
+                        Func<Pedido, double> somaValorPedidos = (ped) => ped.PrecoAPagar();
+                        double valorTotal = todosOsPedidos.Totalizador(somaValorPedidos);
+                        Console.WriteLine($"Valor total vendido no Xulambs Foods: {valorTotal:C2}");
+                        break;
+                    case 9:
+                        Cabecalho();
+                        baseClientes.Processar((cli) => cli.fidelizarCliente("Xulambs"));
+                        Console.WriteLine(baseClientes.RelatorioOrdenado());
+                        break;
                 }
                 Pausa();
             } while (opcao != 0);
-
+            
+            
         }
 
-
+       
     }
 }

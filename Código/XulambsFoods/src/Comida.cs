@@ -78,6 +78,9 @@ namespace XulambsFoods_2024_2.src {
             return $"{_descricao} ({_precoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}).";
         }
 
+        public override string ToString() {
+            return NotaDeCompra();
+        }
         public int CompareTo(object? obj)
         {
             Comida outra = (Comida)obj;
