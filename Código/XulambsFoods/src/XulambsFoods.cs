@@ -96,20 +96,8 @@ namespace XulambsFoods_2024_2.src {
                 Comida novaComida = ComprarComida();
                 EscolherIngredientes(novaComida);
                 MostrarNota(novaComida);
-                try
-                {
-                    procurado.Adicionar(novaComida);
-                }
-                catch (ArgumentNullException anex)
-                {
-                    Console.WriteLine(anex.Message);
-                }
-                catch(InvalidOperationException ope) {
-                    Console.WriteLine(ope.Message);
-                    Pausa();
-                    return;
-                }
-                
+                procurado.Adicionar(novaComida);
+             
                 Console.Write("\nDeseja outra comida? (s/n) ");
                 escolha = Console.ReadLine();
             } while (escolha.ToLower().Equals("s"));
@@ -123,17 +111,18 @@ namespace XulambsFoods_2024_2.src {
             int escolha = lerInteiro("Opção");
             return escolha switch {
                 1 => ComprarPizza(),
-                2 or _ => ComprarSanduiche(),
+                2 => ComprarSanduiche(),
+                _ => null
             };
         }
 
-        static Pizza ComprarPizza() {
+        static Comida ComprarPizza() {
             Console.WriteLine("\nComprando uma nova pizza:");
-            Pizza novaPizza = new Pizza();
-            return novaPizza;
+            return new Pizza();
+            
         }
 
-        static Sanduiche ComprarSanduiche() {
+        static Comida ComprarSanduiche() {
             Console.WriteLine("\nComprando um novo sanduíche:");
             Console.Write("Deseja combo com fritas? (s/n) ");
             string escolha = Console.ReadLine();
@@ -247,41 +236,92 @@ namespace XulambsFoods_2024_2.src {
                 opcao = ExibirMenu();
                 switch (opcao) {
                     case 1:
-                        pedido = AbrirPedido();
-                        todosOsPedidos.Add(pedido);
-                        RelatorioPedido(pedido);
-                        Cliente quem = LocalizarCliente(todosOsClientes);
-                        String mensagem = "Cliente não existente. Pedido registrado como anônimo";
-                        if (quem != null) {
-                            quem.RegistrarPedido(pedido);
-                            mensagem = $"Pedido registrado para {quem}";
+                        try {
+                            pedido = AbrirPedido();
+                            todosOsPedidos.Add(pedido);
+                            RelatorioPedido(pedido);
+                            Cliente quem = LocalizarCliente(todosOsClientes);
+                            string mensagem = "Cliente não existente. Pedido registrado como anônimo";
+                            if (quem != null) {
+                                quem.RegistrarPedido(pedido);
+                                mensagem = $"Pedido registrado para {quem}";
+                            }
+                            Console.WriteLine(mensagem);
                         }
-                        Console.WriteLine(mensagem);
+                        catch (ArgumentNullException ae) {
+                            Console.WriteLine(ae.Message);
+                        }
+                        catch (InvalidOperationException ae) {
+                            Console.WriteLine(ae.Message);
+                        }
+                        catch (NullReferenceException ex) {
+                            Console.WriteLine("Opção inválida. Pedido não foi criado");
+                        }
+
+
+                        //pedido = AbrirPedido();
+                        //todosOsPedidos.Add(pedido);
+                        //RelatorioPedido(pedido);
+                        //Cliente quem = LocalizarCliente(todosOsClientes);
+                        //String mensagem = "Cliente não existente. Pedido registrado como anônimo";
+                        //if (quem != null) {
+                        //    quem.RegistrarPedido(pedido);
+                        //    mensagem = $"Pedido registrado para {quem}";
+                        //}
+                        //Console.WriteLine(mensagem);
                         break;
                     case 2:
-                        pedido = LocalizarPedido(todosOsPedidos);
-                        if (pedido!= null)
+                        try {
+                            pedido = LocalizarPedido(todosOsPedidos);
                             AdicionarComidas(pedido);
-                        else
+                        }
+                        catch (InvalidOperationException ie) {
+                            Console.WriteLine(ie.Message);
+                        }
+                        catch (NullReferenceException ex) {
                             Console.WriteLine("Pedido não existente.");
-                        break;
+                        }
+                    //pedido = LocalizarPedido(todosOsPedidos);
+                    //if (pedido!= null)
+                    //    AdicionarComidas(pedido);
+                    //else
+                    //    Console.WriteLine("Pedido não existente.");
+                    break;
                     case 3:
-                        pedido = LocalizarPedido(todosOsPedidos);
-                        if (pedido != null)
+                        try {
+                            pedido = LocalizarPedido(todosOsPedidos);
                             Console.WriteLine(pedido.Relatorio());
-                        else
+                        }
+                        catch (NullReferenceException) {
                             Console.WriteLine("Pedido não existente.");
+                        }
+                        //pedido = LocalizarPedido(todosOsPedidos);
+                        //if (pedido != null)
+                        //    Console.WriteLine(pedido.Relatorio());
+                        //else
+                        //    Console.WriteLine("Pedido não existente.");
                         break;
                     case 4:
-                        pedido = LocalizarPedido(todosOsPedidos);
-                        if (pedido != null) {
+                        try {
+                            pedido = LocalizarPedido(todosOsPedidos);
                             pedido.FecharPedido();
                             Console.WriteLine("Pedido encerrado: ");
                             Console.WriteLine(pedido.Relatorio());
                         }
-                        else
+                        catch (NullReferenceException) {
                             Console.WriteLine("Pedido não existente.");
+                        }
+    
                         break;
+                    //pedido = LocalizarPedido(todosOsPedidos);
+                    //if (pedido != null) {
+                    //    pedido.FecharPedido();
+                    //    Console.WriteLine("Pedido encerrado: ");
+                    //    Console.WriteLine(pedido.Relatorio());
+                    //}
+                    //else
+                    //    Console.WriteLine("Pedido não existente.");
+                    //break;
                     case 5:
                         IComparable[] pedidosOrd = todosOsPedidos.ToArray();
                         Ordenador qs = new Ordenador(pedidosOrd);
