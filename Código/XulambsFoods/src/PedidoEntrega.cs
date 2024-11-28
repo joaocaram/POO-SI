@@ -8,26 +8,34 @@ namespace XulambsFoods_2024_2.src
 {
     internal class PedidoEntrega : IPedido
     {
-        private const int MaxEntrega = 6;
+        private const int MaxEntrega = 2;
         private readonly double[] TaxasEntrega = { 0, 5, 8 };
         private readonly double[] DistanciasEntrega = { 4, 8, double.MaxValue };
 
         private double _distanciaEntrega;
         private List<Comida> _comidas;
 
-        public PedidoEntrega(List<Comida> comidas, double distancia) 
+        public PedidoEntrega(double distancia) 
         {
 
             if (distancia < 0.1) distancia = 0.1;
             _distanciaEntrega = distancia;
-            _comidas = comidas;
+            _comidas = new List<Comida>(MaxEntrega);
         }
         
-        public  bool PodeAdicionar()
+        public int Adicionar(Comida comida)
         {
-            return (_comidas.Count < MaxEntrega);
+            if (_comidas.Count == MaxEntrega)
+                throw new PedidoLotadoException($"Máximo de {MaxEntrega} comidas em pedido para entrega.");
+            _comidas.Add(comida);
+            return _comidas.Count;
         }
        
+        
+        public double ValorItens() {
+            return _comidas.Sum(c => c.ValorFinal());
+        }
+
         public double ValorTaxa()
         {
             double taxa = 0d;
