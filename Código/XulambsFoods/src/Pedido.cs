@@ -22,7 +22,7 @@ namespace XulambsFoods_2024_2.src
         private IPedido modalidade;
         private int _idPedido;
         private  DateOnly _data;
-        private List<Comida> _comidas;
+        //private List<Comida> _comidas;
         private int _quantComidas;
         private bool _aberto;
         #endregion
@@ -40,14 +40,13 @@ namespace XulambsFoods_2024_2.src
         {
             _quantComidas = 0;
             _aberto = true;
-            _comidas = new List<Comida>();
             _data = DateOnly.FromDateTime(DateTime.Now);
             _idPedido = ++_ultimoPedido;
             setModalidade(distancia);
         }
 
         private void setModalidade(double distancia) {
-            modalidade = (distancia > 0) ? new PedidoEntrega(_comidas, distancia) : new PedidoLocal(_comidas);
+            modalidade = (distancia > 0) ? new PedidoEntrega(distancia) : new PedidoLocal();
         }
         #endregion
 
@@ -55,23 +54,10 @@ namespace XulambsFoods_2024_2.src
 
         protected double ValorItens()
         {
-            double preco = 0d;
-            for (int i = 0; i < _quantComidas; i++)
-            {
-                preco += _comidas[i].ValorFinal();
-            }
-            return preco;
+            return modalidade.ValorItens();
         }
 
-        /// <summary>
-        /// Adiciona uma pizza ao pedido, se for possível. Caso não seja, a operação é ignorada.Retorna a quantidade de pizzas do pedido após a execução. 
-        /// </summary>
-        /// <param name="pizza">Pizza a ser adicionada</param>
-        /// <returns>A quantidade de pizzas do pedido após a execução.</returns>
-        public int Adicionar(Pizza pizza)
-        {
-            return Adicionar(pizza);
-        }
+        
 
         /// <summary>
         /// Adiciona uma comida ao pedido. A comida não pode ser um objeto nulo.
@@ -81,11 +67,11 @@ namespace XulambsFoods_2024_2.src
         /// <exception cref="ArgumentNullException">ArgumentNullException se a comida for inválida</exception>
         public int Adicionar(Comida comida) {
             if (comida == null)
-                throw new ArgumentNullException("Comida não pode ser vazia");
-            if (_aberto && modalidade.PodeAdicionar()) {
-                _comidas.Add(comida);
-                _quantComidas++;
-            }
+                throw new ArgumentNullException("Comida para o pedido não pode ser vazia.");
+            if (!_aberto)
+                throw new InvalidOperationException("Não se pode alterar um pedido fechado.");
+
+            _quantComidas = modalidade.Adicionar(comida);
             return _quantComidas;
         }
 

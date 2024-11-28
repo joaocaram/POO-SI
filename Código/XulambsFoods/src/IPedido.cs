@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace XulambsFoods_2024_2.src {
     public interface IPedido {
-        public bool PodeAdicionar();
+        public int Adicionar(Comida comida);
         public double ValorTaxa();
+        
+        public double ValorItens();
         public string Relatorio();
     }
 }
