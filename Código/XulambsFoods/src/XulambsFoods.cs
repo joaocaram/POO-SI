@@ -104,6 +104,11 @@ namespace XulambsFoods_2024_2.src {
                 {
                     Console.WriteLine(anex.Message);
                 }
+                catch(InvalidOperationException ope) {
+                    Console.WriteLine(ope.Message);
+                    Pausa();
+                    return;
+                }
                 
                 Console.Write("\nDeseja outra comida? (s/n) ");
                 escolha = Console.ReadLine();
@@ -166,6 +171,16 @@ namespace XulambsFoods_2024_2.src {
             }
             return null;
         }
+
+        static Cliente LocalizarCliente(Dictionary<int, Cliente> clientes) {
+            Cabecalho();
+            int id;
+            
+            id = lerInteiro("ID do Cliente");
+
+            return clientes.GetValueOrDefault(id);
+        }
+
         static void config() {
             gerarClientes();
             gerarPedidos();
@@ -191,7 +206,7 @@ namespace XulambsFoods_2024_2.src {
                     0 => new Pedido(0),
                     1 => new Pedido(aleat.NextDouble() * 12),
                 };
-                int quantasComidas = aleat.Next(1, 7);
+                int quantasComidas = aleat.Next(1, 3);
                 for (int j = 0; j < quantasComidas; j++)
                 {
                     Comida novaComida;
@@ -235,7 +250,13 @@ namespace XulambsFoods_2024_2.src {
                         pedido = AbrirPedido();
                         todosOsPedidos.Add(pedido);
                         RelatorioPedido(pedido);
-                        
+                        Cliente quem = LocalizarCliente(todosOsClientes);
+                        String mensagem = "Cliente não existente. Pedido registrado como anônimo";
+                        if (quem != null) {
+                            quem.RegistrarPedido(pedido);
+                            mensagem = $"Pedido registrado para {quem}";
+                        }
+                        Console.WriteLine(mensagem);
                         break;
                     case 2:
                         pedido = LocalizarPedido(todosOsPedidos);
