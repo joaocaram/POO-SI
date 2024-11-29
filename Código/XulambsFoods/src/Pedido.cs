@@ -22,7 +22,7 @@ namespace XulambsFoods_2024_2.src
         private IPedido modalidade;
         private int _idPedido;
         private  DateOnly _data;
-        //private List<Comida> _comidas;
+        
         private int _quantComidas;
         private bool _aberto;
         #endregion
@@ -65,6 +65,7 @@ namespace XulambsFoods_2024_2.src
         /// <param name="comida">Comida a ser adicionada. Não pode ser um objeto nulo </param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">ArgumentNullException se a comida for inválida</exception>
+        /// <exception cref="InvalidOperationException"></exception>
         public int Adicionar(Comida comida) {
             if (comida == null)
                 throw new ArgumentNullException("Comida para o pedido não pode ser vazia.");

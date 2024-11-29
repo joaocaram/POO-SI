@@ -32,7 +32,7 @@ namespace XulambsFoods_2024_2.src
         }
 
         /// <summary>
-        /// Verifica se uma pizza pode ser adicionada ao pedido, ou seja, se o pedido está aberto e há espaço na memória.
+        /// Verifica se uma comida pode ser adicionada ao pedido, ou seja, se o pedido está aberto e há espaço na memória. O parâmetro comida não pode ser nulo, ou causará uma exceção.
         /// </summary>
         /// <returns>TRUE se puder adicionar, FALSE caso contrário</returns>
         public int Adicionar(Comida comida) {
@@ -60,6 +60,10 @@ namespace XulambsFoods_2024_2.src
 
             sb.AppendLine($"TAXA SERVIÇO : {ValorTaxa():C2}");
             return sb.ToString();
+        }
+
+        public override string ToString() {
+            return $"Pedido Local com valor de {(ValorItens() + ValorTaxa()):C2}";
         }
 
     }

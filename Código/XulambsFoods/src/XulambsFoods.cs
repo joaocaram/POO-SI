@@ -1,4 +1,5 @@
 
+using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -23,10 +24,14 @@ namespace XulambsFoods_2024_2.src {
             {
                 opcao = int.Parse(Console.ReadLine());
             }
-            catch (FormatException fex)
+            catch (FormatException)
             {
                 opcao = -1;
                 Console.WriteLine("Favor digitar somente números.");
+            }
+            catch (OverflowException) {
+                opcao = -1;
+                Console.WriteLine("Favor digitar somente valores do menu.");
             }
             return opcao;
         }
@@ -49,9 +54,6 @@ namespace XulambsFoods_2024_2.src {
 
             return  lerInteiro("Digite sua escolha");
             
-            
-            
-
         }
 
         static Pedido EscolherTipoPedido() {
@@ -106,7 +108,7 @@ namespace XulambsFoods_2024_2.src {
             } while (escolha.ToLower().Equals("s"));
         }
 
-        private static Comida ComprarComida() {
+        private static Comida? ComprarComida() {
             Console.WriteLine("Escolha sua opção: ");
             Console.WriteLine("1 - Pizza ");
             Console.WriteLine("2 - Sanduíche");
@@ -228,7 +230,7 @@ namespace XulambsFoods_2024_2.src {
             baseClientes = new BaseDados<Cliente>();
             config();
 
-            Pedido pedido;
+            Pedido pedido = null;
             Cliente cliente;
             int opcao = -1;
             do {
@@ -240,7 +242,7 @@ namespace XulambsFoods_2024_2.src {
                             todosOsPedidos.Add(pedido);
                             RelatorioPedido(pedido);
                             Cliente quem = LocalizarCliente(baseClientes);
-                            string mensagem = "Cliente não existente. Pedido registrado como anônimo";
+                            string mensagem = "Cliente não existente. Pedido registrado como anônimo.";
                             if (quem != null) {
                                 quem.RegistrarPedido(pedido);
                                 mensagem = $"Pedido registrado para {quem}";
@@ -254,10 +256,9 @@ namespace XulambsFoods_2024_2.src {
                             Console.WriteLine(ae.Message);
                         }
                         catch (NullReferenceException ex) {
-                            Console.WriteLine("Opção inválida. Pedido não foi criado");
+                            Console.WriteLine("Opção inválida. Pedido não foi criado.");
                         }
-
-
+            
                         //pedido = AbrirPedido();
                         //todosOsPedidos.Add(pedido);
                         //RelatorioPedido(pedido);
