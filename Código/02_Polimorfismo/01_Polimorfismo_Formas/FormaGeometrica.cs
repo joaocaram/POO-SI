@@ -15,19 +15,19 @@ namespace PoliFiguras {
             _ordinal = ordinal++;
         }
 
-        public string nome() {
+        public string Nome() {
             return _descricao;
         }
 
         public override string ToString() {
-            return $"{_descricao,19} -> Área: {area():00.00} | Perímetro: {perimetro():F2}";
+            return $"{_descricao,19} -> Área: {Area():00.00} | Perímetro: {Perimetro():F2}";
         }
 
         public override int GetHashCode() {
             return _ordinal; 
         }
 
-        public abstract double area();
-        public abstract double perimetro();
+        public abstract double Area();
+        public abstract double Perimetro();
     }
 }

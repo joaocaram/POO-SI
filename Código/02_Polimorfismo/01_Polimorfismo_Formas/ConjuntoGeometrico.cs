@@ -21,7 +21,7 @@ namespace PoliFiguras
             quantasFormas = 0;
         }
 
-        public void addForma(FormaGeometrica nova)
+        public void AddForma(FormaGeometrica nova)
         {
             if (nova != null
                 && quantasFormas < capacidade)
@@ -31,7 +31,7 @@ namespace PoliFiguras
             }
         }
 
-        public FormaGeometrica buscar(FormaGeometrica outra) 
+        public FormaGeometrica Buscar(FormaGeometrica outra) 
         {
             bool achou = false;
             int pos = 0;

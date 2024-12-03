@@ -11,11 +11,11 @@ namespace PoliFiguras {
 
         }
 
-        public override double area() {
+        public override double Area() {
             return Math.Pow(_basePoligono, 2.0);
         }
 
-        public override double perimetro() {
+        public override double Perimetro() {
             return 4 * _basePoligono;
         }
 

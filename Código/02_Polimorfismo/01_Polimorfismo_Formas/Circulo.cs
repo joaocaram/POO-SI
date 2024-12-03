@@ -15,11 +15,11 @@ namespace PoliFiguras {
                 this._raio = raio;
         }
 
-        public override double area() {
+        public override double Area() {
             return Math.PI * Math.Pow(_raio, 2);
         }
 
-        public override double perimetro() {
+        public override double Perimetro() {
             return 2 * Math.PI * _raio;
         }
 

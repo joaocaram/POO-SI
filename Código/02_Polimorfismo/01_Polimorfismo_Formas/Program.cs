@@ -4,7 +4,7 @@ namespace PoliFiguras {
     internal class Program {
         static Random aleatorio = new Random(42);
 
-        static int menuPrincipal() {
+        static int MenuPrincipal() {
             string linha = "=========================";
             //TODO: refatorar menu
             Console.Clear();
@@ -36,7 +36,7 @@ namespace PoliFiguras {
             return int.Parse(Console.ReadLine());
         }
 
-        static FormaGeometrica gerarForma() {
+        static FormaGeometrica GerarForma() {
             int tipo = aleatorio.Next(1, 5);
             double dimensao1 = 2 + aleatorio.NextDouble() * 7.9;
             double dimensao2 = 2 + aleatorio.NextDouble() * 7.9;
@@ -48,29 +48,29 @@ namespace PoliFiguras {
             };
         }
 
-        static IEnumerable<FormaGeometrica> gerarConjunto(int quantas) {
+        static IEnumerable<FormaGeometrica> GerarConjunto(int quantas) {
             IEnumerable<FormaGeometrica> formas = new LinkedList<FormaGeometrica>();
             for (int i = 0; i < quantas; i++) {
-                FormaGeometrica n = gerarForma();
+                FormaGeometrica n = GerarForma();
                 formas = formas.Append(n);
             }
             return formas;
 
         }
-        static void testeConjuntoFixo()
+        static void TesteConjuntoFixo()
         {
             ConjuntoGeometrico conj = new ConjuntoGeometrico(10);
 
-            conj.addForma(new Circulo(3));
-            conj.addForma(new Retangulo(3, 4));
-            conj.addForma(new TrianguloRetangulo(3, 4));
-            conj.addForma(new Circulo(2.5));
-            conj.addForma(new Retangulo(4, 8));
+            conj.AddForma(new Circulo(3));
+            conj.AddForma(new Retangulo(3, 4));
+            conj.AddForma(new TrianguloRetangulo(3, 4));
+            conj.AddForma(new Circulo(2.5));
+            conj.AddForma(new Retangulo(4, 8));
 
             Console.WriteLine(conj);
             Console.ReadKey();
             FormaGeometrica procura = new Circulo(2.5);
-            if (conj.buscar(procura) != null)
+            if (conj.Buscar(procura) != null)
             {
                 Console.WriteLine("Existe");
             }
@@ -82,10 +82,10 @@ namespace PoliFiguras {
 
         static void Main(string[] args) {
             Comparer<FormaGeometrica> compMenorPerimetro = Comparer<FormaGeometrica>.Create(
-                                (f1, f2) => f1.perimetro() > f2.perimetro() ? 1 : -1
+                                (f1, f2) => f1.Perimetro() > f2.Perimetro() ? 1 : -1
                         );
             int quantidade;
-            int opcao = menuPrincipal();
+            int opcao = MenuPrincipal();
             LinkedList<FormaGeometrica> formas = new LinkedList<FormaGeometrica>();
             PriorityQueue<FormaGeometrica, double> filaPrio = new PriorityQueue<FormaGeometrica, double>();//heap
             Dictionary<int, FormaGeometrica> tabHash = new Dictionary<int, FormaGeometrica>();
@@ -98,11 +98,11 @@ namespace PoliFiguras {
                     case 1:
                         Console.Write("Tamanho do conjunto: ");
                         quantidade = int.Parse(Console.ReadLine());
-                        formas = new LinkedList<FormaGeometrica>(gerarConjunto(quantidade));
+                        formas = new LinkedList<FormaGeometrica>(GerarConjunto(quantidade));
                         foreach (FormaGeometrica f in formas) {
                             tabHash.Add(f.GetHashCode(), f);
                             arvore.Add(f.ToString(), f);
-                            filaPrio.Enqueue(f, f.area());
+                            filaPrio.Enqueue(f, f.Area());
                         }
                         break;
                     case 2:
@@ -117,7 +117,7 @@ namespace PoliFiguras {
                         }
                         tabHash.Add(quadradinhoDe8.GetHashCode(), quadradinhoDe8);
                         arvore.Add(quadradinhoDe8.ToString(), quadradinhoDe8);
-                        filaPrio.Enqueue(quadradinhoDe8, quadradinhoDe8.area());
+                        filaPrio.Enqueue(quadradinhoDe8, quadradinhoDe8.Area());
                         break;
                         
                     case 3:
@@ -163,24 +163,24 @@ namespace PoliFiguras {
 
                         //for(int i=0; i<formas.Count; i++) {
                         //    FormaGeometrica formaG = formas.ElementAt(i);
-                        //    if (formaG.area() >= minimo)
+                        //    if (formaG.Area() >= minimo)
                         //        Console.WriteLine(formaG);
                         //}
 
                         //foreach(FormaGeometrica f in formas) {
-                        //    if (f.area() >= minimo)
+                        //    if (f.Area() >= minimo)
                         //        Console.WriteLine(f);
                         //}
 
                         //Console.WriteLine(                      //LINQ
                         //        from f in formas
-                        //        where f.area() >= minimo
+                        //        where f.Area() >= minimo
                         //        select f.ToString()
                         //);
 
                         //LINQ Method
                         IEnumerable<string> formasMaiores =
-                                                formas.Where(f => f.area() >= minimo)
+                                                formas.Where(f => f.Area() >= minimo)
                                                       .Select(f => f.ToString());
                         
                         foreach(string f in formasMaiores)
@@ -191,8 +191,8 @@ namespace PoliFiguras {
                         Console.Write("Qual é a área mínima para o filtro? ");
                         double min = double.Parse(Console.ReadLine());
                         IEnumerable<object> minhasFormasmaiores =
-                                                formas.Where(f => f.area() >= min)
-                                                      .Select(f => new {nome = f.nome(), area = f.area()});
+                                                formas.Where(f => f.Area() >= min)
+                                                      .Select(f => new {nome = f.Nome(), area = f.Area()});
                         
                         foreach (object o in minhasFormasmaiores)
                             Console.WriteLine(o);
@@ -204,7 +204,7 @@ namespace PoliFiguras {
                         Console.Write("Qual é o tipo de figura? ");
                         string tipo = Console.ReadLine().ToLower();
                         IEnumerable<object> formasFiltradas =
-                                                formas.Where(f => f.area() >= minArea)
+                                                formas.Where(f => f.Area() >= minArea)
                                                       .Where(f => f.ToString().ToLower().Contains(tipo))
                                                       .Select(f => f.ToString());
 
@@ -217,15 +217,15 @@ namespace PoliFiguras {
 
 
                         IEnumerable<object> formasFiltradas2 =
-                                                formas.Where(f => f.area() >= minArea2)
-                                                      .Select(f => f.nome())
+                                                formas.Where(f => f.Area() >= minArea2)
+                                                      .Select(f => f.Nome())
                                                       .Distinct();
                         foreach (object o in formasFiltradas2)
                             Console.WriteLine(o);
                         break;
                     case 9:
                         Comparer<FormaGeometrica> compMaiorArea = Comparer<FormaGeometrica>.Create(
-                                (f1, f2) => f1.area() > f2.area() ? 1 : -1
+                                (f1, f2) => f1.Area() > f2.Area() ? 1 : -1
                         );
                         FormaGeometrica maiorDeTodas = formas.Max(compMaiorArea);
                         Console.WriteLine("Maior pela área: " + maiorDeTodas);
@@ -235,11 +235,11 @@ namespace PoliFiguras {
                         Console.WriteLine("Menor perímetro: " + menorPerimetro);
                         break;
                     case 11:
-                        double somaDasAreas = formas.Sum(f => f.area());
+                        double somaDasAreas = formas.Sum(f => f.Area());
                         Console.WriteLine("Soma = " + somaDasAreas);
                         break;
                     case 12:
-                        Func<FormaGeometrica, double> perimetros = f => f.perimetro();
+                        Func<FormaGeometrica, double> perimetros = f => f.Perimetro();
                         double somaDosPerimetros = formas.Sum(perimetros);
                         double mediaDosPerimetros = formas.Average(perimetros);
                         Console.WriteLine("Soma = " + somaDosPerimetros);
@@ -251,7 +251,7 @@ namespace PoliFiguras {
 
                         // map/reduce <--> where/aggregate
 
-                        string resultado = formas.Where(f => f.nome().ToLower().Equals(tipoFigura))
+                        string resultado = formas.Where(f => f.Nome().ToLower().Equals(tipoFigura))
                                                   .Order(compMenorPerimetro)
                                                   .Select(f => f.ToString())
                                                   .Aggregate((s1, s2) => s1 + "\n" + s2);
@@ -260,7 +260,7 @@ namespace PoliFiguras {
                         break;
                 }
                 Console.ReadKey();
-                opcao = menuPrincipal();
+                opcao = MenuPrincipal();
 
             }
         }
