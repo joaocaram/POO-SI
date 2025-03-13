@@ -2,7 +2,7 @@ namespace XulambsFoods_2025_1.src {
     internal class XulambsPizza {
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA v0.1\n================");
+            Console.WriteLine("XULAMBS PIZZA v0.2\n================");
         }
 
         static void Pausa() {
@@ -12,10 +12,21 @@ namespace XulambsFoods_2025_1.src {
 
         static int ExibirMenuPrincipal() {
             Cabecalho();
-            Console.WriteLine("1 - Comprar pizza");
+            Console.WriteLine("1 - Abrir Pedido");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
+        }
+        static Pedido AbrirPedido() {
+            Pedido novo = new Pedido();
+            string conf;
+            do {
+                Pizza novaPizza = ComprarPizza();
+                novo.Adicionar(novaPizza);
+                Console.Write("\nQuer uma nova pizza (S/N)? ");
+                conf = Console.ReadLine().ToUpper();
+            } while (conf.Equals("S"));
+            return novo;
         }
 
         static int ExibirMenuIngredientes(Pizza pizza) {
@@ -29,13 +40,14 @@ namespace XulambsFoods_2025_1.src {
             return int.Parse(Console.ReadLine());
         }
 
-        static void ComprarPizza() {
+        static Pizza ComprarPizza() {
             Cabecalho();
             Console.WriteLine("Comprando uma nova pizza:");
             Pizza novaPizza = new Pizza();
             EscolherIngredientes(novaPizza);
             Console.WriteLine();
             MostrarNota(novaPizza);
+            return novaPizza;
         }
 
         static void EscolherIngredientes(Pizza pizza) {
@@ -63,13 +75,19 @@ namespace XulambsFoods_2025_1.src {
 
         }
 
+        static void MostrarPedido(Pedido pedido) {
+            Cabecalho();
+            Console.WriteLine(pedido.Relatorio());
+        }
+
         static void Main(string[] args) {
             int opcao = -1;
             do {
                 opcao = ExibirMenuPrincipal();
                 switch (opcao) {
                     case 1:
-                        ComprarPizza();
+                        Pedido novo = AbrirPedido();
+                        MostrarPedido(novo);
                         break;
                     case 0: Console.WriteLine("FLW VLW OBG VLT SMP.");
                         break;
