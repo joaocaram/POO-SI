@@ -1,8 +1,13 @@
 namespace XulambsFoods_2025_1.src {
-    internal class XulambsPizza {
+    public class XulambsPizza {
+
+        const int MaxPedidos = 100;
+        static Pedido[] pedidos = new Pedido[MaxPedidos];
+        static int quantPedidos = 0;
+
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA v0.2\n================");
+            Console.WriteLine("XULAMBS PIZZA v0.3\n================");
         }
 
         static void Pausa() {
@@ -13,21 +18,57 @@ namespace XulambsFoods_2025_1.src {
         static int ExibirMenuPrincipal() {
             Cabecalho();
             Console.WriteLine("1 - Abrir Pedido");
+            Console.WriteLine("2 - Alterar Pedido");
+            Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
         }
-        static Pedido AbrirPedido() {
-            Pedido novo = new Pedido();
+
+        static void AdicionarPizzas(Pedido pedido) {
             string conf;
             do {
                 Pizza novaPizza = ComprarPizza();
-                novo.Adicionar(novaPizza);
+                pedido.Adicionar(novaPizza);
                 Console.Write("\nQuer uma nova pizza (S/N)? ");
                 conf = Console.ReadLine().ToUpper();
             } while (conf.Equals("S"));
-            return novo;
         }
+
+        static Pedido AbrirPedido() {
+            Pedido novoPedido = EscolherTipoPedido();
+            AdicionarPizzas(novoPedido);
+            return novoPedido;
+        }
+
+        static Pedido EscolherTipoPedido() {
+            int opcao = ExibirMenuTipoPedido();    
+            return opcao switch {
+                2 => CriarPedidoEntrega(),
+                1 or _ => CriarPedidoLocal()
+            };
+        }
+
+        static int ExibirMenuTipoPedido() {
+            Cabecalho();
+            Console.WriteLine("Escolha o tipo de pedido:");
+            Console.WriteLine("1 - Local (padrão)");
+            Console.WriteLine("2 - Pedido para entrega");
+            Console.Write("Sua opção: ");
+            return int.Parse(Console.ReadLine());
+        }
+
+        static Pedido CriarPedidoLocal() {
+            return new Pedido();
+        }
+
+        static Pedido CriarPedidoEntrega() {
+            Console.WriteLine("Pedido para Entrega.");
+            Console.Write("Distância: ");
+            double dist = double.Parse(Console.ReadLine());
+            return new PedidoEntrega(dist);
+        }
+
 
         static int ExibirMenuIngredientes(Pizza pizza) {
             Cabecalho();
@@ -52,21 +93,23 @@ namespace XulambsFoods_2025_1.src {
 
         static void EscolherIngredientes(Pizza pizza) {
             int opcao = ExibirMenuIngredientes(pizza);
-            while(opcao!=0){
+            while (opcao != 0) {
                 Console.Write("Quantos ingredientes? ");
                 int adicionais = int.Parse(Console.ReadLine());
-                switch(opcao) {
-                    case 1: pizza.AdicionarIngredientes(adicionais);
+                switch (opcao) {
+                    case 1:
+                        pizza.AdicionarIngredientes(adicionais);
                         break;
-                    case 2: pizza.RetirarIngredientes(adicionais);
+                    case 2:
+                        pizza.RetirarIngredientes(adicionais);
                         break;
                 };
                 Console.WriteLine();
                 MostrarNota(pizza);
                 Pausa();
                 opcao = ExibirMenuIngredientes(pizza);
-            } 
-            
+            }
+
         }
 
         static void MostrarNota(Pizza pizza) {
@@ -80,16 +123,64 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine(pedido.Relatorio());
         }
 
+        static void ArmazenarPedido(Pedido pedido) {
+            if (quantPedidos < MaxPedidos) {
+                pedidos[quantPedidos] = pedido;
+                quantPedidos++;
+            }
+        }
+
+        static Pedido LocalizarPedido() {
+            Cabecalho();
+            Console.WriteLine("Localizando um pedido");
+            Console.Write("Digite o número do pedido: ");
+            int numero = int.Parse(Console.ReadLine());
+            Pedido localizado = null;
+
+            for (int i = 0; i < quantPedidos; i++) {
+                if (pedidos[i].GetID() == numero)
+                    localizado = pedidos[i];
+            }
+            return localizado;
+        }
+
+        static void AlterarPedido() {
+            Pedido pedidoParaAlteracao = LocalizarPedido();
+            if (pedidoParaAlteracao != null) {
+                AdicionarPizzas(pedidoParaAlteracao);
+                MostrarPedido(pedidoParaAlteracao);
+            }
+            else
+                Console.WriteLine("Pedido não encontrado");
+        }
+
+        static void RelatorioDePedido() {
+            Pedido localizado = LocalizarPedido();
+            if (localizado != null)
+                MostrarPedido(localizado);
+            else
+                Console.WriteLine("Pedido não existente");
+        }
+
+
         static void Main(string[] args) {
             int opcao = -1;
             do {
                 opcao = ExibirMenuPrincipal();
                 switch (opcao) {
                     case 1:
-                        Pedido novo = AbrirPedido();
-                        MostrarPedido(novo);
+                        Pedido novoPedido = AbrirPedido();
+                        MostrarPedido(novoPedido);
+                        ArmazenarPedido(novoPedido);
                         break;
-                    case 0: Console.WriteLine("FLW VLW OBG VLT SMP.");
+                    case 2:
+                        AlterarPedido();
+                        break;
+                    case 3:
+                        RelatorioDePedido();
+                        break;
+                    case 0:
+                        Console.WriteLine("FLW VLW OBG VLT SMP.");
                         break;
                 }
                 Console.ReadKey();
