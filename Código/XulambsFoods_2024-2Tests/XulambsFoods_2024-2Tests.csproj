@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XulambsFoods\XulambsFoods_2024-2.csproj" />
+    <ProjectReference Include="..\XulambsFoods\XulambsFoods_2025-1.csproj" />
   </ItemGroup>
 
   <ItemGroup>
