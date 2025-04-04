@@ -164,7 +164,7 @@ namespace XulambsFoods_2025_1.src {
             relat.AppendLine("==============================");
             for (int i = 0; i < _quantPizzas; i++)
             {
-                relat.AppendLine(_pizzas[i].NotaDeCompra());
+                relat.AppendLine(_pizzas[i].ToString());
             }
             return relat.ToString();
         }
@@ -174,10 +174,17 @@ namespace XulambsFoods_2025_1.src {
         /// detalhamento das pizzas e preço a pagar.
         /// </summary>
         /// <returns>Uma string, multilinhas, com a informação descrita</returns>
-        public virtual string Relatorio() {
+        public override string ToString() {
             StringBuilder relat = new StringBuilder($"Pedido Local {DetalhamentoPedido()}");
             relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
             return relat.ToString();
+        }
+
+        public override bool Equals(object? obj) {
+            Pedido outroPedido = (Pedido)obj;
+
+            return  this._idPedido == outroPedido._idPedido &&
+                    this._data.Equals(outroPedido._data);
         }
 
         /// <summary>
@@ -185,7 +192,7 @@ namespace XulambsFoods_2025_1.src {
         /// (faremos melhor que isso em breve)
         /// </summary>
         /// <returns>Identificador do pedido (inteiro positivo)</returns>
-        public int GetID() {
+        public override int GetHashCode() {
             return _idPedido;
         }
     }

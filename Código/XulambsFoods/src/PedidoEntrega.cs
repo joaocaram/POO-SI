@@ -91,7 +91,7 @@ namespace XulambsFoods_2025_1.src {
         /// detalhamento das pizzas, valor da taxa de entrega e valor do pedido.
         /// </summary>
         /// <returns>String multilinhas com o detalhamento descrito do pedido.</returns>
-        public override string Relatorio() {
+        public override string ToString() {
             StringBuilder relat = new StringBuilder($"Pedido para Entrega ({_distanciaEntrega:F1}km) {DetalhamentoPedido()}");
             
             relat.AppendLine($"\nValor dos itens: {ValorItens():C2}");

@@ -118,11 +118,14 @@ namespace XulambsFoods_2025_1.src {
         /// Nota simplificada de compra: descrição da pizza, dos ingredientes e do preço.
         /// </summary>
         /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
-        public string NotaDeCompra() {
+        public override string ToString() {
             return $"{Descricao} ({PrecoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
         }
 
-        
+        public override bool Equals(object? obj) {
+            Pizza outraPizza = (Pizza)obj;
+            return this._quantidadeIngredientes == outraPizza._quantidadeIngredientes;
+        }
     }
 
 }
