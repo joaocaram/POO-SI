@@ -139,13 +139,13 @@ namespace XulambsFoods_2025_1.src {
 
         static void MostrarNota(Pizza pizza) {
             Console.WriteLine("Comprando: ");
-            Console.WriteLine(pizza.NotaDeCompra());
+            Console.WriteLine(pizza);
 
         }
 
         static void MostrarPedido(Pedido pedido) {
             Cabecalho();
-            Console.WriteLine(pedido.Relatorio());
+            Console.WriteLine(pedido);
         }
 
         static void ArmazenarPedido(Pedido pedido) {
@@ -163,7 +163,7 @@ namespace XulambsFoods_2025_1.src {
             Pedido localizado = null;
 
             for (int i = 0; i < quantPedidos; i++) {
-                if (pedidos[i].GetID() == numero)
+                if (pedidos[i].GetHashCode() == numero)
                     localizado = pedidos[i];
             }
             return localizado;
