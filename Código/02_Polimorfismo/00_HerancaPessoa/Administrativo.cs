@@ -14,8 +14,8 @@ namespace HerancaPessoa
     private static double salarioBase;
     private double valorGratificacao;
 
-    public Administrativo(string nome, DateOnly nascimento, string documento): 
-            base(nome, nascimento, documento)
+    public Administrativo(string nome, DateOnly nascimento, string documento, string email): 
+            base(nome, nascimento, documento, email)
     {
 
     }
