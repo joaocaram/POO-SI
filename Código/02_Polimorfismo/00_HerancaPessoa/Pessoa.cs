@@ -44,19 +44,21 @@ namespace HerancaPessoa
         protected int _cargaHoraria;
 
         /// <summary>
-        /// Cria uma pessoa com _nome, data de nascimento e _documento. 
+        /// Cria uma pessoa com nome, data de nascimento, documento e email. 
         /// Como trata-se de uma demonstração, sem requisitos envolvidos,
         /// nenhum dado é validado.
         /// </summary>
         /// <param name="nome">Nome da pessoa</param>
         /// <param name="nascimento">Data de nascimento</param>
-        /// <param name="documento">Um _documento identificador</param>
-        public Pessoa(string nome, DateOnly nascimento, string documento)
+        /// <param name="documento">Um documento identificador</param>
+        /// <param name="email">O email de contato da pessoa</param>
+        public Pessoa(string nome, DateOnly nascimento, string documento, string email)
         {
-            this._nome = nome;
-            this._dataNasc = nascimento;
-            this._documento = documento;
-            this._id = s_sorteio.Next() % 1_000_000;
+            _nome = nome;
+            _dataNasc = nascimento;
+            _documento = documento;
+            _id = s_sorteio.Next() % 1_000_000;
+            _email = email;
         }
 
         /// <summary>
@@ -64,14 +66,18 @@ namespace HerancaPessoa
         /// A carga precisa ser maior que 0.
         /// </summary>
         /// <param name="cargaHoraria">Valor da carga horária atual (> 0)</param>
-        public void setCargaHoraria(int cargaHoraria) 
+        public void SetCargaHoraria(int cargaHoraria)
         {
             if (cargaHoraria > 0)
-                this._cargaHoraria = cargaHoraria;
+                _cargaHoraria = cargaHoraria;
         }
 
 
-        public int idade()
+        /// <summary>
+        /// Retorna a idade da pessoa. 
+        /// </summary>
+        /// <returns>Int com a idade da pessoa (valor não negativo)</returns>
+        public int Idade()
         {
             DateOnly hoje = DateOnly.FromDateTime(DateTime.Now);
             int idade = (hoje.Year - _dataNasc.Year);
@@ -80,14 +86,22 @@ namespace HerancaPessoa
             return idade;
         }
 
-        public void enviarEmail(string texto)
+        /// <summary>
+        /// <i>Stub</i> para simular o envio de um email 
+        /// </summary>
+        /// <param name="texto"></param>
+        public void EnviarEmail(string texto)
         {
             //fingindo que estou usando um serviço bacanudo para enviar emails
         }
 
-        public virtual string relatorio()
+        /// <summary>
+        /// Cria uma string com nome e idade da pessoa.
+        /// </summary>
+        /// <returns>String com nome e idade (em anos) da pessoa</returns>
+        public virtual string Relatorio()
         {
-            return _nome + ": " + idade() + " anos.";
+            return $"{_nome}: {Idade()} anos.";
         }
     }
 
