@@ -10,17 +10,28 @@ namespace HerancaPessoa
     {
         static void Main(string[] args)
         {
-            Pessoa[] pessoas = new Pessoa[20];
-            pessoas[0] = new Pessoa("Pessoa Muito Feliz", DateOnly.Parse("01-10-2004"), "1");
-            pessoas[1] = new Professor("Professor", DateOnly.Parse("05-07-1989"), "Pr1");
-            pessoas[2] = new Aluno("Aluno Espantado",
-                DateOnly.Parse("04-11-2005"), "Al1");
+            List<Pessoa> pessoas = new List<Pessoa>(20);
+            
+            Pessoa aluno = new Aluno("Aluno Espantado", DateOnly.Parse("04-11-2006"), "Al1", "aluno@aluno.com", 1250d);
+            aluno.SetCargaHoraria(430);
 
-            foreach(Pessoa p in pessoas)
+            Pessoa prof = new Professor("Professor", DateOnly.Parse("05-07-1989"), "Pr1", "prof@prof.com");
+            prof.SetCargaHoraria(32);
+
+            pessoas.Add(new Pessoa("Pessoa Feliz", DateOnly.Parse("05-04-2004"), "Pe1", "pessoa@pessoa.com"));
+            pessoas.Add(aluno);
+            pessoas.Add(prof);
+
+            Console.WriteLine("Todo mundo:");
+            foreach (Pessoa p in pessoas)
             {
-                if (p != null)
-                    Console.WriteLine(p.relatorio());
+                    Console.WriteLine(p.Relatorio());
             }
+
+            Console.WriteLine("\nMensalidade do aluno: (CUIDADO!!!!)");  
+            double valor = ((Aluno)pessoas[1]).ValorMensalidade();
+            Console.WriteLine($"{valor:C2}");
+
         }
     }
 }
