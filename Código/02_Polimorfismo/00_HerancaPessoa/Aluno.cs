@@ -49,6 +49,10 @@ namespace HerancaPessoa
             return ((_cargaHoraria * s_horaAula) - _valorMatricula) / 6.0;
         }
 
+        public override string Relatorio()
+        {
+            return $"{_nome} ({_id}) - Carga horária de {_cargaHoraria}h no semestre. Mensalidade: {ValorMensalidade():C2}";
+        }
     }
 
 }
