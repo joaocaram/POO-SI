@@ -10,7 +10,7 @@ namespace HerancaPessoa
     public class Professor : Pessoa
     {
 
-        private static double s_horaAula = 20.0;
+        private static double s_horaAula = 30.35;
 
         /// <summary>
         /// Cria um professor com nome, data de nascimento, documento e email.
@@ -33,7 +33,7 @@ namespace HerancaPessoa
         /// <returns>Double positivo com o valor do salário bruto do professor.</returns>
         public double SalarioBruto()
         {
-            return s_horaAula * _cargaHoraria * 1.20;
+            return s_horaAula * (_cargaHoraria*4.5) * 1.20;
         }
 
         /// <summary>
