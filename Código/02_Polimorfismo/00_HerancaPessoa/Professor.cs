@@ -10,23 +10,40 @@ namespace HerancaPessoa
     public class Professor : Pessoa
     {
 
+        private static double s_horaAula = 20.0;
 
-    private static double horaAula = 20.0;
-    public Professor(string nome, DateOnly nascimento, string documento):
-            base (nome, nascimento, documento)
-    {
-            this.cargaHoraria = 20;
-    }
-
-    public double salarioBruto()
-    {
-            return horaAula * cargaHoraria * 1.20;
-    }
-
-    public override string relatorio()
+        /// <summary>
+        /// Cria um professor com nome, data de nascimento, documento e email.
+        /// A carga horária padrão é de 20h e pode ser alterada por meio do 
+        /// método herdado de <i>Pessoa</i>.
+        /// </summary>
+        /// <param name="nome">Nome da pessoa</param>
+        /// <param name="nascimento">Data de nascimento</param>
+        /// <param name="documento">Um documento identificador</param>
+        /// <param name="email">O email de contato da pessoa</param>
+        public Professor(string nome, DateOnly nascimento, string documento, string email) :
+                base(nome, nascimento, documento, email)
         {
-            return nome + ": " + idade() + " anos, salário R$ " + salarioBruto();
+            _cargaHoraria = 20;
         }
 
-}
+        /// <summary>
+        /// Salário bruto do professor, que inclui 20% de extra classe.
+        /// </summary>
+        /// <returns>Double positivo com o valor do salário bruto do professor.</returns>
+        public double SalarioBruto()
+        {
+            return s_horaAula * _cargaHoraria * 1.20;
+        }
+
+        /// <summary>
+        /// Resumo do professor: nome, idade (vindo da classe mãe) e salário bruto.
+        /// </summary>
+        /// <returns>String de uma linha com as informações acima</returns>
+        public override string Relatorio()
+        {
+            return $"{base.Relatorio()} Salário {SalarioBruto():C2}.";
+        }
+
+    }
 }
