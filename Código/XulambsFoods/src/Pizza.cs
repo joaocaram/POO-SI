@@ -29,97 +29,70 @@ namespace XulambsFoods_2025_1.src {
     /// A pizza deve emitir uma nota de compra com os seus detalhes.
     /// </summary>
 
-    
-    public class Pizza {
+
+    public class Pizza : Comida {
 
         private const int MaxIngredientes = 8;
         private const string Descricao = "Pizza";
-	    private const double PrecoBase = 29d;
+        private const double PrecoBase = 29d;
         private const double ValorAdicional = 5d;
-        
-        private int _quantidadeIngredientes;
+        private const int AdicionaisSemDesconto = 5;
+        private const double PctDesconto = 0.5;
+
+
 
         /// <summary>
         /// Inicializador privado da pizza: valida a quantidade de adicionais. Em caso de não validação, a pizza será criada sem adicionais.
         /// </summary>
         /// <param name="quantosAdicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
-        private void init(int quantosAdicionais) {
-            if (PodeAlterarIngredientes(quantosAdicionais))
-                _quantidadeIngredientes = quantosAdicionais;
+        private void Init(int quantosAdicionais) {
+            AdicionarIngredientes(quantosAdicionais);
         }
 
-       /// <summary>
-       /// Construtor padrão.Cria uma pizza sem adicionais.
-       /// </summary>
-        public Pizza() {
-            init(0);            
+        /// <summary>
+        /// Construtor padrão.Cria uma pizza sem adicionais.
+        /// </summary>
+        public Pizza() :
+            base(Descricao, MaxIngredientes, PrecoBase, ValorAdicional) {
+            Init(0);
         }
 
         /// <summary>
         /// Cria uma pizza com a quantidade de adicionais pré-definida.Em caso de valor inválido, a pizza será criada sem adicionais.
         /// </summary>
         /// <param name="quantosAdicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
-        public Pizza(int quantosAdicionais) {
-            init(quantosAdicionais);
+        public Pizza(int quantosAdicionais)
+            : base(Descricao, MaxIngredientes, PrecoBase, ValorAdicional) {
+            Init(quantosAdicionais);
         }
 
-        /// <summary>
-        /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
-        /// </summary>
-        /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
-        private double ValorAdicionais() {
-            return _quantidadeIngredientes * ValorAdicional;
-        }
+
 
         /// <summary>
         /// Retorna o valor final da pizza, incluindo seus adicionais.
         /// </summary>
         /// <returns>Double com o valor final da pizza.</returns>
-        public double ValorFinal() {
+        public override double ValorFinal() {
             return PrecoBase + ValorAdicionais();
         }
 
-        /// <summary>
-        /// Tenta adicionar ingredientes na pizza.Caso a adição seja inválida(ultrapassando limites ou com valores negativos), mantém
-        /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
-        /// </summary>
-        /// <param name="quantos">Quantos ingredientes a serem adicionados (>0)</param>
-        /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
-        public int AdicionarIngredientes(int quantos) {
-            if (PodeAlterarIngredientes(quantos)) {
-                _quantidadeIngredientes += quantos;
-            }
-            return _quantidadeIngredientes;
+        private double DescontoAdicionais() {
+            double desconto = 0d;
+            int quantos = _quantidadeIngredientes - AdicionaisSemDesconto;
+            if (quantos > 0)
+                desconto = quantos * ValorAdicional * PctDesconto;
+            return desconto;
         }
-
-        /// <summary>
-        ///Faz a verificação de limites para adicionar ingredientes na pizza.Retorna TRUE/FALSE conforme seja possível ou não adicionar 
-        ///esta quantidade de ingredientes.
-        /// </summary>
-        /// <param name="quantos">Quantidade de ingredientes a adicionar.</param>
-        /// <returns>TRUE/FALSE conforme seja possível ou não adicionar esta quantidade de ingredientes.</returns>
-        private bool PodeAlterarIngredientes(int quantos) {
-            return (quantos + _quantidadeIngredientes >= 0 && 
-                    quantos + _quantidadeIngredientes <= MaxIngredientes);
+        protected override double ValorAdicionais() {
+            return base.ValorAdicionais() - DescontoAdicionais();
         }
-
-        /// <summary>
-        /// Tenta retirar ingredientes na pizza.Caso a adição seja inválida(resultando em  valores negativos), mantém
-        /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
-        /// </summary>
-        /// <param name="quantos">Quantos ingredientes a serem retirados (>0)</param>
-        /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
-        public int RetirarIngredientes(int quantos) {
-            return AdicionarIngredientes(0-quantos);
-        }
-
 
         /// <summary>
         /// Nota simplificada de compra: descrição da pizza, dos ingredientes e do preço.
         /// </summary>
         /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
         public override string ToString() {
-            return $"{Descricao} ({PrecoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
+            return $"{base.ToString()} , no valor total de {ValorFinal():C2}";
         }
 
         public override bool Equals(object? obj) {
