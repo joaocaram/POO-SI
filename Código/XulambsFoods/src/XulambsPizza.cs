@@ -1,3 +1,5 @@
+
+
 namespace XulambsFoods_2025_1.src {
 
     /** 
@@ -53,8 +55,8 @@ namespace XulambsFoods_2025_1.src {
         static void AdicionarPizzas(Pedido pedido) {
             string conf;
             do {
-                Pizza novaPizza = ComprarPizza();
-                pedido.Adicionar(novaPizza);
+                Comida novaComida = ComprarComida();
+                pedido.Adicionar(novaComida);
                 Console.Write("\nQuer uma nova pizza (S/N)? ");
                 conf = Console.ReadLine().ToUpper();
             } while (conf.Equals("S"));
@@ -83,6 +85,15 @@ namespace XulambsFoods_2025_1.src {
             return int.Parse(Console.ReadLine());
         }
 
+        static int ExibirMenuTipoComida() {
+            Cabecalho();
+            Console.WriteLine("Escolha sua comida:");
+            Console.WriteLine("1 - Pizza (padrão)");
+            Console.WriteLine("2 - Sanduíche");
+            Console.Write("Sua opção: ");
+            return int.Parse(Console.ReadLine());
+        }
+
         static Pedido CriarPedidoLocal() {
             return new Pedido();
         }
@@ -95,10 +106,10 @@ namespace XulambsFoods_2025_1.src {
         }
 
 
-        static int ExibirMenuIngredientes(Pizza pizza) {
+        static int ExibirMenuIngredientes(Comida comida) {
             Cabecalho();
-            Console.WriteLine("Personalizar a Pizza\n");
-            MostrarNota(pizza);
+            Console.WriteLine("Personalizar a Comida\n");
+            MostrarNota(comida);
             Console.WriteLine("\n1 - Acrescentar ingredientes");
             Console.WriteLine("2 - Retirar ingredientes");
             Console.WriteLine("0 - Não quero alterar");
@@ -106,40 +117,54 @@ namespace XulambsFoods_2025_1.src {
             return int.Parse(Console.ReadLine());
         }
 
-        static Pizza ComprarPizza() {
+        static Comida ComprarComida() {
             Cabecalho();
-            Console.WriteLine("Comprando uma nova pizza:");
-            Pizza novaPizza = new Pizza();
-            EscolherIngredientes(novaPizza);
+            Console.WriteLine("Incluindo no pedido:");
+            Comida novaComida = EscolherComida();
+            EscolherIngredientes(novaComida);
             Console.WriteLine();
-            MostrarNota(novaPizza);
-            return novaPizza;
+            MostrarNota(novaComida);
+            return novaComida;
         }
 
-        static void EscolherIngredientes(Pizza pizza) {
-            int opcao = ExibirMenuIngredientes(pizza);
+        private static Comida EscolherComida() {
+            int opcao = ExibirMenuTipoComida();
+            return opcao switch {
+                2 =>  ComprarSanduiche(),
+                1 or _ => new Pizza()
+            };
+        }
+
+        private static Comida ComprarSanduiche() {
+            Console.WriteLine("Deseja combo com fritas (S/N)? ");
+            string querCombo = Console.ReadLine().ToLower();
+            return querCombo.Equals("s") ? new Sanduiche(true) : new Sanduiche();
+        }
+
+        static void EscolherIngredientes(Comida comida) {
+            int opcao = ExibirMenuIngredientes(comida);
             while (opcao != 0) {
                 Console.Write("Quantos ingredientes? ");
                 int adicionais = int.Parse(Console.ReadLine());
                 switch (opcao) {
                     case 1:
-                        pizza.AdicionarIngredientes(adicionais);
+                        comida.AdicionarIngredientes(adicionais);
                         break;
                     case 2:
-                        pizza.RetirarIngredientes(adicionais);
+                        comida.RetirarIngredientes(adicionais);
                         break;
                 };
                 Console.WriteLine();
-                MostrarNota(pizza);
+                MostrarNota(comida);
                 Pausa();
-                opcao = ExibirMenuIngredientes(pizza);
+                opcao = ExibirMenuIngredientes(comida);
             }
 
         }
 
-        static void MostrarNota(Pizza pizza) {
+        static void MostrarNota(Comida comida) {
             Console.WriteLine("Comprando: ");
-            Console.WriteLine(pizza);
+            Console.WriteLine(comida);
 
         }
 
