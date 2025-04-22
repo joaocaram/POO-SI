@@ -59,10 +59,19 @@ namespace XulambsFoods_2025_1.src {
         /// deve ser um valor positivo.
         /// </summary>
         /// <param name="distancia">Distância da entrega (double > 0)</param>
-        public PedidoEntrega(double distancia): base(MaxEntrega) {
+        public PedidoEntrega(double distancia): base() {
             if (distancia < 0.1)
                 distancia = 0.1;
             _distanciaEntrega = distancia;
+        }
+
+        /// <summary>
+        /// Sobrescreve a regra de adicionar comidas, para incluir a verificação
+        /// de tamanho máximo
+        /// </summary>
+        /// <returns>TRUE/FALSE conforme seja possível ou não incluir uma comida</returns>
+        protected override bool PodeAdicionar() {
+            return base.PodeAdicionar() && _comidas.Count < MaxEntrega;
         }
 
         /// <summary>
@@ -77,13 +86,14 @@ namespace XulambsFoods_2025_1.src {
             return TaxasEntrega[i];
         }
 
+        
         /// <summary>
         /// Preço a pagar pelo pedido de entrega: valor de um pedido +
         /// o valor da taxa de entrega.
         /// </summary>
         /// <returns>Valor a ser pago pelo pedido. (double positivo)</returns>
         public override double PrecoAPagar() {
-            return base.PrecoAPagar() + ValorTaxa();
+            return ValorItens() + ValorTaxa();
         }
 
         /// <summary>
@@ -92,7 +102,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>String multilinhas com o detalhamento descrito do pedido.</returns>
         public override string ToString() {
-            StringBuilder relat = new StringBuilder($"Pedido para Entrega ({_distanciaEntrega:F1}km) {DetalhamentoPedido()}");
+            StringBuilder relat = new StringBuilder($"Pedido para Entrega ({_distanciaEntrega:F1}km) {DetalhesPedido()}");
             
             relat.AppendLine($"\nValor dos itens: {ValorItens():C2}");
             relat.AppendLine($"Taxa de entrega: {ValorTaxa():C2}");

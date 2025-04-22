@@ -29,20 +29,11 @@ namespace XulambsFoods_2025_1.src {
     /// Um pedido pode agrupar várias pizzas. Deve exibir um relatório descritivo 
     /// com o detalhamento das pizzas e o valor total a pagar.
     /// </summary>
-    public class Pedido {
+    public abstract class Pedido {
         /// <summary>
         /// Static para geração do id do pedido seguinte.
         /// </summary>
         private static int s_ultimoPedido = 0;
-        /// <summary>
-        /// Apenas para controle do vetor de pizzas.
-        /// </summary>
-        private const int MaxPizzas = 100;
-
-        /// <summary>
-        /// Máximo de pizzas permitidas(pelo controle de tamanho)
-        /// </summary>
-        private int _maxPizzas;
         
         /// <summary>
         /// Identificador do pedido (gerado automaticamente) 
@@ -55,52 +46,37 @@ namespace XulambsFoods_2025_1.src {
         private DateOnly _data;
 
         /// <summary>
-        /// Armazenando as pizzas em um vetor. Pode ser melhorado futuramente.
-        /// </summary>
-        private Pizza[] _pizzas;
-
-        /// <summary>
-        /// Quantidade de pizzas no pedido atualmente.
-        /// </summary>
-        private int _quantPizzas;
-
-        /// <summary>
         /// Estado do pedido: aberto pode ser modificado, fechado não pode.
         /// </summary>
         private bool _aberto;
 
         /// <summary>
+        /// Armazenando as comidas em uma lista encadeada (dinâmica). 
+        /// </summary>
+        protected LinkedList<Comida> _comidas;
+
+        
+        /// <summary>
         /// Inicializador privado. Gera o identificador, cria o vetor
         /// e inicializa demais atributos
         /// </summary>
         /// <param name="maxPizzas"></param>
-        private void init(int maxPizzas) {
+        private void init() {
             s_ultimoPedido++;
             _idPedido = s_ultimoPedido;
-            _maxPizzas = maxPizzas;
             _data = DateOnly.FromDateTime(DateTime.Now);
-            if (_maxPizzas < 1)
-                _maxPizzas = 1;
-            _pizzas = new Pizza[_maxPizzas];
-            _quantPizzas = 0;
+            _comidas = new LinkedList<Comida>();
             _aberto = true;
         }
 
-        /// <summary>
-        /// Construtor para uso de classes derivadas, permitindo
-        /// restringir a quantidade de pizzas armazenadas.
-        /// </summary>
-        /// <param name="maxPizzas">Máximo de pizzas no pedido. Deve ser >= 1.</param>
-        protected Pedido(int maxPizzas) {
-            init(maxPizzas);
-        }
+        
 
         /// <summary>
         /// Cria um pedido vazio, com a data de hoje e identificador gerado
         /// automaticamente.
         /// </summary>
-        public Pedido() {
-            init(MaxPizzas);
+        protected Pedido() {
+            init();
         }
                
         /// <summary>
@@ -108,8 +84,22 @@ namespace XulambsFoods_2025_1.src {
         /// e quantidade de pizzas.
         /// </summary>
         /// <returns>TRUE/FALSE conforme seja permitido adicionar ou não</returns>
-        private bool PodeAdicionar() {
-            return _aberto && _quantPizzas < _maxPizzas;
+        protected virtual bool PodeAdicionar() {
+            return _aberto;
+        }
+
+        /// <summary>
+        /// Detalhamento do pedido (id, data, detalhes das pizzas)
+        /// comum a todos os pedidos.
+        /// </summary>
+        /// <returns>String multilinha com as informações acima</returns>
+        protected string DetalhesPedido() {
+            StringBuilder relat = new StringBuilder($"nº{_idPedido} - {_data}\n");
+            relat.AppendLine("==============================");
+            foreach(Comida comida in _comidas) {
+                relat.AppendLine(comida.ToString());
+            }
+            return relat.ToString();
         }
 
         /// <summary>
@@ -118,8 +108,8 @@ namespace XulambsFoods_2025_1.src {
         /// <returns>Valor dos itens do pedido (soma dos valores dos itens)</returns>
         protected double ValorItens() {
             double preco = 0d;
-            for (int i = 0; i < _quantPizzas; i++) {
-                preco += _pizzas[i].ValorFinal();
+            foreach (Comida comida in _comidas) {
+                preco += comida.ValorFinal();
             }
             return preco;
         }
@@ -127,14 +117,13 @@ namespace XulambsFoods_2025_1.src {
         /// <summary>
         /// Tenta adicionar uma pizza ao pedido. Se não for possível, ignora a operação.
         /// </summary>
-        /// <param name="pizza">A pizza a ser incluída no pedido</param>
+        /// <param name="comida">A pizza a ser incluída no pedido</param>
         /// <returns>Quantidade de pizzas no pedido após a execução.</returns>
-        public int Adicionar(Pizza pizza) {
+        public int Adicionar(Comida comida) {
             if (PodeAdicionar()) {
-                _pizzas[_quantPizzas] = pizza;
-                _quantPizzas++;
+                _comidas.AddLast(comida);
             }
-            return _quantPizzas;
+            return _comidas.Count;
         }
 
         /// <summary>
@@ -142,7 +131,7 @@ namespace XulambsFoods_2025_1.src {
         /// ignora a operação.
         /// </summary>
         public void FecharPedido() {
-            if(_quantPizzas > 0)
+            if(_comidas.Count > 0)
                 _aberto = false;
         }
 
@@ -150,35 +139,11 @@ namespace XulambsFoods_2025_1.src {
         /// Retorna o preço a pagar por um pedido (valor double positivo).
         /// </summary>
         /// <returns>Double com o valor a pagar pelo pedido.</returns>
-        public virtual double PrecoAPagar() {
-            return ValorItens();
-        }
+        public abstract double PrecoAPagar();
 
-        /// <summary>
-        /// Detalhamento do pedido (id, data, detalhes das pizzas)
-        /// comum a todos os pedidos.
-        /// </summary>
-        /// <returns>String multilinha com as informações acima</returns>
-        protected string DetalhamentoPedido(){
-            StringBuilder relat = new StringBuilder($"nº{ _idPedido} - { _data}\n");
-            relat.AppendLine("==============================");
-            for (int i = 0; i < _quantPizzas; i++)
-            {
-                relat.AppendLine(_pizzas[i].ToString());
-            }
-            return relat.ToString();
-        }
+       
 
-        /// <summary>
-        /// Relatório do pedido, contendo seu identificador, data,
-        /// detalhamento das pizzas e preço a pagar.
-        /// </summary>
-        /// <returns>Uma string, multilinhas, com a informação descrita</returns>
-        public override string ToString() {
-            StringBuilder relat = new StringBuilder($"Pedido Local {DetalhamentoPedido()}");
-            relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
-            return relat.ToString();
-        }
+        
 
         public override bool Equals(object? obj) {
             Pedido outroPedido = (Pedido)obj;
