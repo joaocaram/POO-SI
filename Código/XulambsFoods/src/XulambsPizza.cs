@@ -95,7 +95,7 @@ namespace XulambsFoods_2025_1.src {
         }
 
         static Pedido CriarPedidoLocal() {
-            return new Pedido();
+            return new PedidoLocal();
         }
 
         static Pedido CriarPedidoEntrega() {
@@ -136,7 +136,7 @@ namespace XulambsFoods_2025_1.src {
         }
 
         private static Comida ComprarSanduiche() {
-            Console.WriteLine("Deseja combo com fritas (S/N)? ");
+            Console.Write("Deseja combo com fritas (S/N)? ");
             string querCombo = Console.ReadLine().ToLower();
             return querCombo.Equals("s") ? new Sanduiche(true) : new Sanduiche();
         }
