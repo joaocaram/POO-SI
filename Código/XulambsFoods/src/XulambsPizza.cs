@@ -52,7 +52,7 @@ namespace XulambsFoods_2025_1.src {
             return int.Parse(Console.ReadLine());
         }
 
-        static void AdicionarPizzas(Pedido pedido) {
+        static void AdicionarComidas(Pedido pedido) {
             string conf;
             do {
                 Comida novaComida = ComprarComida();
@@ -64,7 +64,7 @@ namespace XulambsFoods_2025_1.src {
 
         static Pedido AbrirPedido() {
             Pedido novoPedido = EscolherTipoPedido();
-            AdicionarPizzas(novoPedido);
+            AdicionarComidas(novoPedido);
             return novoPedido;
         }
 
@@ -130,7 +130,7 @@ namespace XulambsFoods_2025_1.src {
         private static Comida EscolherComida() {
             int opcao = ExibirMenuTipoComida();
             return opcao switch {
-                2 =>  ComprarSanduiche(),
+                2 => ComprarSanduiche(),
                 1 or _ => new Pizza()
             };
         }
@@ -197,7 +197,7 @@ namespace XulambsFoods_2025_1.src {
         static void AlterarPedido() {
             Pedido pedidoParaAlteracao = LocalizarPedido();
             if (pedidoParaAlteracao != null) {
-                AdicionarPizzas(pedidoParaAlteracao);
+                AdicionarComidas(pedidoParaAlteracao);
                 MostrarPedido(pedidoParaAlteracao);
             }
             else
