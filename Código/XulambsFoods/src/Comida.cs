@@ -26,16 +26,14 @@ namespace XulambsFoods_2025_1.src {
             _valorAdicional = valorAdicional;
 
         }
-
-        /// <summary>
+                /// <summary>
         /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
         /// </summary>
         /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
         protected virtual double ValorAdicionais() {
             return _quantidadeIngredientes * _valorAdicional;
         }
-
-        /// <summary>
+                /// <summary>
         ///Faz a verificação de limites para adicionar ingredientes na pizza.Retorna TRUE/FALSE conforme seja possível ou não adicionar 
         ///esta quantidade de ingredientes.
         /// </summary>
@@ -46,7 +44,7 @@ namespace XulambsFoods_2025_1.src {
                     quantos + _quantidadeIngredientes <= _maxIngredientes);
         }
 
-        public abstract double ValorFinal();
+        public abstract double ValorFinal(); //permite OCP e LSP
 
         /// <summary>
         /// Tenta adicionar ingredientes na pizza.Caso a adição seja inválida(ultrapassando limites ou com valores negativos), mantém
@@ -61,8 +59,6 @@ namespace XulambsFoods_2025_1.src {
             return _quantidadeIngredientes;
         }
 
-
-
         /// <summary>
         /// Tenta retirar ingredientes na pizza.Caso a adição seja inválida(resultando em  valores negativos), mantém
         /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
@@ -72,7 +68,6 @@ namespace XulambsFoods_2025_1.src {
         public int RetirarIngredientes(int quantos) {
             return AdicionarIngredientes(0 - quantos);
         }
-
 
 
         public override string ToString() {
