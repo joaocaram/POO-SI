@@ -34,7 +34,7 @@ namespace XulambsFoods_2025_1.src {
 
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA v0.3\n================");
+            Console.WriteLine("XULAMBS FOODS v0.31\n================");
         }
 
         static void Pausa() {
@@ -57,7 +57,7 @@ namespace XulambsFoods_2025_1.src {
             do {
                 Comida novaComida = ComprarComida();
                 pedido.Adicionar(novaComida);
-                Console.Write("\nQuer uma nova pizza (S/N)? ");
+                Console.Write("\nQuer adicionar algo mais (S/N)? ");
                 conf = Console.ReadLine().ToUpper();
             } while (conf.Equals("S"));
         }
