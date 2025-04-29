@@ -47,6 +47,7 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine("1 - Abrir Pedido");
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
+            Console.WriteLine("4 - Fechar Pedido");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -212,6 +213,20 @@ namespace XulambsFoods_2025_1.src {
                 Console.WriteLine("Pedido não existente");
         }
 
+        static void FecharPedido()
+        {
+            Pedido localizado = LocalizarPedido();
+            if (localizado != null)
+            {
+                localizado.FecharPedido();
+                Console.WriteLine("Pedido fechado:");
+                MostrarPedido(localizado);
+            }
+                
+            else
+                Console.WriteLine("Pedido não existente");
+        }
+
 
         static void Main(string[] args) {
             int opcao = -1;
@@ -228,6 +243,9 @@ namespace XulambsFoods_2025_1.src {
                         break;
                     case 3:
                         RelatorioDePedido();
+                        break;
+                    case 4:
+                        FecharPedido();
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
