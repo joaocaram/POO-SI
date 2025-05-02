@@ -53,9 +53,10 @@ namespace XulambsFoods_2025_1.src {
         /// <param name="quantos">Quantos ingredientes a serem adicionados (>0)</param>
         /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
         public int AdicionarIngredientes(int quantos) {
-            if (PodeAlterarIngredientes(quantos)) {
-                _quantidadeIngredientes += quantos;
+            if (!PodeAlterarIngredientes(quantos)) {
+                throw new MaximoDeIngredientesException(quantos+_quantidadeIngredientes);          
             }
+            _quantidadeIngredientes += quantos;
             return _quantidadeIngredientes;
         }
 

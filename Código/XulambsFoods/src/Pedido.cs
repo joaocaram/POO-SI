@@ -119,10 +119,15 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <param name="comida">A pizza a ser incluída no pedido</param>
         /// <returns>Quantidade de pizzas no pedido após a execução.</returns>
+        /// <exception cref="InvalidOperationException">InvalidOperationException em caso de 
+        /// tentativa de alteração de pedido fechado</exception>
         public int Adicionar(Comida comida) {
-            if (PodeAdicionar()) {
-                _comidas.AddLast(comida);
+            if (!PodeAdicionar()) {
+                throw new InvalidOperationException("Pedido fechado: não pode ser alterado.");
             }
+            if (comida == null)
+                throw new ArgumentNullException("Comida não foi criada corretamente");
+            _comidas.AddLast(comida);
             return _comidas.Count;
         }
 
@@ -131,8 +136,10 @@ namespace XulambsFoods_2025_1.src {
         /// ignora a operação.
         /// </summary>
         public void FecharPedido() {
-            if(_comidas.Count > 0)
+            if (_comidas.Count > 0)
                 _aberto = false;
+            else
+                throw new InvalidOperationException("O pedido não pode ser fechado sem comidas");
         }
 
         /// <summary>

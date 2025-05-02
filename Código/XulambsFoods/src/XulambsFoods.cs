@@ -1,6 +1,5 @@
-
-
-namespace XulambsFoods_2025_1.src {
+namespace XulambsFoods_2025_1.src
+{
 
     /** 
     * MIT License
@@ -26,7 +25,7 @@ namespace XulambsFoods_2025_1.src {
     * SOFTWARE.
     */
 
-    public class XulambsPizza {
+    public class XulambsFoods {
 
         const int MaxPedidos = 100;
         static Pedido[] pedidos = new Pedido[MaxPedidos];
@@ -34,7 +33,7 @@ namespace XulambsFoods_2025_1.src {
 
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS v0.31\n================");
+            Console.WriteLine("XULAMBS FOODS v0.32\n================");
         }
 
         static void Pausa() {
@@ -54,13 +53,20 @@ namespace XulambsFoods_2025_1.src {
         }
 
         static void AdicionarComidas(Pedido pedido) {
-            string conf;
+            string confirmacao;
             do {
                 Comida novaComida = ComprarComida();
-                pedido.Adicionar(novaComida);
-                Console.Write("\nQuer adicionar algo mais (S/N)? ");
-                conf = Console.ReadLine().ToUpper();
-            } while (conf.Equals("S"));
+                try { 
+                    pedido.Adicionar(novaComida);
+                    Console.Write("\nQuer adicionar algo mais (S/N)? ");
+                    confirmacao = Console.ReadLine().ToUpper();
+                }catch(InvalidOperationException iex)
+                {
+                    Console.WriteLine("Pedido já está fechado!");
+                    Pausa();
+                    confirmacao = "N";
+                }
+            } while (confirmacao.Equals("S"));
         }
 
         static Pedido AbrirPedido() {
@@ -106,7 +112,12 @@ namespace XulambsFoods_2025_1.src {
             return new PedidoEntrega(dist);
         }
 
-
+        /// <summary>
+        /// Exibe menu para adicionar ou remover ingredientes.
+        /// </summary>
+        /// <param name="comida">Comida para mostrar a nota</param>
+        /// <returns>Opção válida do menu, ou -1 em caso
+        /// de digitação de opção inválida</returns>
         static int ExibirMenuIngredientes(Comida comida) {
             Cabecalho();
             Console.WriteLine("Personalizar a Comida\n");
@@ -114,8 +125,9 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine("\n1 - Acrescentar ingredientes");
             Console.WriteLine("2 - Retirar ingredientes");
             Console.WriteLine("0 - Não quero alterar");
-            Console.Write("Digite sua escolha: ");
-            return int.Parse(Console.ReadLine());
+            return lerNumero("Digite sua escolha");
+           
+            
         }
 
         static Comida ComprarComida() {
@@ -128,6 +140,24 @@ namespace XulambsFoods_2025_1.src {
             return novaComida;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private static int lerNumero(string msg)
+        {
+            Console.Write(msg + ":");
+            try
+            {
+                return int.Parse(Console.ReadLine());
+            }
+            catch (FormatException fException)
+            {
+                return -1;
+            }
+
+        }
         private static Comida EscolherComida() {
             int opcao = ExibirMenuTipoComida();
             return opcao switch {
@@ -145,13 +175,26 @@ namespace XulambsFoods_2025_1.src {
         static void EscolherIngredientes(Comida comida) {
             int opcao = ExibirMenuIngredientes(comida);
             while (opcao != 0) {
-                Console.Write("Quantos ingredientes? ");
-                int adicionais = int.Parse(Console.ReadLine());
+
+                int adicionais;
                 switch (opcao) {
+                    case -1: Console.WriteLine("Opção inválida. Tente novamente");
+                        break;
                     case 1:
-                        comida.AdicionarIngredientes(adicionais);
+                        adicionais = lerNumero("Quantidade de ingredientes");
+                        try
+                        {
+                            comida.AdicionarIngredientes(adicionais);
+                        }catch(MaximoDeIngredientesException mex)
+                        {
+                            Console.WriteLine(mex.Message);
+                            Console.WriteLine("Quantidade: " + mex.getQuant());
+                            Pausa();
+                        }
+                        
                         break;
                     case 2:
+                        adicionais = lerNumero("Quantidade de ingredientes");
                         comida.RetirarIngredientes(adicionais);
                         break;
                 };
