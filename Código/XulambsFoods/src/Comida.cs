@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace XulambsFoods_2025_1.src {
 
-    public abstract class Comida {
+    public abstract class Comida : IComparable<Comida> {
         private int _maxIngredientes;
         private string _descricao;
         private double _precoBase;
@@ -73,6 +73,17 @@ namespace XulambsFoods_2025_1.src {
 
         public override string ToString() {
             return $"{_descricao} ({_precoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2})";
+        }
+
+        public int CompareTo(Comida? other)
+        {
+            double diferenca = this.ValorFinal() - other.ValorFinal();
+            int resposta = 0;
+
+            if (diferenca != 0)
+                resposta = (diferenca < 0) ? -1 : 1;
+           
+            return resposta;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace XulambsFoods_2025_1.src {
     /// Um pedido pode agrupar várias pizzas. Deve exibir um relatório descritivo 
     /// com o detalhamento das pizzas e o valor total a pagar.
     /// </summary>
-    public abstract class Pedido {
+    public abstract class Pedido : IComparable<Pedido> {
         /// <summary>
         /// Static para geração do id do pedido seguinte.
         /// </summary>
@@ -166,6 +166,19 @@ namespace XulambsFoods_2025_1.src {
         /// <returns>Identificador do pedido (inteiro positivo)</returns>
         public override int GetHashCode() {
             return _idPedido;
+        }
+
+        public int CompareTo(Pedido? other)
+        {
+            int resposta = -1;
+            double precoDeste = this.PrecoAPagar();
+            double precoOutro = other.PrecoAPagar();
+            if (precoDeste == precoOutro)
+                resposta = 0;
+            else if (precoDeste > precoOutro)
+                resposta = 1;
+            return resposta;
+
         }
     }
 }
