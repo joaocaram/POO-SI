@@ -32,7 +32,7 @@ namespace XulambsFoods_2025_1.src
         static Comida[] comidas= new Comida[MaxPedidos];
         static int quantPedidos = 0;
 
-        static T maiorDoConjunto<T>(T[] dados) where T:IComparable<T>
+        static T maiorDoConjunto<T>(T[] dados) where T : IComparable<T>
         {
             T maior = dados[0];
             for (int i = 1; i < quantPedidos; i++)
@@ -291,12 +291,10 @@ namespace XulambsFoods_2025_1.src
         }
 
         
-
         static void Main(string[] args) {
             int opcao = -1;
             do {
                 opcao = ExibirMenuPrincipal();
-                ExibirMaior(comidas);
                 switch (opcao) {
                     case 1:
                         Pedido novoPedido = AbrirPedido();
@@ -314,6 +312,9 @@ namespace XulambsFoods_2025_1.src
                         break;
                     case 5:
                         ExibirMaior(pedidos);
+                        break;
+                    case 6:
+                        ExibirMaior(comidas);
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");

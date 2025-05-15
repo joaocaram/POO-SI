@@ -178,7 +178,6 @@ namespace XulambsFoods_2025_1.src {
             else if (precoDeste > precoOutro)
                 resposta = 1;
             return resposta;
-
         }
     }
 }
