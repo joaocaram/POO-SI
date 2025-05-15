@@ -29,7 +29,19 @@ namespace XulambsFoods_2025_1.src
 
         const int MaxPedidos = 100;
         static Pedido[] pedidos = new Pedido[MaxPedidos];
+        static Comida[] comidas= new Comida[MaxPedidos];
         static int quantPedidos = 0;
+
+        static T maiorDoConjunto<T>(T[] dados) where T:IComparable<T>
+        {
+            T maior = dados[0];
+            for (int i = 1; i < quantPedidos; i++)
+            {
+                if (dados[i].CompareTo(maior) > 0)
+                    maior = dados[i];
+            }
+            return maior;
+        }
 
         static void Cabecalho() {
             Console.Clear();
@@ -47,6 +59,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Fechar Pedido");
+            Console.WriteLine("5 - Obter maior Pedido do dia");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -270,11 +283,20 @@ namespace XulambsFoods_2025_1.src
                 Console.WriteLine("Pedido não existente");
         }
 
+        static void ExibirMaior<T>(T[] dados) where T: IComparable<T>
+        {
+            Cabecalho();
+            Console.WriteLine("Pedido mais caro do dia:");
+            Console.WriteLine(maiorDoConjunto(dados));
+        }
+
+        
 
         static void Main(string[] args) {
             int opcao = -1;
             do {
                 opcao = ExibirMenuPrincipal();
+                ExibirMaior(comidas);
                 switch (opcao) {
                     case 1:
                         Pedido novoPedido = AbrirPedido();
@@ -289,6 +311,9 @@ namespace XulambsFoods_2025_1.src
                         break;
                     case 4:
                         FecharPedido();
+                        break;
+                    case 5:
+                        ExibirMaior(pedidos);
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
