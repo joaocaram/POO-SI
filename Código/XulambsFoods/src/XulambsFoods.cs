@@ -29,8 +29,18 @@ namespace XulambsFoods_2025_1.src
 
         const int MaxPedidos = 100;
         static Pedido[] pedidos = new Pedido[MaxPedidos];
-        static Comida[] comidas= new Comida[MaxPedidos];
+        static Dictionary<int, Cliente> clientes = new Dictionary<int, Cliente>();
         static int quantPedidos = 0;
+
+        static void config()
+        {
+            Cliente nova = new Cliente(0, "Anônimo");
+            clientes.Add(nova.GetHashCode(), nova);
+            nova = new Cliente(1, "Ada");
+            clientes.Add(nova.GetHashCode(), nova);
+            nova = new Cliente(2, "Dorothy");
+            clientes.Add(nova.GetHashCode(), nova);
+        }
 
         static T maiorDoConjunto<T>(T[] dados) where T:IComparable<T>
         {
@@ -45,7 +55,7 @@ namespace XulambsFoods_2025_1.src
 
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS v0.4\n================");
+            Console.WriteLine("XULAMBS FOODS v0.5\n================");
         }
 
         static void Pausa() {
@@ -291,18 +301,39 @@ namespace XulambsFoods_2025_1.src
         }
 
         
+        static void RegistrarPedidoParaCliente(Pedido pedido)
+        {
+            Cabecalho();
+            MostrarPedido(pedido);
+  
+            int id = lerNumero("ID do cliente");
+            Cliente cliente = clientes[id];
+            cliente.RegistrarPedido(pedido);
+            Console.WriteLine($"Pedido registrado para {cliente.ToString()}");
+        }
 
+        static void CriarERegistrarPedido()
+        {
+            Pedido novoPedido = AbrirPedido();
+            try
+            {
+                RegistrarPedidoParaCliente(novoPedido);
+            }
+            catch (KeyNotFoundException ke)
+            {
+                clientes[0].RegistrarPedido(novoPedido);
+                Console.WriteLine("Não foi encontrado cliente com este id. Registrado para cliente anônimo");
+            }
+            ArmazenarPedido(novoPedido);
+        }
         static void Main(string[] args) {
+            config();
             int opcao = -1;
             do {
                 opcao = ExibirMenuPrincipal();
-                ExibirMaior(comidas);
                 switch (opcao) {
-                    case 1:
-                        Pedido novoPedido = AbrirPedido();
-                        MostrarPedido(novoPedido);
-                        ArmazenarPedido(novoPedido);
-                        break;
+                    case 1: CriarERegistrarPedido();
+                       break;
                     case 2:
                         AlterarPedido();
                         break;
