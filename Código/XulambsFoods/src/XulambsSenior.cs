@@ -13,7 +13,20 @@ namespace XulambsFoods_2025_1.src
 		private const double ValorCupom = 10;
 		private int _contadorPedidos;
 
-		
+        public XulambsSenior() {
+            _contadorPedidos = 0;
+        }
+
+        public double DescontoPedido(Pedido pedido) {
+            if (pedido == null)
+                throw new ArgumentNullException("Pedido não foi criado corretamente");
+            double valorDesconto = pedido.PrecoAPagar() * PctDesconto;
+            if ((_contadorPedidos + 1) % ComprasCupom == 0)
+                valorDesconto += ValorCupom;
+            pedido.AplicarDesconto(valorDesconto);
+            _contadorPedidos++;
+            return valorDesconto;
+        }
 
         public override string ToString() {
             return "Cliente Xulambs Senior";

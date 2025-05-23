@@ -15,5 +15,13 @@ namespace XulambsFoods_2025_1.src
         public override string ToString() {
             return "Cliente Xulambs Pleno";
         }
+
+        public double DescontoPedido(Pedido pedido) {
+            if(pedido == null)
+                throw new ArgumentNullException("Pedido não foi criado corretamente");
+            double desc = pedido.PrecoAPagar() * PctDesconto;
+            pedido.AplicarDesconto(desc);
+            return desc;
+        }
     }
 }

@@ -25,6 +25,9 @@ namespace XulambsFoods_2025_1.src
 
         public int RegistrarPedido(Pedido novo)
         {
+            if (novo == null)
+                throw new ArgumentNullException("O pedido não é válido para registro.");
+            _categoria.DescontoPedido(novo);            
             _pedidos.Enqueue(novo);
             return _pedidos.Count;
         }
@@ -54,7 +57,7 @@ namespace XulambsFoods_2025_1.src
         }
 
         public void AtualizarCategoria() {
-            
+            _categoria = IFidelidade.DefinirCategoria(_pedidos);
         }
 
         public override string ToString()

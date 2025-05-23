@@ -167,10 +167,10 @@ namespace XulambsFoods_2025_1.src {
         }
 
         public double AplicarDesconto(double valor) {
+            if (valor < 0)
+                throw new ArgumentOutOfRangeException("Valor não pode ser negativo");
             if (_desconto != 0)
                 throw new InvalidOperationException("Desconto já foi aplicado neste pedido");
-            if (valor < 0 )
-                throw new ArgumentOutOfRangeException("Valor não pode ser negativo");
             _desconto = valor;
             return _desconto;
         }

@@ -42,7 +42,6 @@ namespace XulambsFoods_2025_1.src
                 clientes.Add(novo.GetHashCode(), novo);
                 doc++;
             }
-            
         }
 
         static void gerarPedidos(int quantCli) {
@@ -324,9 +323,7 @@ namespace XulambsFoods_2025_1.src
             Pedido localizado = LocalizarPedido();
             if (localizado != null)
             {
-                localizado.FecharPedido();
-                Console.WriteLine("Pedido fechado:");
-                MostrarPedido(localizado);
+                FecharERegistrarPedido(localizado);
             }
                 
             else
@@ -342,31 +339,37 @@ namespace XulambsFoods_2025_1.src
 
         
         static void RegistrarPedidoParaCliente(Pedido pedido)
-        {
-            Cabecalho();
-              
+        {  
             int id = lerNumero("ID do cliente");
             Cliente cliente = clientes[id];
             cliente.RegistrarPedido(pedido);
             Console.WriteLine($"\nPedido registrado para {cliente.ToString()}\n");
-            MostrarPedido(pedido);
         }
 
-        static void CriarERegistrarPedido()
+        static void CriarPedido()
         {
             Pedido novoPedido = AbrirPedido();
-            try
-            {
-                RegistrarPedidoParaCliente(novoPedido);
+            if (novoPedido != null) {
+                MostrarPedido(novoPedido);
+                ArmazenarPedido(novoPedido);
             }
-            catch (KeyNotFoundException ke)
-            {
-                clientes[0].RegistrarPedido(novoPedido);
-                Console.WriteLine("Não foi encontrado cliente com este id. Registrado para cliente anônimo");
-            }
-            ArmazenarPedido(novoPedido);
+            else
+                Console.WriteLine("Pedido não foi criado corretamente.");
         }
 
+        static void FecharERegistrarPedido(Pedido pedido) {
+            
+            try {
+                RegistrarPedidoParaCliente(pedido);
+            }
+            catch (KeyNotFoundException ke) {
+                clientes[0].RegistrarPedido(pedido);
+                Console.WriteLine("Não foi encontrado cliente com este id. Registrado para cliente anônimo");
+            }
+            pedido.FecharPedido();
+            Console.WriteLine("Pedido fechado:");
+            MostrarPedido(pedido);
+        }
         static void RelatorioCliente() {
             Cabecalho();
             Console.WriteLine("RELATÓRIO DETALHADO DE CLIENTE");
@@ -394,7 +397,7 @@ namespace XulambsFoods_2025_1.src
             do {
                 opcao = ExibirMenuPrincipal();
                 switch (opcao) {
-                    case 1: CriarERegistrarPedido();
+                    case 1: CriarPedido();
                        break;
                     case 2:
                         AlterarPedido();
