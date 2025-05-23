@@ -51,6 +51,11 @@ namespace XulambsFoods_2025_1.src {
         private bool _aberto;
 
         /// <summary>
+        /// Valor de um possível desconto para o pedido. Só pode ser aplicado o desconto uma vez.
+        /// </summary>
+        private double _desconto;
+
+        /// <summary>
         /// Armazenando as comidas em uma lista encadeada (dinâmica). 
         /// </summary>
         protected LinkedList<Comida> _comidas;
@@ -66,10 +71,9 @@ namespace XulambsFoods_2025_1.src {
             _idPedido = s_ultimoPedido;
             _data = DateOnly.FromDateTime(DateTime.Now);
             _comidas = new LinkedList<Comida>();
+            _desconto = 0d;
             _aberto = true;
         }
-
-        
 
         /// <summary>
         /// Cria um pedido vazio, com a data de hoje e identificador gerado
@@ -99,6 +103,18 @@ namespace XulambsFoods_2025_1.src {
             foreach(Comida comida in _comidas) {
                 relat.AppendLine(comida.ToString());
             }
+            relat.AppendLine($"\nValor dos itens: {ValorItens():C2}");
+            return relat.ToString();
+        }
+
+        /// <summary>
+        /// Rodapé da nota de compra, com o desconto e o valor a pagar.
+        /// </summary>
+        /// <returns>String multilinha com as informações acima</returns>
+        protected string RodapeNotinha() {
+            StringBuilder relat = new StringBuilder();
+            relat.AppendLine($"Desconto do cliente: {_desconto:C2}");
+            relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
             return relat.ToString();
         }
 
@@ -146,11 +162,18 @@ namespace XulambsFoods_2025_1.src {
         /// Retorna o preço a pagar por um pedido (valor double positivo).
         /// </summary>
         /// <returns>Double com o valor a pagar pelo pedido.</returns>
-        public abstract double PrecoAPagar();
+        public virtual double PrecoAPagar() {
+            return ValorItens() - _desconto;
+        }
 
-       
-
-        
+        public double AplicarDesconto(double valor) {
+            if (_desconto != 0)
+                throw new InvalidOperationException("Desconto já foi aplicado neste pedido");
+            if (valor < 0 )
+                throw new ArgumentOutOfRangeException("Valor não pode ser negativo");
+            _desconto = valor;
+            return _desconto;
+        }
 
         public override bool Equals(object? obj) {
             Pedido outroPedido = (Pedido)obj;

@@ -10,6 +10,7 @@ namespace XulambsFoods_2025_1.src
     {
         private int _id;
         private string _nome;
+        private IFidelidade _categoria;
         private Queue<Pedido> _pedidos;
 
         public Cliente(int id, string nome)
@@ -18,25 +19,27 @@ namespace XulambsFoods_2025_1.src
                 throw new ArgumentOutOfRangeException("Id deve ser positivo e o nome deve ter ao menos 2 letras");
             _id = id;
             _nome = nome;
+            _categoria = new XulambsJunior();
             _pedidos = new Queue<Pedido>();
         }
 
         public int RegistrarPedido(Pedido novo)
         {
-            if (novo == null)
-                throw new ArgumentNullException("Pedido não foi criado corretamente");
             _pedidos.Enqueue(novo);
             return _pedidos.Count;
         }
 
         public string RelatorioPedidos()
         {
-            StringBuilder relat = new StringBuilder($"{_nome} ({_id}) - Relatório de Pedidos\n");
+            StringBuilder relat = new StringBuilder($"{_nome} ({_id}) - {_categoria}\nRelatório de Pedidos\n");
+            int i = 1;
             foreach (Pedido pedido in _pedidos)
             {
-                relat.AppendLine("==============");
-                relat.AppendLine(pedido.ToString());
+                relat.AppendLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+                relat.AppendLine($"{i:D3} - {pedido.ToString()}\n");
+                i++;
             }
+            relat.AppendLine($"Total gasto pelo cliente: {TotalGasto():C2}");
             return relat.ToString();
         }
 
@@ -50,9 +53,13 @@ namespace XulambsFoods_2025_1.src
             return total;
         }
 
+        public void AtualizarCategoria() {
+            
+        }
+
         public override string ToString()
         {
-            return $"{_nome} - ({_id}). Total gasto: {TotalGasto():C2} em {_pedidos.Count} pedidos.";
+            return $"{_nome} - ({_id}) - {_categoria}.\nTotal gasto: {TotalGasto():C2} em {_pedidos.Count} pedidos.";
         }
 
         public override bool Equals(object? obj)

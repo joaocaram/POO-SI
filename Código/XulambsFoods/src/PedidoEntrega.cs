@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Transactions;
 
 
 /** 
@@ -93,7 +94,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>Valor a ser pago pelo pedido. (double positivo)</returns>
         public override double PrecoAPagar() {
-            return ValorItens() + ValorTaxa();
+            return base.PrecoAPagar() + ValorTaxa();
         }
 
         /// <summary>
@@ -104,9 +105,9 @@ namespace XulambsFoods_2025_1.src {
         public override string ToString() {
             StringBuilder relat = new StringBuilder($"Pedido para Entrega ({_distanciaEntrega:F1}km) {DetalhesPedido()}");
             
-            relat.AppendLine($"\nValor dos itens: {ValorItens():C2}");
+            
             relat.AppendLine($"Taxa de entrega: {ValorTaxa():C2}");
-            relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
+            relat.Append(RodapeNotinha());
             return relat.ToString();
         }
     }

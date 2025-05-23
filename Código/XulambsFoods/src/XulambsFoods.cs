@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace XulambsFoods_2025_1.src
 {
 
@@ -27,28 +29,67 @@ namespace XulambsFoods_2025_1.src
 
     public class XulambsFoods {
 
-        const int MaxPedidos = 100;
-        static Pedido[] pedidos = new Pedido[MaxPedidos];
+        static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
         static Dictionary<int, Cliente> clientes = new Dictionary<int, Cliente>();
-        static int quantPedidos = 0;
+        
+
+        static void gerarClientes() {
+            clientes.Add(0, new Cliente(0, "Anônimo"));
+            string[] nomes = File.ReadAllLines("medalhistas.txt");
+            int doc = 1;
+            foreach (string nome in nomes) {
+                Cliente novo = new Cliente(doc, nome);
+                clientes.Add(novo.GetHashCode(), novo);
+                doc++;
+            }
+            
+        }
+
+        static void gerarPedidos(int quantCli) {
+            Random aleat = new Random(42);
+            Pedido pedido;
+            Comida comida;
+            for (int i = 0; i < quantCli * 16; i++) {
+                int tipo = aleat.Next() % 2;
+                if (tipo == 0) pedido = new PedidoLocal();
+                else pedido = new PedidoEntrega(aleat.Next(14));
+                
+                int quantComidas = aleat.Next(1000);
+                if (quantComidas > 950)
+                    quantComidas = 4;
+                else if (quantComidas > 750)
+                    quantComidas = 3;
+                else if (quantComidas > 500)
+                    quantComidas = 2;
+                else quantComidas = 1;
+
+                for (int j = 0; j < quantComidas; j++) {
+                    tipo = aleat.Next() % 2;
+                    int quantAdic = aleat.Next(5);
+                    if (tipo == 0) comida = new Pizza(quantAdic);
+                    else comida = new Sanduiche(quantAdic);
+                    pedido.Adicionar(comida);
+                }
+                Cliente quem = clientes[aleat.Next(quantCli)];
+                quem.RegistrarPedido(pedido);
+                pedido.FecharPedido();
+                pedidos.AddLast(pedido);
+            }
+        }
 
         static void config()
         {
-            Cliente nova = new Cliente(0, "Anônimo");
-            clientes.Add(nova.GetHashCode(), nova);
-            nova = new Cliente(1, "Ada");
-            clientes.Add(nova.GetHashCode(), nova);
-            nova = new Cliente(2, "Dorothy");
-            clientes.Add(nova.GetHashCode(), nova);
+            gerarClientes();
+            gerarPedidos(clientes.Count);
         }
 
-        static T maiorDoConjunto<T>(T[] dados) where T:IComparable<T>
+        static T maiorDoConjunto<T>(ICollection<T> dados) where T:IComparable<T>
         {
-            T maior = dados[0];
-            for (int i = 1; i < quantPedidos; i++)
+            T maior = dados.ElementAt(0);
+            for (int i = 1; i < dados.Count; i++)
             {
-                if (dados[i].CompareTo(maior) > 0)
-                    maior = dados[i];
+                if (dados.ElementAt(i).CompareTo(maior) > 0)
+                    maior = dados.ElementAt(i);
             }
             return maior;
         }
@@ -70,6 +111,9 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Fechar Pedido");
             Console.WriteLine("5 - Obter maior Pedido do dia");
+            Console.WriteLine("6 - Relatório de cliente");
+            Console.WriteLine("7 - Atualizar programa de fidelidade");
+
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -170,7 +214,7 @@ namespace XulambsFoods_2025_1.src
         /// <returns></returns>
         private static int lerNumero(string msg)
         {
-            Console.Write(msg + ":");
+            Console.Write(msg + ": ");
             try
             {
                 return int.Parse(Console.ReadLine());
@@ -236,15 +280,11 @@ namespace XulambsFoods_2025_1.src
         }
 
         static void MostrarPedido(Pedido pedido) {
-            Cabecalho();
             Console.WriteLine(pedido);
         }
 
         static void ArmazenarPedido(Pedido pedido) {
-            if (quantPedidos < MaxPedidos) {
-                pedidos[quantPedidos] = pedido;
-                quantPedidos++;
-            }
+            pedidos.AddLast(pedido);
         }
 
         static Pedido LocalizarPedido() {
@@ -254,9 +294,9 @@ namespace XulambsFoods_2025_1.src
             int numero = int.Parse(Console.ReadLine());
             Pedido localizado = null;
 
-            for (int i = 0; i < quantPedidos; i++) {
-                if (pedidos[i].GetHashCode() == numero)
-                    localizado = pedidos[i];
+            for (int i = 0; i < pedidos.Count && localizado == null; i++) {
+                if (pedidos.ElementAt(i).GetHashCode() == numero)
+                    localizado = pedidos.ElementAt(i);
             }
             return localizado;
         }
@@ -293,7 +333,7 @@ namespace XulambsFoods_2025_1.src
                 Console.WriteLine("Pedido não existente");
         }
 
-        static void ExibirMaior<T>(T[] dados) where T: IComparable<T>
+        static void ExibirMaior<T>(ICollection<T> dados) where T: IComparable<T>
         {
             Cabecalho();
             Console.WriteLine("Pedido mais caro do dia:");
@@ -304,12 +344,12 @@ namespace XulambsFoods_2025_1.src
         static void RegistrarPedidoParaCliente(Pedido pedido)
         {
             Cabecalho();
-            MostrarPedido(pedido);
-  
+              
             int id = lerNumero("ID do cliente");
             Cliente cliente = clientes[id];
             cliente.RegistrarPedido(pedido);
-            Console.WriteLine($"Pedido registrado para {cliente.ToString()}");
+            Console.WriteLine($"\nPedido registrado para {cliente.ToString()}\n");
+            MostrarPedido(pedido);
         }
 
         static void CriarERegistrarPedido()
@@ -326,6 +366,28 @@ namespace XulambsFoods_2025_1.src
             }
             ArmazenarPedido(novoPedido);
         }
+
+        static void RelatorioCliente() {
+            Cabecalho();
+            Console.WriteLine("RELATÓRIO DETALHADO DE CLIENTE");
+            int id = lerNumero("ID do cliente");
+            string mensagem = "";
+            try {
+                Cliente cliente = clientes[id];
+                mensagem = cliente.RelatorioPedidos();
+            }catch(KeyNotFoundException knfex) {
+                mensagem = $"Cliente com id {id} não existe.";
+            }
+            Console.WriteLine($"\n{mensagem}");
+        }
+
+        static void AtualizarFidelidade() {
+            foreach (Cliente cliente in clientes.Values) {
+                cliente.AtualizarCategoria();
+            }
+            Console.WriteLine("Categorias atualizadas.");
+        }
+
         static void Main(string[] args) {
             config();
             int opcao = -1;
@@ -346,11 +408,17 @@ namespace XulambsFoods_2025_1.src
                     case 5:
                         ExibirMaior(pedidos);
                         break;
+                    case 6:
+                        RelatorioCliente();
+                        break;
+                    case 7:
+                        AtualizarFidelidade();
+                        break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
                         break;
                 }
-                Console.ReadKey();
+                Pausa();
             } while (opcao != 0);
         }
     }

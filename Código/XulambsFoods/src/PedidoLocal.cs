@@ -12,7 +12,7 @@ namespace XulambsFoods_2025_1.src {
         }
 
         public override double PrecoAPagar() {
-            return ValorItens();
+            return base.PrecoAPagar();
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace XulambsFoods_2025_1.src {
         /// <returns>Uma string, multilinhas, com a informação descrita</returns>
         public override string ToString() {
             StringBuilder relat = new StringBuilder($"Pedido Local {DetalhesPedido()}");
-            relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
+            relat.Append(RodapeNotinha());
             return relat.ToString();
         }
     }
