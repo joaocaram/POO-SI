@@ -111,7 +111,8 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("5 - Obter maior Pedido do dia");
             Console.WriteLine("6 - Relatório de cliente");
             Console.WriteLine("7 - Atualizar programa de fidelidade");
-
+            Console.WriteLine("=================================");
+            Console.WriteLine("8 - Relatório resumido de clientes");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -390,6 +391,11 @@ namespace XulambsFoods_2025_1.src
             //Console.WriteLine("Categorias atualizadas.");
         }
 
+        static void RelatorioResumidoClientes() {
+            Cabecalho();
+            Console.WriteLine(clientes.Report());
+        }
+
         static void Main(string[] args) {
             config();
             int opcao = -1;
@@ -415,6 +421,9 @@ namespace XulambsFoods_2025_1.src
                         break;
                     case 7:
                         AtualizarFidelidade();
+                        break;
+                    case 8:
+                        RelatorioResumidoClientes();
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");

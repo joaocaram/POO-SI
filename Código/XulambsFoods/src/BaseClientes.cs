@@ -28,5 +28,12 @@ namespace XulambsFoods_2025_1.src {
         public int Size() {
             return _clientes.Count;
         }
+
+        public string Report() {
+            StringBuilder sb = new StringBuilder("Relatório resumido de clientes:\n");
+            foreach (Cliente cliente in _clientes.Values)
+                sb.AppendLine(cliente.ToString() + "\n");
+            return sb.ToString();
+        }
     }
 }
