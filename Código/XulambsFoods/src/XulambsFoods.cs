@@ -95,7 +95,7 @@ namespace XulambsFoods_2025_1.src
 
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS v0.5\n================");
+            Console.WriteLine("XULAMBS FOODS v0.6\n================");
         }
 
         static void Pausa() {
