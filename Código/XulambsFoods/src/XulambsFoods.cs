@@ -30,16 +30,15 @@ namespace XulambsFoods_2025_1.src
     public class XulambsFoods {
 
         static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
-        static Dictionary<int, Cliente> clientes = new Dictionary<int, Cliente>();
+        static BaseClientes clientes = new BaseClientes();
         
-
         static void gerarClientes() {
-            clientes.Add(0, new Cliente(0, "Anônimo"));
+            clientes.Add(new Cliente(0, "Anônimo"));
             string[] nomes = File.ReadAllLines("medalhistas.txt");
             int doc = 1;
             foreach (string nome in nomes) {
                 Cliente novo = new Cliente(doc, nome);
-                clientes.Add(novo.GetHashCode(), novo);
+                clientes.Add(novo);
                 doc++;
             }
         }
@@ -69,7 +68,7 @@ namespace XulambsFoods_2025_1.src
                     else comida = new Sanduiche(quantAdic);
                     pedido.Adicionar(comida);
                 }
-                Cliente quem = clientes[aleat.Next(quantCli)];
+                Cliente quem = clientes.Get(aleat.Next(quantCli));
                 quem.RegistrarPedido(pedido);
                 pedido.FecharPedido();
                 pedidos.AddLast(pedido);
@@ -79,7 +78,7 @@ namespace XulambsFoods_2025_1.src
         static void config()
         {
             gerarClientes();
-            gerarPedidos(clientes.Count);
+            gerarPedidos(clientes.Size());
         }
 
         static T maiorDoConjunto<T>(ICollection<T> dados) where T:IComparable<T>
@@ -341,7 +340,7 @@ namespace XulambsFoods_2025_1.src
         static void RegistrarPedidoParaCliente(Pedido pedido)
         {  
             int id = lerNumero("ID do cliente");
-            Cliente cliente = clientes[id];
+            Cliente cliente = clientes.Get(id);
             cliente.RegistrarPedido(pedido);
             Console.WriteLine($"\nPedido registrado para {cliente.ToString()}\n");
         }
@@ -363,7 +362,7 @@ namespace XulambsFoods_2025_1.src
                 RegistrarPedidoParaCliente(pedido);
             }
             catch (KeyNotFoundException ke) {
-                clientes[0].RegistrarPedido(pedido);
+                clientes.Get(0).RegistrarPedido(pedido);
                 Console.WriteLine("Não foi encontrado cliente com este id. Registrado para cliente anônimo");
             }
             pedido.FecharPedido();
@@ -376,7 +375,7 @@ namespace XulambsFoods_2025_1.src
             int id = lerNumero("ID do cliente");
             string mensagem = "";
             try {
-                Cliente cliente = clientes[id];
+                Cliente cliente = clientes.Get(id);
                 mensagem = cliente.RelatorioPedidos();
             }catch(KeyNotFoundException knfex) {
                 mensagem = $"Cliente com id {id} não existe.";
@@ -385,10 +384,10 @@ namespace XulambsFoods_2025_1.src
         }
 
         static void AtualizarFidelidade() {
-            foreach (Cliente cliente in clientes.Values) {
-                cliente.AtualizarCategoria();
-            }
-            Console.WriteLine("Categorias atualizadas.");
+            //foreach (Cliente cliente in clientes.Values) {
+            //    cliente.AtualizarCategoria();
+            //}
+            //Console.WriteLine("Categorias atualizadas.");
         }
 
         static void Main(string[] args) {
