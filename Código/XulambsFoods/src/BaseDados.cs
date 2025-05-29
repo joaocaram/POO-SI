@@ -35,5 +35,15 @@ namespace XulambsFoods_2025_1.src {
                 sb.AppendLine(dado.ToString() + "\n");
             return sb.ToString();
         }
+
+        public string SortedReport(Comparer<T> comparador) {
+            List<T> lista = _dados.Values.ToList();
+            lista.Sort(comparador);
+
+            StringBuilder sb = new StringBuilder("Relatório resumido de clientes:\n");
+            foreach (T dado in lista)
+                sb.AppendLine(dado.ToString() + "\n");
+            return sb.ToString();
+        }
     }
 }
