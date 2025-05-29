@@ -29,8 +29,8 @@ namespace XulambsFoods_2025_1.src
 
     public class XulambsFoods {
 
-        static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
-        static BaseDados clientes = new BaseDados();
+        static BaseDados<Pedido> pedidos = new BaseDados<Pedido>();
+        static BaseDados<Cliente> clientes = new BaseDados<Cliente>();
         
         static void gerarClientes() {
             clientes.Add(new Cliente(0, "Anônimo"));
@@ -71,7 +71,7 @@ namespace XulambsFoods_2025_1.src
                 Cliente quem = clientes.Get(aleat.Next(quantCli));
                 quem.RegistrarPedido(pedido);
                 pedido.FecharPedido();
-                pedidos.AddLast(pedido);
+                pedidos.Add(pedido);
             }
         }
 
@@ -283,7 +283,7 @@ namespace XulambsFoods_2025_1.src
         }
 
         static void ArmazenarPedido(Pedido pedido) {
-            pedidos.AddLast(pedido);
+            pedidos.Add(pedido);
         }
 
         static Pedido LocalizarPedido() {
@@ -291,12 +291,8 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("Localizando um pedido");
             Console.Write("Digite o número do pedido: ");
             int numero = int.Parse(Console.ReadLine());
-            Pedido localizado = null;
-
-            for (int i = 0; i < pedidos.Count && localizado == null; i++) {
-                if (pedidos.ElementAt(i).GetHashCode() == numero)
-                    localizado = pedidos.ElementAt(i);
-            }
+            Pedido localizado = pedidos.Get(numero);
+                       
             return localizado;
         }
 
@@ -414,7 +410,7 @@ namespace XulambsFoods_2025_1.src
                         FecharPedido();
                         break;
                     case 5:
-                        ExibirMaior(pedidos);
+                       // ExibirMaior(pedidos);
                         break;
                     case 6:
                         RelatorioCliente();
