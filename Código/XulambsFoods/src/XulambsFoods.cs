@@ -113,6 +113,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("7 - Atualizar programa de fidelidade");
             Console.WriteLine("=================================");
             Console.WriteLine("8 - Relatório resumido de clientes");
+            Console.WriteLine("9 - Relatório resumido por ordem de gastos");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -392,6 +393,15 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine(clientes.Report());
         }
 
+        static void RelatorioResumidoPorGastos() {
+            Cabecalho();
+            Comparer<Cliente> comparador = Comparer<Cliente>.Create(
+                        (cli1, cli2) => cli1.TotalGasto() > cli2.TotalGasto() ? 1 : -1
+            );
+
+            Console.WriteLine(clientes.SortedReport(comparador));
+        }
+
         static void Main(string[] args) {
             config();
             int opcao = -1;
@@ -420,6 +430,9 @@ namespace XulambsFoods_2025_1.src
                         break;
                     case 8:
                         RelatorioResumidoClientes();
+                        break;
+                    case 9:
+                        RelatorioResumidoPorGastos();
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
