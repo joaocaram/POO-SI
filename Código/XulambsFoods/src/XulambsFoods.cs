@@ -30,7 +30,7 @@ namespace XulambsFoods_2025_1.src
     public class XulambsFoods {
 
         static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
-        static BaseClientes clientes = new BaseClientes();
+        static BaseDados clientes = new BaseDados();
         
         static void gerarClientes() {
             clientes.Add(new Cliente(0, "Anônimo"));
