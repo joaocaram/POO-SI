@@ -113,7 +113,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("7 - Atualizar programa de fidelidade");
             Console.WriteLine("=================================");
             Console.WriteLine("8 - Relatório resumido de clientes");
-            Console.WriteLine("9 - Relatório resumido por ordem de gastos");
+            Console.WriteLine("9 - Relatório resumido ordenado");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -195,6 +195,15 @@ namespace XulambsFoods_2025_1.src
             return lerNumero("Digite sua escolha");
            
             
+        }
+
+        static int ExibirMenuComparacoes()
+        {
+            Cabecalho();
+            Console.WriteLine("Escolha uma ordenação para o relatório\n");
+            Console.WriteLine("\n1 - Por ordem alfabética");
+            Console.WriteLine("2 - Por ordem de gastos");
+            return lerNumero("Digite sua escolha");
         }
 
         static Comida ComprarComida() {
@@ -393,11 +402,16 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine(clientes.Report());
         }
 
-        static void RelatorioResumidoPorGastos() {
+        static void RelatorioResumidoOrdenado() {
             Cabecalho();
-            Comparer<Cliente> comparador = Comparer<Cliente>.Create(
-                        (cli1, cli2) => cli1.TotalGasto() > cli2.TotalGasto() ? 1 : -1
-            );
+            int opcao = ExibirMenuComparacoes();
+            Comparison<Cliente> comparacao = null;
+            comparacao = opcao switch
+            {
+                1 => (cli1, cli2) => cli1.ToString().CompareTo(cli2.ToString()),
+                2 => (cli1, cli2) => (cli1.TotalGasto() > cli2.TotalGasto() ? 1 : -1)
+            };
+            Comparer<Cliente> comparador = Comparer<Cliente>.Create(comparacao);
 
             Console.WriteLine(clientes.SortedReport(comparador));
         }
@@ -432,7 +446,7 @@ namespace XulambsFoods_2025_1.src
                         RelatorioResumidoClientes();
                         break;
                     case 9:
-                        RelatorioResumidoPorGastos();
+                        RelatorioResumidoOrdenado();
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
