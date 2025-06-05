@@ -47,28 +47,34 @@ namespace XulambsFoods_2025_1.src
             Random aleat = new Random(42);
             Pedido pedido;
             Comida comida;
-            for (int i = 0; i < quantCli * 16; i++) {
+            for (int i = 0; i < quantCli * 32; i++) {
                 int tipo = aleat.Next() % 2;
-                if (tipo == 0) pedido = new PedidoLocal();
-                else pedido = new PedidoEntrega(aleat.Next(14));
+                if (tipo == 0) pedido = new PedidoLocal(null);
+                else pedido = new PedidoEntrega(null, aleat.Next(14));
                 
                 int quantComidas = aleat.Next(1000);
-                if (quantComidas > 950)
+                if (quantComidas > 990)
                     quantComidas = 4;
-                else if (quantComidas > 750)
+                else if (quantComidas > 880)
                     quantComidas = 3;
-                else if (quantComidas > 500)
+                else if (quantComidas > 650)
                     quantComidas = 2;
                 else quantComidas = 1;
 
                 for (int j = 0; j < quantComidas; j++) {
-                    tipo = aleat.Next() % 2;
+                    tipo = aleat.Next(10)+1;
                     int quantAdic = aleat.Next(5);
-                    if (tipo == 0) comida = new Pizza(quantAdic);
+                    if (tipo > 6) comida = new Pizza(quantAdic);
                     else comida = new Sanduiche(quantAdic);
                     pedido.Adicionar(comida);
                 }
-                Cliente quem = clientes.Buscar(aleat.Next(quantCli-1));
+                int sorteio = aleat.Next(1000);
+                if (sorteio > 400)
+                    sorteio = quantCli / 3;
+                else if (sorteio > 750)
+                    sorteio = quantCli / 2;
+                else sorteio = quantCli;
+                Cliente quem = clientes.Buscar(aleat.Next(sorteio-1));
                 quem.RegistrarPedido(pedido);
                 pedido.FecharPedido();
                 pedidos.Adicionar(pedido);
@@ -81,17 +87,7 @@ namespace XulambsFoods_2025_1.src
             gerarPedidos(clientes.Tamanho());
         }
 
-        static T maiorDoConjunto<T>(ICollection<T> dados) where T:IComparable<T>
-        {
-            T maior = dados.ElementAt(0);
-            for (int i = 1; i < dados.Count; i++)
-            {
-                if (dados.ElementAt(i).CompareTo(maior) > 0)
-                    maior = dados.ElementAt(i);
-            }
-            return maior;
-        }
-
+        
         static void Cabecalho() {
             Console.Clear();
             Console.WriteLine("XULAMBS FOODS v0.6\n================");
@@ -108,18 +104,41 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Fechar Pedido");
-            Console.WriteLine("5 - Obter maior Pedido do dia");
-            Console.WriteLine("6 - Relatório de cliente");
-            Console.WriteLine("7 - Atualizar programa de fidelidade");
-            Console.WriteLine("=================================");
-            Console.WriteLine("8 - Relatório resumido de clientes");
-            Console.WriteLine("9 - Relatório resumido ordenado");
-            Console.WriteLine("10 - Valor total gasto por clientes");
-            Console.WriteLine("11 - Clientes com gasto mínimo");
+            Console.WriteLine("5 - Menu Gerente");
             Console.WriteLine("0 - Finalizar");
-            Console.Write("Digite sua escolha: ");
-            return int.Parse(Console.ReadLine());
+            return lerNumero("Digite sua escolha");
         }
+        static int ExibirMenuGerente() {
+            Cabecalho();
+            Console.WriteLine("Funções Gerenciais");
+            Console.WriteLine("=================================");
+            Console.WriteLine("CLIENTES");
+            Console.WriteLine("1 - Atualizar programa de fidelidade");
+            Console.WriteLine("2 - Relatório de um cliente");
+            Console.WriteLine("3 - Relatório resumido dos clientes");
+            Console.WriteLine("4 - Relatório resumido ordenado dos clientes ");
+            Console.WriteLine("5 - Relatório de clientes com gasto mínimo");
+            Console.WriteLine("=================================");
+            Console.WriteLine("PEDIDOS");
+            Console.WriteLine("6 - Maior pedido do restaurante");
+            Console.WriteLine("7 - Pedidos de um dia");
+            Console.WriteLine("8 - Pedidos com um prato");
+            Console.WriteLine("9 - Pedidos com um valor mínimo");
+            Console.WriteLine("=================================");
+            Console.WriteLine("FINANCEIRO");
+            Console.WriteLine("10 - Gasto total dos clientes");
+            Console.WriteLine("11 - Gasto médio por cliente");
+            Console.WriteLine("12 - Gasto médio por pedido");
+            Console.WriteLine("13 - Arrecadação em um dia");
+                       
+            Console.WriteLine("\n0 - Voltar");
+            return lerNumero("Digite sua escolha");
+
+        }
+            
+            
+            
+        
 
         static void AdicionarComidas(Pedido pedido) {
             string confirmacao;
@@ -171,14 +190,14 @@ namespace XulambsFoods_2025_1.src
         }
 
         static Pedido CriarPedidoLocal() {
-            return new PedidoLocal();
+            return new PedidoLocal(DateOnly.FromDateTime(DateTime.Now));
         }
 
         static Pedido CriarPedidoEntrega() {
             Console.WriteLine("Pedido para Entrega.");
             Console.Write("Distância: ");
             double dist = double.Parse(Console.ReadLine());
-            return new PedidoEntrega(dist);
+            return new PedidoEntrega(DateOnly.FromDateTime(DateTime.Now), dist);
         }
 
         /// <summary>
@@ -303,8 +322,12 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("Localizando um pedido");
             Console.Write("Digite o número do pedido: ");
             int numero = int.Parse(Console.ReadLine());
-            Pedido localizado = pedidos.Buscar(numero);
-                       
+            Pedido localizado;
+            try {
+                localizado = pedidos.Buscar(numero);
+            }catch (KeyNotFoundException ke) {
+                localizado = null;
+            }
             return localizado;
         }
 
@@ -338,12 +361,12 @@ namespace XulambsFoods_2025_1.src
                 Console.WriteLine("Pedido não existente");
         }
 
-        static void ExibirMaior<T>(ICollection<T> dados) where T: IComparable<T>
-        {
-            Cabecalho();
-            Console.WriteLine("Pedido mais caro do dia:");
-            Console.WriteLine(maiorDoConjunto(dados));
-        }
+        //static void ExibirMaior<T>(BaseDados<T> dados) where T: IComparable<T>
+        //{
+        //    Cabecalho();
+        //    Console.WriteLine("Pedido mais caro do dia:");
+        //    Console.WriteLine(dados.Maior());
+        //}
 
         
         static void RegistrarPedidoParaCliente(Pedido pedido)
@@ -423,7 +446,7 @@ namespace XulambsFoods_2025_1.src
             Console.Write("Total gasto no restaurante: ");
             Console.WriteLine($"{clientes.Totalizar((cli) => cli.TotalGasto()):C2}");
         }
-        static void FiltroDeClientes()
+        static void ClientesComGastoMinimo()
         {
             Cabecalho();
             Console.Write("Digite o valor mínimo para filtro: ");
@@ -434,6 +457,57 @@ namespace XulambsFoods_2025_1.src
              Console.WriteLine(clientes.RelatorioFiltrado(filtro));
         }
 
+        static void ModoGerente() {
+            int opcao = -1;
+            do {
+                opcao = ExibirMenuGerente();
+                switch (opcao) {
+                    case 1:
+                        AtualizarFidelidade();
+                        break;
+                    case 2:
+                        RelatorioCliente();
+                        break;
+                    case 3:
+                        RelatorioResumidoClientes();
+                        break;
+                    case 4:
+                        RelatorioResumidoOrdenado();
+                        break;
+                    case 5:
+                        ClientesComGastoMinimo();
+                        break;
+                    case 6:
+                 //       ExibirMaior(pedidos);
+                        break;
+                    case 7:
+                   //     PedidosDeUmDia();
+                        break;
+                    case 8: 
+                   //     PedidosComUmPrato();
+                        break;
+                    case 9:
+                   //     PedidosComValorMinimo();
+                        break;
+                    case 10:
+                        TotalGastoPorClientes();
+                        break;
+                    case 11:
+                    //    GastoMedioPorClientes();
+                        break;
+                    case 12:
+                    //    GastoMedioPorPedido();
+                        break;
+                    case 13:
+                    //    ArrecadacaoDeUmDia();
+                        break;
+                    case 0: Console.WriteLine("Retornando ao menu principal.");
+                        break;
+                }
+                Pausa();
+            } while (opcao != 0);
+        
+        }
         static void Main(string[] args) {
             config();
             int opcao = -1;
@@ -451,26 +525,7 @@ namespace XulambsFoods_2025_1.src
                     case 4:
                         FecharPedido();
                         break;
-                    case 5:
-                       // ExibirMaior(pedidos);
-                        break;
-                    case 6:
-                        RelatorioCliente();
-                        break;
-                    case 7:
-                        AtualizarFidelidade();
-                        break;
-                    case 8:
-                        RelatorioResumidoClientes();
-                        break;
-                    case 9:
-                        RelatorioResumidoOrdenado();
-                        break;
-                    case 10:
-                        TotalGastoPorClientes();
-                        break;
-                    case 11:
-                        FiltroDeClientes();
+                    case 5: ModoGerente();
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
