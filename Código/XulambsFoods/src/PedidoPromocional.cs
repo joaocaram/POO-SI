@@ -9,6 +9,10 @@ namespace XulambsFoods_2025_1.src
     public class PedidoPromocional : Pedido
     {
         const int  ComidasParaDesconto = 5;
+
+        public PedidoPromocional(): base(null) {
+
+        }
         private double ValorDesconto()
         {
             double desconto = 0d;

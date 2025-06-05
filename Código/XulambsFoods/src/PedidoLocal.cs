@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 namespace XulambsFoods_2025_1.src {
     public class PedidoLocal : Pedido{
 
-        public PedidoLocal() : base(){
+        public PedidoLocal() : base(null){
 
         }
 
+        public PedidoLocal(DateOnly? data) : base(data) {
+
+        }
         public override double PrecoAPagar() {
             return base.PrecoAPagar();
         }

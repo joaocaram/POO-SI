@@ -60,7 +60,13 @@ namespace XulambsFoods_2025_1.src {
         /// deve ser um valor positivo.
         /// </summary>
         /// <param name="distancia">Distância da entrega (double > 0)</param>
-        public PedidoEntrega(double distancia): base() {
+        public PedidoEntrega(double distancia): base(null) {
+            if (distancia < 0.1)
+                distancia = 0.1;
+            _distanciaEntrega = distancia;
+        }
+
+        public PedidoEntrega(DateOnly? data, double distancia) : base(data) {
             if (distancia < 0.1)
                 distancia = 0.1;
             _distanciaEntrega = distancia;

@@ -30,6 +30,9 @@ namespace XulambsFoods_2025_1.src {
     /// com o detalhamento das pizzas e o valor total a pagar.
     /// </summary>
     public abstract class Pedido : IComparable<Pedido> {
+        static DateTime dataBase = new DateTime(2025, 02, 01,12,0,0);
+        static Random sorteio = new Random(42);
+        
         /// <summary>
         /// Static para geração do id do pedido seguinte.
         /// </summary>
@@ -66,10 +69,19 @@ namespace XulambsFoods_2025_1.src {
         /// e inicializa demais atributos
         /// </summary>
         /// <param name="maxPizzas"></param>
-        private void init() {
+        private void init(DateOnly? data) {
             s_ultimoPedido++;
             _idPedido = s_ultimoPedido;
-            _data = DateOnly.FromDateTime(DateTime.Now);
+
+            if (data != null)
+                _data = (DateOnly)data;
+            else {
+                dataBase = dataBase.AddMinutes(sorteio.NextInt64(12, 50) + 1);
+                if (dataBase.Hour < 12)
+                    dataBase.AddHours(13 - dataBase.Hour);
+
+                _data = DateOnly.FromDateTime(dataBase);
+            }            
             _comidas = new LinkedList<Comida>();
             _desconto = 0d;
             _aberto = true;
@@ -79,8 +91,8 @@ namespace XulambsFoods_2025_1.src {
         /// Cria um pedido vazio, com a data de hoje e identificador gerado
         /// automaticamente.
         /// </summary>
-        protected Pedido() {
-            init();
+        protected Pedido(DateOnly? data) {
+            init(data);
         }
                
         /// <summary>
@@ -173,6 +185,10 @@ namespace XulambsFoods_2025_1.src {
                 throw new InvalidOperationException("Desconto já foi aplicado neste pedido");
             _desconto = valor;
             return _desconto;
+        }
+
+        public DateOnly Data() {
+            return _data;
         }
 
         public override bool Equals(object? obj) {
