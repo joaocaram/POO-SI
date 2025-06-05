@@ -68,7 +68,7 @@ namespace XulambsFoods_2025_1.src
                     else comida = new Sanduiche(quantAdic);
                     pedido.Adicionar(comida);
                 }
-                Cliente quem = clientes.Get(aleat.Next(quantCli));
+                Cliente quem = clientes.Get(aleat.Next(quantCli-1));
                 quem.RegistrarPedido(pedido);
                 pedido.FecharPedido();
                 pedidos.Add(pedido);
@@ -114,6 +114,8 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("=================================");
             Console.WriteLine("8 - Relatório resumido de clientes");
             Console.WriteLine("9 - Relatório resumido ordenado");
+            Console.WriteLine("10 - Valor total gasto por clientes");
+            Console.WriteLine("11 - Clientes com gasto mínimo");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -391,10 +393,10 @@ namespace XulambsFoods_2025_1.src
         }
 
         static void AtualizarFidelidade() {
-            //foreach (Cliente cliente in clientes.Values) {
-            //    cliente.AtualizarCategoria();
-            //}
-            //Console.WriteLine("Categorias atualizadas.");
+            Cabecalho();
+            Action<Cliente> atualizar = (cli) => cli.AtualizarCategoria();
+            clientes.Update(atualizar);
+            Console.WriteLine("Categorias atualizadas.");
         }
 
         static void RelatorioResumidoClientes() {
@@ -414,6 +416,22 @@ namespace XulambsFoods_2025_1.src
             Comparer<Cliente> comparador = Comparer<Cliente>.Create(comparacao);
 
             Console.WriteLine(clientes.SortedReport(comparador));
+        }
+        static void TotalGastoPorClientes()
+        {
+            Cabecalho();
+            Console.Write("Total gasto no restaurante: ");
+            Console.WriteLine($"{clientes.Sum((cli) => cli.TotalGasto()):C2}");
+        }
+        static void FiltroDeClientes()
+        {
+            Cabecalho();
+            Console.Write("Digite o valor mínimo para filtro: ");
+            double valor = double.Parse(Console.ReadLine());
+            Predicate<Cliente> filtro =
+                    (cli) => cli.TotalGasto() > valor;
+
+             Console.WriteLine(clientes.FilteredReport(filtro));
         }
 
         static void Main(string[] args) {
@@ -447,6 +465,12 @@ namespace XulambsFoods_2025_1.src
                         break;
                     case 9:
                         RelatorioResumidoOrdenado();
+                        break;
+                    case 10:
+                        TotalGastoPorClientes();
+                        break;
+                    case 11:
+                        FiltroDeClientes();
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");

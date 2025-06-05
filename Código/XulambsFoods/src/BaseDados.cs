@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,5 +46,30 @@ namespace XulambsFoods_2025_1.src {
                 sb.AppendLine(dado.ToString() + "\n");
             return sb.ToString();
         }
+
+        public double Sum(Func<T, double> extratora)
+        {
+            double valor = 0d;
+            foreach (T dado in _dados.Values)
+                valor += extratora.Invoke(dado);
+            return valor;
+        }
+
+ 
+        public string FilteredReport(Predicate<T> condicao)
+        {
+            StringBuilder filtrados = new StringBuilder(); ;
+            foreach (T dado in _dados.Values)
+                if (condicao.Invoke(dado))
+                    filtrados.AppendLine(dado.ToString() + "\n");
+            return filtrados.ToString();
+        }
+
+        public void Update(Action<T> atualizacao)
+        {
+            foreach (T dado in _dados.Values)
+                atualizacao.Invoke(dado);
+        }
+
     }
 }
