@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -8,38 +9,34 @@ using System.Threading.Tasks;
 namespace XulambsFoods_2025_1.src {
     internal class BaseDados<T> {
         private Dictionary<int, T> _dados;
+        private LinkedList<T> _dadosEmLista;
         
         public BaseDados() {
             _dados = new Dictionary<int, T>();
+            _dadosEmLista = new LinkedList<T>();
         }
 
         public BaseDados(int quantidade) {
             _dados = new Dictionary<int, T>(quantidade);
         }
 
-        public int Add(T novoItem) {
+        public int Adicionar(T novoItem) {
             _dados.Add(novoItem.GetHashCode(), novoItem);
+            _dadosEmLista.AddLast(novoItem);
             return _dados.Count;
         }
 
-        public T Get(int identificador) {
+        public T Buscar(int identificador) {
             return _dados[identificador];   
         }
 
-        public int Size() {
+        public int Tamanho() {
             return _dados.Count;
         }
 
-        public string Report() {
-            StringBuilder sb = new StringBuilder("Relatório resumido de clientes:\n");
-            foreach (T dado in _dados.Values)
-                sb.AppendLine(dado.ToString() + "\n");
-            return sb.ToString();
-        }
-
-        public string SortedReport(Comparer<T> comparador) {
-            List<T> lista = _dados.Values.ToList();
-            lista.Sort(comparador);
+        private string Relatorio(List<T> lista, Comparer<T> comparador) {        
+            if(comparador !=null )
+                lista.Sort(comparador);
 
             StringBuilder sb = new StringBuilder("Relatório resumido de clientes:\n");
             foreach (T dado in lista)
@@ -47,27 +44,35 @@ namespace XulambsFoods_2025_1.src {
             return sb.ToString();
         }
 
-        public double Sum(Func<T, double> extratora)
+        public string Relatorio() {
+            return Relatorio(_dadosEmLista.ToList(), null);
+        }
+
+        public string RelatorioOrdenado(Comparer<T> comparador) {
+            return Relatorio(_dadosEmLista.ToList(), comparador);
+        }
+
+        public double Totalizar(Func<T, double> extratora)
         {
             double valor = 0d;
-            foreach (T dado in _dados.Values)
+            foreach (T dado in _dadosEmLista)
                 valor += extratora.Invoke(dado);
             return valor;
         }
 
  
-        public string FilteredReport(Predicate<T> condicao)
+        public string RelatorioFiltrado(Predicate<T> condicao)
         {
             StringBuilder filtrados = new StringBuilder(); ;
-            foreach (T dado in _dados.Values)
+            foreach (T dado in _dadosEmLista)
                 if (condicao.Invoke(dado))
                     filtrados.AppendLine(dado.ToString() + "\n");
             return filtrados.ToString();
         }
 
-        public void Update(Action<T> atualizacao)
+        public void Atualizar(Action<T> atualizacao)
         {
-            foreach (T dado in _dados.Values)
+            foreach (T dado in _dadosEmLista)
                 atualizacao.Invoke(dado);
         }
 

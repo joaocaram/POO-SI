@@ -33,12 +33,12 @@ namespace XulambsFoods_2025_1.src
         static BaseDados<Cliente> clientes = new BaseDados<Cliente>();
         
         static void gerarClientes() {
-            clientes.Add(new Cliente(0, "Anônimo"));
+            clientes.Adicionar(new Cliente(0, "Anônimo"));
             string[] nomes = File.ReadAllLines("medalhistas.txt");
             int doc = 1;
             foreach (string nome in nomes) {
                 Cliente novo = new Cliente(doc, nome);
-                clientes.Add(novo);
+                clientes.Adicionar(novo);
                 doc++;
             }
         }
@@ -68,17 +68,17 @@ namespace XulambsFoods_2025_1.src
                     else comida = new Sanduiche(quantAdic);
                     pedido.Adicionar(comida);
                 }
-                Cliente quem = clientes.Get(aleat.Next(quantCli-1));
+                Cliente quem = clientes.Buscar(aleat.Next(quantCli-1));
                 quem.RegistrarPedido(pedido);
                 pedido.FecharPedido();
-                pedidos.Add(pedido);
+                pedidos.Adicionar(pedido);
             }
         }
 
         static void config()
         {
             gerarClientes();
-            gerarPedidos(clientes.Size());
+            gerarPedidos(clientes.Tamanho());
         }
 
         static T maiorDoConjunto<T>(ICollection<T> dados) where T:IComparable<T>
@@ -295,7 +295,7 @@ namespace XulambsFoods_2025_1.src
         }
 
         static void ArmazenarPedido(Pedido pedido) {
-            pedidos.Add(pedido);
+            pedidos.Adicionar(pedido);
         }
 
         static Pedido LocalizarPedido() {
@@ -303,7 +303,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("Localizando um pedido");
             Console.Write("Digite o número do pedido: ");
             int numero = int.Parse(Console.ReadLine());
-            Pedido localizado = pedidos.Get(numero);
+            Pedido localizado = pedidos.Buscar(numero);
                        
             return localizado;
         }
@@ -349,7 +349,7 @@ namespace XulambsFoods_2025_1.src
         static void RegistrarPedidoParaCliente(Pedido pedido)
         {  
             int id = lerNumero("ID do cliente");
-            Cliente cliente = clientes.Get(id);
+            Cliente cliente = clientes.Buscar(id);
             cliente.RegistrarPedido(pedido);
             Console.WriteLine($"\nPedido registrado para {cliente.ToString()}\n");
         }
@@ -371,7 +371,7 @@ namespace XulambsFoods_2025_1.src
                 RegistrarPedidoParaCliente(pedido);
             }
             catch (KeyNotFoundException ke) {
-                clientes.Get(0).RegistrarPedido(pedido);
+                clientes.Buscar(0).RegistrarPedido(pedido);
                 Console.WriteLine("Não foi encontrado cliente com este id. Registrado para cliente anônimo");
             }
             pedido.FecharPedido();
@@ -384,7 +384,7 @@ namespace XulambsFoods_2025_1.src
             int id = lerNumero("ID do cliente");
             string mensagem = "";
             try {
-                Cliente cliente = clientes.Get(id);
+                Cliente cliente = clientes.Buscar(id);
                 mensagem = cliente.RelatorioPedidos();
             }catch(KeyNotFoundException knfex) {
                 mensagem = $"Cliente com id {id} não existe.";
@@ -395,13 +395,13 @@ namespace XulambsFoods_2025_1.src
         static void AtualizarFidelidade() {
             Cabecalho();
             Action<Cliente> atualizar = (cli) => cli.AtualizarCategoria();
-            clientes.Update(atualizar);
+            clientes.Atualizar(atualizar);
             Console.WriteLine("Categorias atualizadas.");
         }
 
         static void RelatorioResumidoClientes() {
             Cabecalho();
-            Console.WriteLine(clientes.Report());
+            Console.WriteLine(clientes.Relatorio());
         }
 
         static void RelatorioResumidoOrdenado() {
@@ -415,13 +415,13 @@ namespace XulambsFoods_2025_1.src
             };
             Comparer<Cliente> comparador = Comparer<Cliente>.Create(comparacao);
 
-            Console.WriteLine(clientes.SortedReport(comparador));
+            Console.WriteLine(clientes.RelatorioOrdenado(comparador));
         }
         static void TotalGastoPorClientes()
         {
             Cabecalho();
             Console.Write("Total gasto no restaurante: ");
-            Console.WriteLine($"{clientes.Sum((cli) => cli.TotalGasto()):C2}");
+            Console.WriteLine($"{clientes.Totalizar((cli) => cli.TotalGasto()):C2}");
         }
         static void FiltroDeClientes()
         {
@@ -431,7 +431,7 @@ namespace XulambsFoods_2025_1.src
             Predicate<Cliente> filtro =
                     (cli) => cli.TotalGasto() > valor;
 
-             Console.WriteLine(clientes.FilteredReport(filtro));
+             Console.WriteLine(clientes.RelatorioFiltrado(filtro));
         }
 
         static void Main(string[] args) {
