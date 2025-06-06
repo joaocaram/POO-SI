@@ -104,6 +104,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Fechar Pedido");
+            Console.WriteLine("=============================");
             Console.WriteLine("5 - Menu Gerente");
             Console.WriteLine("0 - Finalizar");
             return lerNumero("Digite sua escolha");
@@ -361,12 +362,12 @@ namespace XulambsFoods_2025_1.src
                 Console.WriteLine("Pedido não existente");
         }
 
-        //static void ExibirMaior<T>(BaseDados<T> dados) where T: IComparable<T>
-        //{
-        //    Cabecalho();
-        //    Console.WriteLine("Pedido mais caro do dia:");
-        //    Console.WriteLine(dados.Maior());
-        //}
+        static void ExibirMaior<T>(BaseDados<T> dados) where T: IComparable<T>
+        {
+            Cabecalho();
+            Console.WriteLine("Pedido mais caro do dia:");
+            Console.WriteLine(dados.Maior());
+        }
 
         
         static void RegistrarPedidoParaCliente(Pedido pedido)
@@ -446,6 +447,9 @@ namespace XulambsFoods_2025_1.src
             Console.Write("Total gasto no restaurante: ");
             Console.WriteLine($"{clientes.Totalizar((cli) => cli.TotalGasto()):C2}");
         }
+
+        
+
         static void ClientesComGastoMinimo()
         {
             Cabecalho();
@@ -456,7 +460,22 @@ namespace XulambsFoods_2025_1.src
 
              Console.WriteLine(clientes.RelatorioFiltrado(filtro));
         }
+        
+        static void GastoMedio<T>(BaseDados<T> basedados, Func<T, double> funcao, string nome) {
+            Cabecalho();
+            double valorMedio = basedados.Media(funcao);
+            Console.WriteLine($"Gasto médio: {valorMedio:C2}, sendo {basedados.Tamanho()} {nome}.");
+        }
 
+        static void PedidosDeUmDia() {
+            Cabecalho();
+            Console.Write("Digite uma data para filtrar (DD/MM/AAAA): ");
+            string[] dadosFiltro = Console.ReadLine().Split("/");
+            DateOnly data = new DateOnly(int.Parse(dadosFiltro[2]), int.Parse(dadosFiltro[1]), int.Parse(dadosFiltro[0]));
+
+            Console.WriteLine(pedidos.RelatorioFiltrado( p => p.Data().Equals(data)));
+
+        }
         static void ModoGerente() {
             int opcao = -1;
             do {
@@ -478,10 +497,10 @@ namespace XulambsFoods_2025_1.src
                         ClientesComGastoMinimo();
                         break;
                     case 6:
-                 //       ExibirMaior(pedidos);
+                       ExibirMaior(pedidos);
                         break;
                     case 7:
-                   //     PedidosDeUmDia();
+                        PedidosDeUmDia();
                         break;
                     case 8: 
                    //     PedidosComUmPrato();
@@ -493,10 +512,10 @@ namespace XulambsFoods_2025_1.src
                         TotalGastoPorClientes();
                         break;
                     case 11:
-                    //    GastoMedioPorClientes();
+                        GastoMedio(clientes, cli => cli.TotalGasto(), "clientes");
                         break;
                     case 12:
-                    //    GastoMedioPorPedido();
+                        GastoMedio(pedidos, ped => ped.PrecoAPagar(), "pedidos");
                         break;
                     case 13:
                     //    ArrecadacaoDeUmDia();

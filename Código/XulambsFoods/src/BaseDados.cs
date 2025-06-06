@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,26 +55,42 @@ namespace XulambsFoods_2025_1.src {
 
         public double Totalizar(Func<T, double> extratora)
         {
-            double valor = 0d;
-            foreach (T dado in _dadosEmLista)
-                valor += extratora.Invoke(dado);
-            return valor;
+            return TotalizarFiltrado(extratora, (d => true));   
         }
 
- 
+        public double TotalizarFiltrado(Func<T, double> extratora, Predicate<T> condicao) {
+            return _dadosEmLista.Where(d => condicao.Invoke(d))
+                                .Sum(d => extratora.Invoke(d));
+        }
+
+        public double Media(Func<T, double> extratora) {
+            return _dadosEmLista.Average(d => extratora.Invoke(d));
+        }
+
+
         public string RelatorioFiltrado(Predicate<T> condicao)
         {
-            StringBuilder filtrados = new StringBuilder(); ;
-            foreach (T dado in _dadosEmLista)
-                if (condicao.Invoke(dado))
-                    filtrados.AppendLine(dado.ToString() + "\n");
-            return filtrados.ToString();
+            //IEnumerable<string> resultado =  from dado in _dadosEmLista
+            //                                 where condicao.Invoke(dado)
+            //                                 select dado.ToString();
+            string separador = "\n~~~~~~~~~~~~~~~~~~~~~~~~\n";
+            return _dadosEmLista.Where(d => condicao.Invoke(d))
+                                        .Select(e => e.ToString())
+                                        .Aggregate((str1, str2) => str1 + separador + str2);               
         }
 
         public void Atualizar(Action<T> atualizacao)
         {
             foreach (T dado in _dadosEmLista)
                 atualizacao.Invoke(dado);
+        }
+
+        public T Maior(){
+            return _dadosEmLista.Max();
+        }
+
+        public T Maior(Comparison<T> comparacao) {
+            return _dadosEmLista.Max(Comparer<T>.Create(comparacao));
         }
 
     }
