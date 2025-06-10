@@ -20,7 +20,7 @@ namespace PoliFiguras {
             Console.WriteLine("5 - Todas as formas com filtro de área");
             Console.WriteLine("6 - Nomes e áreas com filtro de área");
             Console.WriteLine("7 - Filtro por tamanho e pelo tipo de figura");
-            Console.WriteLine("8 - Figuras que atendem uma condição");
+            Console.WriteLine("8 - Tipos de formas com área mínima");
             Console.WriteLine(linha);
             Console.WriteLine("TOTALIZADORES ");
             Console.WriteLine("9 - Maior área");
@@ -49,7 +49,7 @@ namespace PoliFiguras {
         }
 
         static IEnumerable<FormaGeometrica> GerarConjunto(int quantas) {
-            IEnumerable<FormaGeometrica> formas = new LinkedList<FormaGeometrica>();
+            IEnumerable<FormaGeometrica> formas = new List<FormaGeometrica>(quantas);
             for (int i = 0; i < quantas; i++) {
                 FormaGeometrica n = GerarForma();
                 formas = formas.Append(n);
@@ -57,8 +57,7 @@ namespace PoliFiguras {
             return formas;
 
         }
-        static void TesteConjuntoFixo()
-        {
+        static void TesteConjuntoFixo() {
             ConjuntoGeometrico conj = new ConjuntoGeometrico(10);
 
             conj.AddForma(new Circulo(3));
@@ -70,193 +69,203 @@ namespace PoliFiguras {
             Console.WriteLine(conj);
             Console.ReadKey();
             FormaGeometrica procura = new Circulo(2.5);
-            if (conj.Buscar(procura) != null)
-            {
+            if (conj.Buscar(procura) != null) {
                 Console.WriteLine("Existe");
             }
             else
                 Console.WriteLine("Não existe.");
 
-         
+
+        }
+        static IEnumerable<FormaGeometrica> GerarNovoConjunto() {
+            Console.Write("Tamanho do conjunto: ");
+            int quantidade = int.Parse(Console.ReadLine());
+            List<FormaGeometrica> lista = new List<FormaGeometrica>(GerarConjunto(quantidade));
+            return lista;
         }
 
-        static void Main(string[] args) {
-            Comparer<FormaGeometrica> compMenorPerimetro = Comparer<FormaGeometrica>.Create(
-                                (f1, f2) => f1.Perimetro() > f2.Perimetro() ? 1 : -1
-                        );
-            int quantidade;
-            int opcao = MenuPrincipal();
-            LinkedList<FormaGeometrica> formas = new LinkedList<FormaGeometrica>();
-            PriorityQueue<FormaGeometrica, double> filaPrio = new PriorityQueue<FormaGeometrica, double>();//heap
-            Dictionary<int, FormaGeometrica> tabHash = new Dictionary<int, FormaGeometrica>();
-            SortedDictionary<string, FormaGeometrica> arvore = new SortedDictionary<string, FormaGeometrica>();
-            
-            while (opcao != 0) {
+        static void AdicionarFormaFixa(IEnumerable<FormaGeometrica> conjunto) {
+            if (conjunto == null)
+                conjunto = GerarConjunto(10);
+            FormaGeometrica quadradinhoDe8 = new Quadrado(8);
+            conjunto.Append(quadradinhoDe8);
+            conjunto.Prepend(quadradinhoDe8);
+        }
 
-                //TODO: organizar exemplos e revisar código
+        static string Relatorio(IEnumerable<FormaGeometrica> conjunto) {
+            return conjunto.Select(f => f.ToString())
+                            .Aggregate((s1, s2) => $"{s1}\n{s2}");
+        }
+
+        static void LocalizarElemento(IEnumerable<FormaGeometrica> formas) {
+            Console.Write("Escolha o identificador ou posição: ");
+            int ident = int.Parse(Console.ReadLine());
+
+            FormaGeometrica? escolhida = formas.FirstOrDefault(f => f.GetHashCode() == ident);
+
+            if (escolhida != null)
+                Console.WriteLine($"Pelo id: {escolhida}");
+            else
+                Console.WriteLine("Sem forma com este id.");
+
+            try {
+                escolhida = formas.ElementAt(ident);
+                Console.WriteLine($"Pela posição: {escolhida}");
+            }
+            catch (ArgumentOutOfRangeException ex) {
+                Console.WriteLine("Posição inexistente");
+            }
+        }
+
+        static void FiltroDeFormas(IEnumerable<FormaGeometrica> formas) {
+            Console.Write("Qual é a área mínima para o filtro? ");
+            double minimo = double.Parse(Console.ReadLine());
+
+            //for(int i=0; i<formas.Count; i++) {
+            //    FormaGeometrica formaG = formas.ElementAt(i);
+            //    if (formaG.Area() >= minimo)
+            //        Console.WriteLine(formaG);
+            //}
+
+            //foreach(FormaGeometrica f in formas) {
+            //    if (f.Area() >= minimo)
+            //        Console.WriteLine(f);
+            //}
+
+            //Console.WriteLine(                      //LINQ
+            //        from f in formas
+            //        where f.Area() >= minimo
+            //        select f.ToString()
+            //);
+
+            //LINQ Method
+            IEnumerable<string> formasMaiores =
+                                    formas.Where(f => f.Area() >= minimo)
+                                          .Select(f => f.ToString());
+
+            foreach (string f in formasMaiores)
+                Console.WriteLine(f);
+
+        }
+
+        static void FiltroComInformacoes(IEnumerable<FormaGeometrica> conjunto) {
+            Console.Write("Qual é a área mínima para o filtro? ");
+            double min = double.Parse(Console.ReadLine());
+            IEnumerable<object> minhasFormasmaiores =
+                                    conjunto.Where(f => f.Area() >= min)
+                                            .Select(f => new { nome = f.Nome(), area = f.Area() });
+
+            foreach (object o in minhasFormasmaiores)
+                Console.WriteLine(o);
+        }
+
+        static void FiltroDuplo(IEnumerable<FormaGeometrica> conjunto) {
+            Console.Write("Qual é a área mínima para o filtro? ");
+            double minArea = double.Parse(Console.ReadLine());
+            Console.Write("Qual é o tipo de figura? ");
+            string tipo = Console.ReadLine().ToLower();
+            IEnumerable<object> formasFiltradas =
+                                    conjunto.Where(f => f.Area() >= minArea)
+                                          .Where(f => f.ToString().ToLower().Contains(tipo))
+                                          .Select(f => f.ToString());
+
+            foreach (object o in formasFiltradas)
+                Console.WriteLine(o);
+        }
+
+        static void FormasDistintasPorArea(IEnumerable<FormaGeometrica> conjunto) {
+            Console.Write("Qual é a área mínima para o filtro? ");
+            double minArea2 = double.Parse(Console.ReadLine());
+
+
+            IEnumerable<object> formasFiltradas2 =
+                                    conjunto.Where(f => f.Area() >= minArea2)
+                                          .Select(f => f.Nome())
+                                          .Distinct();
+            foreach (object o in formasFiltradas2)
+                Console.WriteLine(o);
+        }
+
+        static FormaGeometrica MaiorDeTodas(IEnumerable<FormaGeometrica> conjunto) {
+            Comparer<FormaGeometrica> compMaiorArea = Comparer<FormaGeometrica>.Create(
+                            (f1, f2) => f1.Area() > f2.Area() ? 1 : -1
+                    );
+            return conjunto.Max(compMaiorArea);
+        }
+
+        static FormaGeometrica MenorPerimetro(IEnumerable<FormaGeometrica> conjunto) {
+            Comparer<FormaGeometrica> compMenorPerimetro = Comparer<FormaGeometrica>.Create(
+                            (f1, f2) => f1.Perimetro() > f2.Perimetro() ? 1 : -1
+            );
+            return conjunto.Min(compMenorPerimetro);
+        }
+
+        static void FormasOrdenadas(IEnumerable<FormaGeometrica> conjunto) {
+            Comparer<FormaGeometrica> compMenorPerimetro = Comparer<FormaGeometrica>.Create(
+                            (f1, f2) => f1.Perimetro() > f2.Perimetro() ? 1 : -1
+            );
+
+            Console.Write("Qual é o tipo de figura para o filtro? ");
+            string tipoFigura = Console.ReadLine().ToLower();
+
+            // map/reduce <--> where/aggregate
+
+            string resultado = conjunto.Where(f => f.Nome().ToLower().Equals(tipoFigura))
+                                      .Order(compMenorPerimetro)
+                                      .Select(f => f.ToString())
+                                      .Aggregate((s1, s2) => $"{s1}\n{s2}");
+
+            Console.WriteLine(resultado);
+        }
+
+
+
+        static void Main(string[] args) {
+
+            int opcao = MenuPrincipal();
+            IEnumerable<FormaGeometrica> formas = null;
+
+            while (opcao != 0) {
                 switch (opcao) {
                     case 1:
-                        Console.Write("Tamanho do conjunto: ");
-                        quantidade = int.Parse(Console.ReadLine());
-                        formas = new LinkedList<FormaGeometrica>(GerarConjunto(quantidade));
-                        foreach (FormaGeometrica f in formas) {
-                            tabHash.Add(f.GetHashCode(), f);
-                            arvore.Add(f.ToString(), f);
-                            filaPrio.Enqueue(f, f.Area());
-                        }
+                        formas = GerarNovoConjunto();
                         break;
                     case 2:
-                        FormaGeometrica quadradinhoDe8 = new Quadrado(8);
-                        formas.AddLast(quadradinhoDe8);
-                        formas.AddFirst(quadradinhoDe8);
-                        FormaGeometrica quem = new Quadrado(3.8532488206649429);
-                        LinkedListNode<FormaGeometrica>? posicao = formas.Find(quem);
-                        if(posicao!=null)
-                        {
-                            formas.AddAfter(posicao, quadradinhoDe8);
-                        }
-                        tabHash.Add(quadradinhoDe8.GetHashCode(), quadradinhoDe8);
-                        arvore.Add(quadradinhoDe8.ToString(), quadradinhoDe8);
-                        filaPrio.Enqueue(quadradinhoDe8, quadradinhoDe8.Area());
+                        AdicionarFormaFixa(formas);
                         break;
-                        
                     case 3:
-                        Console.WriteLine("Lista:");
-                        foreach (FormaGeometrica f in formas)
-                            Console.WriteLine(f);
-                        Console.WriteLine("===================");
-                       
-                        Console.WriteLine("Retirando da Fila de prioridades:");
-                        while(filaPrio.Count > 0) {
-                            FormaGeometrica fg = filaPrio.Dequeue();
-                            Console.WriteLine(fg);
-                        
-                        }
-                        Console.WriteLine("===================");
-                        
-                        Console.WriteLine("Dicionário / hash:");
-                        foreach (FormaGeometrica f in tabHash.Values)
-                            Console.WriteLine(f);
-                        Console.WriteLine("===================");
-                        
-                        Console.WriteLine("Árvore:");
-                        foreach (FormaGeometrica f in arvore.Values)
-                            Console.WriteLine(f);
-
+                        Console.WriteLine("Todas as formas:");
+                        Console.WriteLine(Relatorio(formas));
                         break;
                     case 4:
-                        Console.Write($"Escolha o identificador ou posição: ");
-                        int ident = int.Parse(Console.ReadLine());
-
-                        FormaGeometrica? escolhida = tabHash.GetValueOrDefault(ident);
-                        
-                        Console.WriteLine("Pelo id (dicionário): "+ escolhida);
-
-                        escolhida = formas.ElementAt(ident);
-                        Console.WriteLine("Pela posição (lista): " + escolhida);
-
-
+                        LocalizarElemento(formas);
                         break;
                     case 5:
-                        Console.Write("Qual é a área mínima para o filtro? ");
-                        double minimo = double.Parse(Console.ReadLine());
-
-                        //for(int i=0; i<formas.Count; i++) {
-                        //    FormaGeometrica formaG = formas.ElementAt(i);
-                        //    if (formaG.Area() >= minimo)
-                        //        Console.WriteLine(formaG);
-                        //}
-
-                        //foreach(FormaGeometrica f in formas) {
-                        //    if (f.Area() >= minimo)
-                        //        Console.WriteLine(f);
-                        //}
-
-                        //Console.WriteLine(                      //LINQ
-                        //        from f in formas
-                        //        where f.Area() >= minimo
-                        //        select f.ToString()
-                        //);
-
-                        //LINQ Method
-                        IEnumerable<string> formasMaiores =
-                                                formas.Where(f => f.Area() >= minimo)
-                                                      .Select(f => f.ToString());
-                        
-                        foreach(string f in formasMaiores)
-                            Console.WriteLine(f);
-
+                        FiltroDeFormas(formas);
                         break;
                     case 6:
-                        Console.Write("Qual é a área mínima para o filtro? ");
-                        double min = double.Parse(Console.ReadLine());
-                        IEnumerable<object> minhasFormasmaiores =
-                                                formas.Where(f => f.Area() >= min)
-                                                      .Select(f => new {nome = f.Nome(), area = f.Area()});
-                        
-                        foreach (object o in minhasFormasmaiores)
-                            Console.WriteLine(o);
-
+                        FiltroComInformacoes(formas);
                         break;
                     case 7:
-                        Console.Write("Qual é a área mínima para o filtro? ");
-                        double minArea = double.Parse(Console.ReadLine());
-                        Console.Write("Qual é o tipo de figura? ");
-                        string tipo = Console.ReadLine().ToLower();
-                        IEnumerable<object> formasFiltradas =
-                                                formas.Where(f => f.Area() >= minArea)
-                                                      .Where(f => f.ToString().ToLower().Contains(tipo))
-                                                      .Select(f => f.ToString());
-
-                        foreach (object o in formasFiltradas)
-                            Console.WriteLine(o);
+                        FiltroDuplo(formas);
                         break;
                     case 8:
-                        Console.Write("Qual é a área mínima para o filtro? ");
-                        double minArea2 = double.Parse(Console.ReadLine());
-
-
-                        IEnumerable<object> formasFiltradas2 =
-                                                formas.Where(f => f.Area() >= minArea2)
-                                                      .Select(f => f.Nome())
-                                                      .Distinct();
-                        foreach (object o in formasFiltradas2)
-                            Console.WriteLine(o);
+                        FormasDistintasPorArea(formas);
                         break;
                     case 9:
-                        Comparer<FormaGeometrica> compMaiorArea = Comparer<FormaGeometrica>.Create(
-                                (f1, f2) => f1.Area() > f2.Area() ? 1 : -1
-                        );
-                        FormaGeometrica maiorDeTodas = formas.Max(compMaiorArea);
-                        Console.WriteLine("Maior pela área: " + maiorDeTodas);
+                        Console.WriteLine($"Maior pela área: {MaiorDeTodas(formas)}");
                         break;
                     case 10:
-                        FormaGeometrica menorPerimetro = formas.Min(compMenorPerimetro);
-                        Console.WriteLine("Menor perímetro: " + menorPerimetro);
+                        Console.WriteLine($"Menor perímetro: {MenorPerimetro(formas)}");
                         break;
                     case 11:
-                        double somaDasAreas = formas.Sum(f => f.Area());
-                        Console.WriteLine("Soma = " + somaDasAreas);
+                        Console.WriteLine($"Soma = {formas.Sum(f => f.Area())}");
                         break;
                     case 12:
-                        Func<FormaGeometrica, double> perimetros = f => f.Perimetro();
-                        double somaDosPerimetros = formas.Sum(perimetros);
-                        double mediaDosPerimetros = formas.Average(perimetros);
-                        Console.WriteLine("Soma = " + somaDosPerimetros);
-                        Console.WriteLine("Media = " + mediaDosPerimetros);
+                        Console.WriteLine($"Média = {formas.Average(f => f.Perimetro())}");
                         break;
                     case 13:
-                        Console.Write("Qual é o tipo de figura para o filtro? ");
-                        string tipoFigura= Console.ReadLine().ToLower();
-
-                        // map/reduce <--> where/aggregate
-
-                        string resultado = formas.Where(f => f.Nome().ToLower().Equals(tipoFigura))
-                                                  .Order(compMenorPerimetro)
-                                                  .Select(f => f.ToString())
-                                                  .Aggregate((s1, s2) => s1 + "\n" + s2);
-
-                        Console.WriteLine(resultado);
+                        FormasOrdenadas(formas);
                         break;
                 }
                 Console.ReadKey();

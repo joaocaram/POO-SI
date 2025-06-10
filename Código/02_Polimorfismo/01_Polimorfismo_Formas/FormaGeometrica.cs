@@ -27,6 +27,8 @@ namespace PoliFiguras {
             return _ordinal; 
         }
 
+        
+
         public abstract double Area();
         public abstract double Perimetro();
     }
