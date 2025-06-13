@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Net.WebSockets;
 
 namespace XulambsFoods_2025_1.src
 {
@@ -30,8 +31,12 @@ namespace XulambsFoods_2025_1.src
     public class XulambsFoods {
 
         static BaseDados<Pedido> pedidos = new BaseDados<Pedido>();
+     
         static BaseDados<Cliente> clientes = new BaseDados<Cliente>();
-        
+
+        static Dictionary<DateOnly, LinkedList<Pedido>> pedidosPorDia = 
+                                                new Dictionary<DateOnly, LinkedList<Pedido>>();
+
         static void gerarClientes() {
             clientes.Adicionar(new Cliente(0, "Anônimo"));
             string[] nomes = File.ReadAllLines("medalhistas.txt");
@@ -77,7 +82,7 @@ namespace XulambsFoods_2025_1.src
                 Cliente quem = clientes.Buscar(aleat.Next(sorteio-1));
                 quem.RegistrarPedido(pedido);
                 pedido.FecharPedido();
-                pedidos.Adicionar(pedido);
+                ArmazenarPedido(pedido);
             }
         }
 
@@ -86,11 +91,10 @@ namespace XulambsFoods_2025_1.src
             gerarClientes();
             gerarPedidos(clientes.Tamanho());
         }
-
         
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS FOODS v0.6\n================");
+            Console.WriteLine("XULAMBS FOODS v0.7\n================");
         }
 
         static void Pausa() {
@@ -109,6 +113,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("0 - Finalizar");
             return lerNumero("Digite sua escolha");
         }
+        
         static int ExibirMenuGerente() {
             Cabecalho();
             Console.WriteLine("Funções Gerenciais");
@@ -136,11 +141,7 @@ namespace XulambsFoods_2025_1.src
             return lerNumero("Digite sua escolha");
 
         }
-            
-            
-            
-        
-
+       
         static void AdicionarComidas(Pedido pedido) {
             string confirmacao;
             do {
@@ -256,6 +257,7 @@ namespace XulambsFoods_2025_1.src
             }
 
         }
+        
         private static Comida EscolherComida() {
             int opcao = ExibirMenuTipoComida();
             return opcao switch {
@@ -315,7 +317,17 @@ namespace XulambsFoods_2025_1.src
         }
 
         static void ArmazenarPedido(Pedido pedido) {
-            pedidos.Adicionar(pedido);
+            LinkedList<Pedido> pedidosHoje;
+            pedidosPorDia.TryGetValue(pedido.Data(), out pedidosHoje);
+            
+            if (pedidosHoje == null) {
+                pedidosHoje = new LinkedList<Pedido>();
+                pedidosPorDia.Add(pedido.Data(), pedidosHoje);
+            }
+
+            pedidosHoje.AddLast(pedido);        // no dicionário por data.
+            
+            pedidos.Adicionar(pedido);          // na base de todos os pedidos.
         }
 
         static Pedido LocalizarPedido() {
@@ -369,7 +381,6 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine(dados.Maior());
         }
 
-        
         static void RegistrarPedidoParaCliente(Pedido pedido)
         {  
             int id = lerNumero("ID do cliente");
@@ -402,6 +413,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("Pedido fechado:");
             MostrarPedido(pedido);
         }
+      
         static void RelatorioCliente() {
             Cabecalho();
             Console.WriteLine("RELATÓRIO DETALHADO DE CLIENTE");
@@ -441,14 +453,13 @@ namespace XulambsFoods_2025_1.src
 
             Console.WriteLine(clientes.RelatorioOrdenado(comparador));
         }
+       
         static void TotalGastoPorClientes()
         {
             Cabecalho();
             Console.Write("Total gasto no restaurante: ");
             Console.WriteLine($"{clientes.Totalizar((cli) => cli.TotalGasto()):C2}");
-        }
-
-        
+        }        
 
         static void ClientesComGastoMinimo()
         {
@@ -472,10 +483,21 @@ namespace XulambsFoods_2025_1.src
             Console.Write("Digite uma data para filtrar (DD/MM/AAAA): ");
             string[] dadosFiltro = Console.ReadLine().Split("/");
             DateOnly data = new DateOnly(int.Parse(dadosFiltro[2]), int.Parse(dadosFiltro[1]), int.Parse(dadosFiltro[0]));
-
-            Console.WriteLine(pedidos.RelatorioFiltrado( p => p.Data().Equals(data)));
+            
+            LinkedList<Pedido> pedidos;
+            pedidosPorDia.TryGetValue(data, out pedidos);
+            if (pedidos != null) { 
+                string resposta = pedidos.Select(p => p.ToString())
+                                         .Aggregate((s1, s2) => $"\n{s1}\n{s2}\n~~~~~~~~~~~~~~~~\n");
+            
+                Console.WriteLine(resposta);
+            }
+            else
+                Console.WriteLine($"Sem pedidos para {data}!");
+            //Console.WriteLine(pedidos.RelatorioFiltrado( p => p.Data().Equals(data)));
 
         }
+        
         static void ModoGerente() {
             int opcao = -1;
             do {
@@ -527,6 +549,7 @@ namespace XulambsFoods_2025_1.src
             } while (opcao != 0);
         
         }
+        
         static void Main(string[] args) {
             config();
             int opcao = -1;
