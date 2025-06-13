@@ -210,14 +210,13 @@ namespace PoliFiguras {
 
             // map/reduce <--> where/aggregate
 
-            string resultado = conjunto.Where(f => f.Nome().ToLower().Equals(tipoFigura))
-                                      .Order(compMenorPerimetro)
-                                      .Select(f => f.ToString())
-                                      .Aggregate((s1, s2) => $"{s1}\n{s2}");
+            string resultado = conjunto.Where(f => f.ToString().ToLower().Contains(tipoFigura))
+                                        .Order(compMenorPerimetro)
+                                        .Select(f => f.ToString())
+                                        .Aggregate((s1, s2) => $"{s1}\n{s2}");
 
             Console.WriteLine(resultado);
         }
-
 
 
         static void Main(string[] args) {
