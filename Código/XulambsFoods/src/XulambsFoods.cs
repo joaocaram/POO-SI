@@ -128,7 +128,7 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine("PEDIDOS");
             Console.WriteLine("6 - Maior pedido do restaurante");
             Console.WriteLine("7 - Pedidos de um dia");
-            Console.WriteLine("8 - Pedidos com um prato");
+            Console.WriteLine("8 - Pedidos com somente um tipo de prato");
             Console.WriteLine("9 - Pedidos com um valor mínimo");
             Console.WriteLine("=================================");
             Console.WriteLine("FINANCEIRO");
@@ -461,43 +461,92 @@ namespace XulambsFoods_2025_1.src
             Console.WriteLine($"{clientes.Totalizar((cli) => cli.TotalGasto()):C2}");
         }        
 
+        static string FiltroValorMinimo<T>(BaseDados<T> dados, Func<T, double> extratora, double minimo) {
+            Predicate<T> condicao = (d => extratora.Invoke(d) >= minimo);
+            return dados.RelatorioFiltrado(condicao);
+        }
+
         static void ClientesComGastoMinimo()
         {
             Cabecalho();
             Console.Write("Digite o valor mínimo para filtro: ");
             double valor = double.Parse(Console.ReadLine());
-            Predicate<Cliente> filtro =
-                    (cli) => cli.TotalGasto() > valor;
-
-             Console.WriteLine(clientes.RelatorioFiltrado(filtro));
+            Console.WriteLine(FiltroValorMinimo(clientes, (cli) => cli.TotalGasto(), valor));
         }
-        
+
+        static void PedidosComValorMinimo() {
+            Cabecalho();
+            Console.Write("Digite o valor mínimo para filtro: ");
+            double valor = double.Parse(Console.ReadLine());
+            Console.WriteLine(FiltroValorMinimo(pedidos, (ped) => ped.PrecoAPagar(), valor));
+        }
+
         static void GastoMedio<T>(BaseDados<T> basedados, Func<T, double> funcao, string nome) {
             Cabecalho();
             double valorMedio = basedados.Media(funcao);
             Console.WriteLine($"Gasto médio: {valorMedio:C2}, sendo {basedados.Tamanho()} {nome}.");
         }
 
-        static void PedidosDeUmDia() {
+        static LinkedList<Pedido> ListaDePedidosDia() {
             Cabecalho();
             Console.Write("Digite uma data para filtrar (DD/MM/AAAA): ");
             string[] dadosFiltro = Console.ReadLine().Split("/");
             DateOnly data = new DateOnly(int.Parse(dadosFiltro[2]), int.Parse(dadosFiltro[1]), int.Parse(dadosFiltro[0]));
-            
+
             LinkedList<Pedido> pedidos;
             pedidosPorDia.TryGetValue(data, out pedidos);
+            return pedidos;
+        }
+
+        static void PedidosDeUmDia() {
+
+            LinkedList<Pedido> pedidos = ListaDePedidosDia();
             if (pedidos != null) { 
                 string resposta = pedidos.Select(p => p.ToString())
                                          .Aggregate((s1, s2) => $"\n{s1}\n{s2}\n~~~~~~~~~~~~~~~~\n");
-            
                 Console.WriteLine(resposta);
             }
             else
-                Console.WriteLine($"Sem pedidos para {data}!");
+                Console.WriteLine($"Sem pedidos para esta data!");
+            
             //Console.WriteLine(pedidos.RelatorioFiltrado( p => p.Data().Equals(data)));
-
         }
+
+        static void ArrecadacaoDeUmDia() {
+            
+            LinkedList<Pedido> pedidos = ListaDePedidosDia();
+            
+            if (pedidos != null) {
+                Console.WriteLine($"Valor arrecadado na data: {pedidos.Sum(p => p.PrecoAPagar()):C2}.");
+            }
+            else
+                Console.WriteLine($"Sem pedidos para esta data!.");
+        }
+
+        static void PedidosComUmPrato() {
+            Cabecalho();
+            Console.WriteLine("Pedidos com somente um tipo de prato");
+            Console.WriteLine("1 - Pedidos que tenham somente pizzas");
+            Console.WriteLine("2 - Pedidos que tenham somente sanduíches");
+            int opcao = lerNumero("Digite sua escolha");
+            string prato, outroPrato;
+            prato = outroPrato = "";
+            switch(opcao){
+                case 1: prato = "pizza"; outroPrato = "sanduiche";
+                    break;
+                case 2: prato = "sanduiche"; outroPrato = "pizza";
+                    break;
+            };
+
+            Predicate<Pedido> filtroPorPrato = (p1 => p1.ToString().ToLower().Contains(prato) && !p1.ToString().ToLower().Contains(outroPrato));
+            Console.Clear();
+            Console.WriteLine($"Pedidos que tenham somente {prato}s:");
+            Console.WriteLine(pedidos.RelatorioFiltrado(filtroPorPrato));
+        }
+
         
+
+
         static void ModoGerente() {
             int opcao = -1;
             do {
@@ -525,10 +574,10 @@ namespace XulambsFoods_2025_1.src
                         PedidosDeUmDia();
                         break;
                     case 8: 
-                   //     PedidosComUmPrato();
+                        PedidosComUmPrato();
                         break;
                     case 9:
-                   //     PedidosComValorMinimo();
+                        PedidosComValorMinimo();
                         break;
                     case 10:
                         TotalGastoPorClientes();
@@ -540,7 +589,7 @@ namespace XulambsFoods_2025_1.src
                         GastoMedio(pedidos, ped => ped.PrecoAPagar(), "pedidos");
                         break;
                     case 13:
-                    //    ArrecadacaoDeUmDia();
+                        ArrecadacaoDeUmDia();
                         break;
                     case 0: Console.WriteLine("Retornando ao menu principal.");
                         break;
