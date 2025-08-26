@@ -46,11 +46,11 @@ namespace XulambsFoods_2025_1.src {
     
     public class Pizza {
 
-        private const int MaxIngredientes = 8;
-        private const string Descricao = "Pizza";
-	    private const double PrecoBase = 29d;
-        private const double ValorAdicional = 5d;
-        [JsonInclude]
+        private int _maxIngredientes;
+        private string _descricao;
+	    private double _precoBase;
+        private double _valorAdicional;
+        
         private int _quantidadeIngredientes;
 
         /// <summary>
@@ -58,6 +58,10 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <param name="quantosAdicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
         private void init(int quantosAdicionais) {
+            _maxIngredientes = 8;
+            _descricao = "Pizza";
+            _precoBase = 29d;
+            _valorAdicional = 5d;
             if (PodeAlterarIngredientes(quantosAdicionais))
                 _quantidadeIngredientes = quantosAdicionais;
         }
@@ -82,7 +86,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
         private double ValorAdicionais() {
-            return _quantidadeIngredientes * ValorAdicional;
+            return _quantidadeIngredientes * _valorAdicional;
         }
 
         /// <summary>
@@ -90,7 +94,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>Double com o valor final da pizza.</returns>
         public double ValorFinal() {
-            return PrecoBase + ValorAdicionais();
+            return _precoBase + ValorAdicionais();
         }
 
         /// <summary>
@@ -113,36 +117,15 @@ namespace XulambsFoods_2025_1.src {
         /// <param name="quantos">Quantidade de ingredientes a adicionar.</param>
         /// <returns>TRUE/FALSE conforme seja possível ou não adicionar esta quantidade de ingredientes.</returns>
         private bool PodeAlterarIngredientes(int quantos) {
-            return (quantos + _quantidadeIngredientes >= 0 && 
-                    quantos + _quantidadeIngredientes <= MaxIngredientes);
+            return (quantos > 0 && quantos + _quantidadeIngredientes <= _maxIngredientes);
         }
-
-        /// <summary>
-        /// Tenta retirar ingredientes na pizza.Caso a adição seja inválida(resultando em  valores negativos), mantém
-        /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
-        /// </summary>
-        /// <param name="quantos">Quantos ingredientes a serem retirados (>0)</param>
-        /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
-        public int RetirarIngredientes(int quantos) {
-            return AdicionarIngredientes(0-quantos);
-        }
-
-
+        
         /// <summary>
         /// Nota simplificada de compra: descrição da pizza, dos ingredientes e do preço.
         /// </summary>
         /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
         public string NotaDeCompra() {
-            return $"{Descricao} ({PrecoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
-        }
-
-        public override bool Equals(object? obj) {
-            Pizza outra = (Pizza)obj;
-            return this._quantidadeIngredientes == outra._quantidadeIngredientes;
-        }
-
-        public override string? ToString() {
-            return $"{Descricao} com {_quantidadeIngredientes}.";
+            return $"{_descricao} ({_precoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
         }
     }
 

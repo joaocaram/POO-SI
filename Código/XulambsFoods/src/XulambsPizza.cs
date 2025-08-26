@@ -22,8 +22,7 @@ namespace XulambsFoods_2025_1.src {
             Cabecalho();
             Console.WriteLine("Personalizar a Pizza\n");
             MostrarNota(pizza);
-            Console.WriteLine("\n1 - Acrescentar ingredientes");
-            Console.WriteLine("2 - Retirar ingredientes");
+            Console.WriteLine("\n1 - Acrescentar ingredientes");         
             Console.WriteLine("0 - Não quero alterar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -40,21 +39,12 @@ namespace XulambsFoods_2025_1.src {
 
         static void EscolherIngredientes(Pizza pizza) {
             int opcao = ExibirMenuIngredientes(pizza);
-            while(opcao!=0){
+            if (opcao != 0) { 
                 Console.Write("Quantos ingredientes? ");
                 int adicionais = int.Parse(Console.ReadLine());
-                switch(opcao) {
-                    case 1: pizza.AdicionarIngredientes(adicionais);
-                        break;
-                    case 2: pizza.RetirarIngredientes(adicionais);
-                        break;
-                };
+                pizza.AdicionarIngredientes(adicionais);
                 Console.WriteLine();
-                MostrarNota(pizza);
-                Pausa();
-                opcao = ExibirMenuIngredientes(pizza);
-            } 
-            
+            }
         }
 
         static void MostrarNota(Pizza pizza) {
