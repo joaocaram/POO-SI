@@ -43,7 +43,6 @@ namespace XulambsFoods_2025_1.src {
     /// A pizza deve emitir uma nota de compra com os seus detalhes.
     /// </summary>
 
-    
     public class Pizza {
 
         private int _maxIngredientes;
@@ -52,7 +51,7 @@ namespace XulambsFoods_2025_1.src {
         private double _valorPorAdicional;
         private string _descricao;
 	    
-        /// <summary>
+       /// <summary>
         /// Inicializador privado da pizza: valida a quantidade de adicionais. Em caso de não validação, a pizza será criada sem adicionais.
         /// </summary>
         /// <param name="adicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
@@ -71,7 +70,7 @@ namespace XulambsFoods_2025_1.src {
             Init(0);            
         }
 
-        /// <summary>
+       /// <summary>
         /// Cria uma pizza com a quantidade de adicionais pré-definida.Em caso de valor inválido, a pizza será criada sem adicionais.
         /// </summary>
         /// <param name="adicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
@@ -79,7 +78,7 @@ namespace XulambsFoods_2025_1.src {
             Init(adicionais);
         }
 
-        /// <summary>
+      /// <summary>
         /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
         /// </summary>
         /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
@@ -95,7 +94,7 @@ namespace XulambsFoods_2025_1.src {
             return _precoBase + ValorAdicionais();
         }
 
-        /// <summary>
+      /// <summary>
         /// Tenta adicionar ingredientes na pizza.Caso a adição seja inválida(ultrapassando limites ou com valores negativos), mantém
         /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
         /// </summary>
@@ -108,7 +107,7 @@ namespace XulambsFoods_2025_1.src {
             return _quantidadeIngredientes;
         }
 
-        /// <summary>
+       /// <summary>
         ///Faz a verificação de limites para adicionar ingredientes na pizza.Retorna TRUE/FALSE conforme seja possível ou não adicionar 
         ///esta quantidade de ingredientes.
         /// </summary>
@@ -117,8 +116,7 @@ namespace XulambsFoods_2025_1.src {
         private bool PodeAdicionar(int quantos) {
             return (quantos > 0 && quantos + _quantidadeIngredientes <= _maxIngredientes);
         }
-        
-        /// <summary>
+                            /// <summary>
         /// Nota simplificada de compra: descrição da pizza, dos ingredientes e do preço.
         /// </summary>
         /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
@@ -126,5 +124,4 @@ namespace XulambsFoods_2025_1.src {
             return $"{_descricao} ({_precoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
         }
     }
-
 }

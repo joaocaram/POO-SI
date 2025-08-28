@@ -33,7 +33,6 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine("Comprando uma nova pizza:");
             Pizza novaPizza = new Pizza();
             EscolherIngredientes(novaPizza);
-            Console.WriteLine();
             MostrarNota(novaPizza);
         }
 
@@ -43,14 +42,12 @@ namespace XulambsFoods_2025_1.src {
                 Console.Write("Quantos ingredientes? ");
                 int adicionais = int.Parse(Console.ReadLine());
                 pizza.AdicionarIngredientes(adicionais);
-                Console.WriteLine();
             }
         }
 
         static void MostrarNota(Pizza pizza) {
-            Console.WriteLine("Comprando: ");
+            Console.WriteLine("Comprando:");
             Console.WriteLine(pizza.NotaDeCompra());
-
         }
 
         static void Main(string[] args) {
