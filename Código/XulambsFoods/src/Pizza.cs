@@ -61,8 +61,7 @@ namespace XulambsFoods_2025_1.src {
             _descricao = "Pizza";
             _precoBase = 29d;
             _valorPorAdicional = 5d;
-            if (PodeAdicionar(adicionais))
-                _quantidadeIngredientes = adicionais;
+            AdicionarIngredientes(adicionais);
         }
 
        /// <summary>
