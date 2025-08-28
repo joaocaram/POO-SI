@@ -2,7 +2,7 @@ namespace XulambsFoods_2025_1.src {
     internal class XulambsPizza {
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA v0.1\n================");
+            Console.WriteLine("XULAMBS PIZZA v0.1 \n====================");
         }
 
         static void Pausa() {
@@ -64,7 +64,7 @@ namespace XulambsFoods_2025_1.src {
                     case 0: Console.WriteLine("FLW VLW OBG VLT SMP.");
                         break;
                 }
-                Console.ReadKey();
+                Pausa();
             } while (opcao != 0);
         }
     }
