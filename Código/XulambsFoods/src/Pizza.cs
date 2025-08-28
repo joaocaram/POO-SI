@@ -47,38 +47,37 @@ namespace XulambsFoods_2025_1.src {
     public class Pizza {
 
         private int _maxIngredientes;
-        private string _descricao;
-	    private double _precoBase;
-        private double _valorAdicional;
-        
+        private double _precoBase;
         private int _quantidadeIngredientes;
-
+        private double _valorPorAdicional;
+        private string _descricao;
+	    
         /// <summary>
         /// Inicializador privado da pizza: valida a quantidade de adicionais. Em caso de não validação, a pizza será criada sem adicionais.
         /// </summary>
-        /// <param name="quantosAdicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
-        private void init(int quantosAdicionais) {
+        /// <param name="adicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
+        private void Init(int adicionais) {
             _maxIngredientes = 8;
             _descricao = "Pizza";
             _precoBase = 29d;
-            _valorAdicional = 5d;
-            if (PodeAlterarIngredientes(quantosAdicionais))
-                _quantidadeIngredientes = quantosAdicionais;
+            _valorPorAdicional = 5d;
+            if (PodeAdicionar(adicionais))
+                _quantidadeIngredientes = adicionais;
         }
 
        /// <summary>
        /// Construtor padrão.Cria uma pizza sem adicionais.
        /// </summary>
         public Pizza() {
-            init(0);            
+            Init(0);            
         }
 
         /// <summary>
         /// Cria uma pizza com a quantidade de adicionais pré-definida.Em caso de valor inválido, a pizza será criada sem adicionais.
         /// </summary>
-        /// <param name="quantosAdicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
-        public Pizza(int quantosAdicionais) {
-            init(quantosAdicionais);
+        /// <param name="adicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
+        public Pizza(int adicionais) {
+            Init(adicionais);
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
         private double ValorAdicionais() {
-            return _quantidadeIngredientes * _valorAdicional;
+            return _quantidadeIngredientes * _valorPorAdicional;
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace XulambsFoods_2025_1.src {
         /// <param name="quantos">Quantos ingredientes a serem adicionados (>0)</param>
         /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
         public int AdicionarIngredientes(int quantos) {
-            if (PodeAlterarIngredientes(quantos)) {
+            if (PodeAdicionar(quantos)) {
                 _quantidadeIngredientes += quantos;
             }
             return _quantidadeIngredientes;
@@ -116,7 +115,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <param name="quantos">Quantidade de ingredientes a adicionar.</param>
         /// <returns>TRUE/FALSE conforme seja possível ou não adicionar esta quantidade de ingredientes.</returns>
-        private bool PodeAlterarIngredientes(int quantos) {
+        private bool PodeAdicionar(int quantos) {
             return (quantos > 0 && quantos + _quantidadeIngredientes <= _maxIngredientes);
         }
         
