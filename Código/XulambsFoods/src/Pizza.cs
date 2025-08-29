@@ -44,14 +44,16 @@ namespace XulambsFoods_2025_1.src {
     /// </summary>
 
     public class Pizza {
-
+        #region Atributos   
         private int _maxIngredientes;
         private double _precoBase;
         private int _quantidadeIngredientes;
         private double _valorPorAdicional;
         private string _descricao;
-	    
-       /// <summary>
+        #endregion
+
+        #region Construtores
+        /// <summary>
         /// Inicializador privado da pizza: valida a quantidade de adicionais. Em caso de não validação, a pizza será criada sem adicionais.
         /// </summary>
         /// <param name="adicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
@@ -77,8 +79,10 @@ namespace XulambsFoods_2025_1.src {
         public Pizza(int adicionais) {
             Init(adicionais);
         }
+        #endregion
 
-      /// <summary>
+        #region Métodos de negócio
+        /// <summary>
         /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
         /// </summary>
         /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
@@ -123,5 +127,6 @@ namespace XulambsFoods_2025_1.src {
         public string NotaDeCompra() {
             return $"{_descricao} ({_precoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
         }
+        #endregion
     }
 }
