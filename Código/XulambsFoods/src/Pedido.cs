@@ -7,20 +7,17 @@ using System.Threading.Tasks;
 namespace XulambsFoods_2025_1.src {
     public class Pedido {
         private static int s_ultimoPedido = 0;
-        private const int MaxPizzas = 100;
-
+        
         private int _idPedido;
         private DateOnly _data;
-        private Pizza[] _pizzas;
-        private int _quantPizzas;
+        private LinkedList<Pizza> _pizzas;
         private bool _aberto;
 
         public Pedido() {
             s_ultimoPedido++;
             _idPedido = s_ultimoPedido;
             _data = DateOnly.FromDateTime(DateTime.Now);
-            _pizzas = new Pizza[MaxPizzas];
-            _quantPizzas = 0;
+            _pizzas = new LinkedList<Pizza>();
             _aberto = true;
         }
 
@@ -30,10 +27,9 @@ namespace XulambsFoods_2025_1.src {
 
         public int Adicionar(Pizza pizza) {
             if (PodeAdicionar()) {
-                _pizzas[_quantPizzas] = pizza;
-                _quantPizzas++;
+               _pizzas.AddLast(pizza); 
             }
-            return _quantPizzas;
+            return _pizzas.Count;
         }
 
         public void FecharPedido() {
@@ -42,8 +38,8 @@ namespace XulambsFoods_2025_1.src {
 
         public double PrecoAPagar() {
             double preco = 0d;
-            for (int i = 0; i < _quantPizzas; i++) {
-                preco += _pizzas[i].ValorFinal();
+            foreach (Pizza pizza in _pizzas) {
+                preco += pizza.ValorFinal();                
             }
             return preco;
         }
@@ -51,8 +47,8 @@ namespace XulambsFoods_2025_1.src {
         public string Relatorio() {
             StringBuilder relat = new StringBuilder($"Pedido {_idPedido} - {_data}\n");
             relat.AppendLine("==============================");
-            for (int i = 0; i < _quantPizzas; i++) {
-                relat.AppendLine(_pizzas[i].NotaDeCompra());
+            foreach (Pizza pizza in _pizzas) {
+                relat.AppendLine(pizza.NotaDeCompra());
             }
             relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
             return relat.ToString();
