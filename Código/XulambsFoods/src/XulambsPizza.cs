@@ -154,6 +154,19 @@ namespace XulambsFoods_2025_1.src {
                 Console.WriteLine("Pedido não encontrado");
         }
 
+        static void FecharPedido()
+        {
+            Pedido pedidoParaFechar = LocalizarPedido();
+            if (pedidoParaFechar != null)
+            {
+                pedidoParaFechar.FecharPedido();
+                Console.WriteLine(pedidoParaFechar.Relatorio());
+            }
+            else
+                Console.WriteLine("Pedido não encontrado");
+
+        }
+
         static void RelatorioDePedido() {
             Pedido localizado = LocalizarPedido();
             if (localizado != null)
@@ -178,6 +191,9 @@ namespace XulambsFoods_2025_1.src {
                         break;
                     case 3:
                         RelatorioDePedido();
+                        break;
+                    case 4:
+                        FecharPedido();
                         break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
