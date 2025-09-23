@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+
 
 namespace XulambsFoods_2025_1.src {
     public class Pedido {
@@ -19,6 +16,14 @@ namespace XulambsFoods_2025_1.src {
             _data = DateOnly.FromDateTime(DateTime.Now);
             _pizzas = new LinkedList<Pizza>();
             _aberto = true;
+        }
+
+        /// <summary>
+        /// Retorna id para localização do Pedido. Será melhorado em breve, para evitar método get
+        /// </summary>
+        /// <returns></returns>
+        public int GetID() {
+            return _idPedido;
         }
 
         private bool PodeAdicionar() {
