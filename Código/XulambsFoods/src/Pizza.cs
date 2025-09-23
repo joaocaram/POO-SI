@@ -1,23 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.Intrinsics.X86;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Net.WebRequestMethods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
+﻿
 namespace XulambsFoods_2025_1.src {
     /** 
     * MIT License
     *
-    * Copyright(c) 2024 João Caram <caram@pucminas.br>
+    * Copyright(c) 2024-25 João Caram <caram@pucminas.br>
     *
     * Permission is hereby granted, free of charge, to any person obtaining a copy
     * of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +36,7 @@ namespace XulambsFoods_2025_1.src {
         private const string Descricao = "Pizza";
 	    private const double PrecoBase = 29d;
         private const double ValorAdicional = 5d;
-        [JsonInclude]
+        
         private int _quantidadeIngredientes;
 
         /// <summary>
@@ -136,14 +122,7 @@ namespace XulambsFoods_2025_1.src {
             return $"{Descricao} ({PrecoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
         }
 
-        public override bool Equals(object? obj) {
-            Pizza outra = (Pizza)obj;
-            return this._quantidadeIngredientes == outra._quantidadeIngredientes;
-        }
-
-        public override string? ToString() {
-            return $"{Descricao} com {_quantidadeIngredientes}.";
-        }
+        
     }
 
 }
