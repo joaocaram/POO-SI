@@ -95,7 +95,6 @@ namespace XulambsFoods_2025_1.src {
             return new PedidoEntrega(dist);
         }
 
-
         static int ExibirMenuIngredientes(Pizza pizza) {
             Cabecalho();
             Console.WriteLine("Personalizar a Pizza\n");
@@ -129,19 +128,17 @@ namespace XulambsFoods_2025_1.src {
                     case 2:
                         pizza.RetirarIngredientes(adicionais);
                         break;
-                };
+                }
                 Console.WriteLine();
                 MostrarNota(pizza);
                 Pausa();
                 opcao = ExibirMenuIngredientes(pizza);
             }
-
         }
 
         static void MostrarNota(Pizza pizza) {
             Console.WriteLine("Comprando: ");
             Console.WriteLine(pizza.NotaDeCompra());
-
         }
 
         static void MostrarPedido(Pedido pedido) {
@@ -151,7 +148,6 @@ namespace XulambsFoods_2025_1.src {
 
         static void ArmazenarPedido(Pedido pedido) {
             pedidos.AddLast(pedido);
-            
         }
 
         static Pedido LocalizarPedido() {
@@ -193,7 +189,6 @@ namespace XulambsFoods_2025_1.src {
             else
                 Console.WriteLine("Pedido não existente");
         }
-
 
         static void Main(string[] args) {
             int opcao = -1;
