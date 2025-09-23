@@ -34,16 +34,7 @@ namespace XulambsFoods_2025_1.src {
         /// Static para geração do id do pedido seguinte.
         /// </summary>
         private static int s_ultimoPedido = 0;
-        /// <summary>
-        /// Apenas para controle do vetor de pizzas.
-        /// </summary>
-        private const int MaxPizzas = 100;
-
-        /// <summary>
-        /// Máximo de pizzas permitidas(pelo controle de tamanho)
-        /// </summary>
-        private int _maxPizzas;
-        
+               
         /// <summary>
         /// Identificador do pedido (gerado automaticamente) 
         /// </summary>
@@ -57,50 +48,24 @@ namespace XulambsFoods_2025_1.src {
         /// <summary>
         /// Armazenando as pizzas em um vetor. Pode ser melhorado futuramente.
         /// </summary>
-        private Pizza[] _pizzas;
-
-        /// <summary>
-        /// Quantidade de pizzas no pedido atualmente.
-        /// </summary>
-        private int _quantPizzas;
+        protected LinkedList<Pizza> _pizzas;
 
         /// <summary>
         /// Estado do pedido: aberto pode ser modificado, fechado não pode.
         /// </summary>
         private bool _aberto;
 
-        /// <summary>
-        /// Inicializador privado. Gera o identificador, cria o vetor
-        /// e inicializa demais atributos
-        /// </summary>
-        /// <param name="maxPizzas"></param>
-        private void init(int maxPizzas) {
-            s_ultimoPedido++;
-            _idPedido = s_ultimoPedido;
-            _maxPizzas = maxPizzas;
-            _data = DateOnly.FromDateTime(DateTime.Now);
-            if (_maxPizzas < 1)
-                _maxPizzas = 1;
-            _pizzas = new Pizza[_maxPizzas];
-            _quantPizzas = 0;
-            _aberto = true;
-        }
-
-        /// <summary>
-        /// Construtor para uso de classes derivadas, permitindo
-        /// restringir a quantidade de pizzas armazenadas.
-        /// </summary>
-        /// <param name="maxPizzas">Máximo de pizzas no pedido. Deve ser >= 1.</param>
-        protected Pedido(int maxPizzas) {
-            init(maxPizzas);
-        }
-
+               
         /// <summary>
         /// Cria um pedido vazio, com a data de hoje e identificador gerado
         /// automaticamente.
         /// </summary>
         public Pedido() {
-            init(MaxPizzas);
+            s_ultimoPedido++;
+            _idPedido = s_ultimoPedido;
+            _data = DateOnly.FromDateTime(DateTime.Now);
+            _pizzas = new LinkedList<Pizza>();
+            _aberto = true;
         }
                
         /// <summary>
@@ -108,21 +73,11 @@ namespace XulambsFoods_2025_1.src {
         /// e quantidade de pizzas.
         /// </summary>
         /// <returns>TRUE/FALSE conforme seja permitido adicionar ou não</returns>
-        private bool PodeAdicionar() {
-            return _aberto && _quantPizzas < _maxPizzas;
+        protected virtual bool PodeAdicionar() {
+            return _aberto;
         }
 
-        /// <summary>
-        /// Encapsula a lógica do cálculo do valor dos itens do pedidos (soma dos valores)
-        /// </summary>
-        /// <returns>Valor dos itens do pedido (soma dos valores dos itens)</returns>
-        protected double ValorItens() {
-            double preco = 0d;
-            for (int i = 0; i < _quantPizzas; i++) {
-                preco += _pizzas[i].ValorFinal();
-            }
-            return preco;
-        }
+        
 
         /// <summary>
         /// Tenta adicionar uma pizza ao pedido. Se não for possível, ignora a operação.
@@ -131,10 +86,10 @@ namespace XulambsFoods_2025_1.src {
         /// <returns>Quantidade de pizzas no pedido após a execução.</returns>
         public int Adicionar(Pizza pizza) {
             if (PodeAdicionar()) {
-                _pizzas[_quantPizzas] = pizza;
-                _quantPizzas++;
+                _pizzas.AddLast(pizza);
+                
             }
-            return _quantPizzas;
+            return _pizzas.Count;
         }
 
         /// <summary>
@@ -142,7 +97,7 @@ namespace XulambsFoods_2025_1.src {
         /// ignora a operação.
         /// </summary>
         public void FecharPedido() {
-            if(_quantPizzas > 0)
+            if(_pizzas.Count > 0)
                 _aberto = false;
         }
 
@@ -151,7 +106,10 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>Double com o valor a pagar pelo pedido.</returns>
         public virtual double PrecoAPagar() {
-            return ValorItens();
+            double valor = 0d;
+            foreach (Pizza p in _pizzas)
+                valor += p.ValorFinal();
+            return valor;
         }
 
         /// <summary>
@@ -159,25 +117,26 @@ namespace XulambsFoods_2025_1.src {
         /// comum a todos os pedidos.
         /// </summary>
         /// <returns>String multilinha com as informações acima</returns>
-        protected string DetalhamentoPedido(){
+        protected string DetalhamentoNota(){
             StringBuilder relat = new StringBuilder($"nº{ _idPedido} - { _data}\n");
             relat.AppendLine("==============================");
-            for (int i = 0; i < _quantPizzas; i++)
+            foreach(Pizza pizza in _pizzas)
             {
-                relat.AppendLine(_pizzas[i].NotaDeCompra());
+                relat.AppendLine(pizza.NotaDeCompra());
             }
             return relat.ToString();
         }
 
+        protected string RodapeNota() {
+            return $"=========================\nValor a pagar: {PrecoAPagar():C2}";
+        }
         /// <summary>
         /// Relatório do pedido, contendo seu identificador, data,
         /// detalhamento das pizzas e preço a pagar.
         /// </summary>
         /// <returns>Uma string, multilinhas, com a informação descrita</returns>
         public virtual string Relatorio() {
-            StringBuilder relat = new StringBuilder($"Pedido Local {DetalhamentoPedido()}");
-            relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
-            return relat.ToString();
+            return $"Pedido Local {DetalhamentoNota()}\n{RodapeNota()}";
         }
 
         /// <summary>
