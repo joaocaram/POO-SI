@@ -26,8 +26,7 @@ namespace XulambsFoods_2025_1.src {
 
     public class XulambsPizza {
 
-        const int MaxPedidos = 100;
-        static Pedido[] pedidos = new Pedido[MaxPedidos];
+        static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
         static int quantPedidos = 0;
 
         static void Cabecalho() {
@@ -45,6 +44,7 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine("1 - Abrir Pedido");
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
+            Console.WriteLine("4 - Fechar Pedido");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -63,6 +63,7 @@ namespace XulambsFoods_2025_1.src {
         static Pedido AbrirPedido() {
             Pedido novoPedido = EscolherTipoPedido();
             AdicionarPizzas(novoPedido);
+            MostrarPedido(novoPedido);
             return novoPedido;
         }
 
@@ -149,10 +150,8 @@ namespace XulambsFoods_2025_1.src {
         }
 
         static void ArmazenarPedido(Pedido pedido) {
-            if (quantPedidos < MaxPedidos) {
-                pedidos[quantPedidos] = pedido;
-                quantPedidos++;
-            }
+            pedidos.AddLast(pedido);
+            
         }
 
         static Pedido LocalizarPedido() {
@@ -160,13 +159,11 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine("Localizando um pedido");
             Console.Write("Digite o número do pedido: ");
             int numero = int.Parse(Console.ReadLine());
-            Pedido localizado = null;
-
-            for (int i = 0; i < quantPedidos; i++) {
-                if (pedidos[i].GetID() == numero)
-                    localizado = pedidos[i];
+            foreach (Pedido ped in pedidos) { 
+                if (ped.GetID() == numero)
+                    return ped;
             }
-            return localizado;
+            return null;
         }
 
         static void AlterarPedido() {
@@ -174,6 +171,16 @@ namespace XulambsFoods_2025_1.src {
             if (pedidoParaAlteracao != null) {
                 AdicionarPizzas(pedidoParaAlteracao);
                 MostrarPedido(pedidoParaAlteracao);
+            }
+            else
+                Console.WriteLine("Pedido não encontrado");
+        }
+
+        static void FecharPedido() {
+            Pedido pedidoParaFechar = LocalizarPedido();
+            if (pedidoParaFechar != null) {
+                pedidoParaFechar.FecharPedido();
+                MostrarPedido(pedidoParaFechar);
             }
             else
                 Console.WriteLine("Pedido não encontrado");
@@ -195,7 +202,6 @@ namespace XulambsFoods_2025_1.src {
                 switch (opcao) {
                     case 1:
                         Pedido novoPedido = AbrirPedido();
-                        MostrarPedido(novoPedido);
                         ArmazenarPedido(novoPedido);
                         break;
                     case 2:
@@ -204,11 +210,14 @@ namespace XulambsFoods_2025_1.src {
                     case 3:
                         RelatorioDePedido();
                         break;
+                    case 4:
+                        FecharPedido();
+                        break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
                         break;
                 }
-                Console.ReadKey();
+                Pausa();
             } while (opcao != 0);
         }
     }
