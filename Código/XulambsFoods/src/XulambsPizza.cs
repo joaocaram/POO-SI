@@ -1,3 +1,4 @@
+
 namespace XulambsFoods_2025_1.src {
 
     /** 
@@ -45,6 +46,7 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine("2 - Alterar Pedido");
             Console.WriteLine("3 - Relatório de Pedido");
             Console.WriteLine("4 - Fechar Pedido");
+            Console.WriteLine("5 - Valor do último pedido");
             Console.WriteLine("0 - Finalizar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -100,7 +102,6 @@ namespace XulambsFoods_2025_1.src {
             Console.WriteLine("Personalizar a Pizza\n");
             MostrarNota(pizza);
             Console.WriteLine("\n1 - Acrescentar ingredientes");
-            Console.WriteLine("2 - Retirar ingredientes");
             Console.WriteLine("0 - Não quero alterar");
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -118,21 +119,10 @@ namespace XulambsFoods_2025_1.src {
 
         static void EscolherIngredientes(Pizza pizza) {
             int opcao = ExibirMenuIngredientes(pizza);
-            while (opcao != 0) {
+            if (opcao == 1) {
                 Console.Write("Quantos ingredientes? ");
                 int adicionais = int.Parse(Console.ReadLine());
-                switch (opcao) {
-                    case 1:
-                        pizza.AdicionarIngredientes(adicionais);
-                        break;
-                    case 2:
-                        pizza.RetirarIngredientes(adicionais);
-                        break;
-                }
-                Console.WriteLine();
-                MostrarNota(pizza);
-                Pausa();
-                opcao = ExibirMenuIngredientes(pizza);
+                pizza.AdicionarIngredientes(adicionais);
             }
         }
 
@@ -143,7 +133,7 @@ namespace XulambsFoods_2025_1.src {
 
         static void MostrarPedido(Pedido pedido) {
             Cabecalho();
-            Console.WriteLine(pedido.Relatorio());
+            Console.WriteLine(pedido);
         }
 
         static void ArmazenarPedido(Pedido pedido) {
@@ -156,7 +146,7 @@ namespace XulambsFoods_2025_1.src {
             Console.Write("Digite o número do pedido: ");
             int numero = int.Parse(Console.ReadLine());
             foreach (Pedido ped in pedidos) { 
-                if (ped.GetID() == numero)
+                if (ped.GetHashCode() == numero)
                     return ped;
             }
             return null;
@@ -190,6 +180,12 @@ namespace XulambsFoods_2025_1.src {
                 Console.WriteLine("Pedido não existente");
         }
 
+        static void ValorUltimoPedido() {
+            Cabecalho();
+            Pedido ultimo = pedidos.Last();
+            Console.WriteLine($"Valor do último pedido: {ultimo.PrecoAPagar():C2}");
+        }
+
         static void Main(string[] args) {
             int opcao = -1;
             do {
@@ -208,6 +204,9 @@ namespace XulambsFoods_2025_1.src {
                     case 4:
                         FecharPedido();
                         break;
+                    case 5:
+                        ValorUltimoPedido();
+                        break;
                     case 0:
                         Console.WriteLine("FLW VLW OBG VLT SMP.");
                         break;
@@ -215,5 +214,7 @@ namespace XulambsFoods_2025_1.src {
                 Pausa();
             } while (opcao != 0);
         }
+
+        
     }
 }

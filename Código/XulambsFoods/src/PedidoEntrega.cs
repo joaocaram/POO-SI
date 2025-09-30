@@ -66,7 +66,7 @@ namespace XulambsFoods_2025_1.src {
         }
 
         protected override bool PodeAdicionar() {
-            return base.PodeAdicionar() && _pizzas.Count <= MaxEntrega;
+            return base.PodeAdicionar() && _pizzas.Count < MaxEntrega;
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace XulambsFoods_2025_1.src {
         /// detalhamento das pizzas, valor da taxa de entrega e valor do pedido.
         /// </summary>
         /// <returns>String multilinhas com o detalhamento descrito do pedido.</returns>
-        public override string Relatorio() {
+        public override string ToString() {
             StringBuilder relat = new StringBuilder($"Pedido para Entrega ({_distanciaEntrega:F1}km) {DetalhamentoNota()}");
             relat.AppendLine($"Taxa de entrega: {ValorTaxa():C2}");
             relat.Append(RodapeNota());

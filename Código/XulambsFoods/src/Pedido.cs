@@ -54,8 +54,7 @@ namespace XulambsFoods_2025_1.src {
         /// Estado do pedido: aberto pode ser modificado, fechado não pode.
         /// </summary>
         private bool _aberto;
-
-               
+       
         /// <summary>
         /// Cria um pedido vazio, com a data de hoje e identificador gerado
         /// automaticamente.
@@ -76,10 +75,8 @@ namespace XulambsFoods_2025_1.src {
         protected virtual bool PodeAdicionar() {
             return _aberto;
         }
-
-        
-
-        /// <summary>
+     
+      /// <summary>
         /// Tenta adicionar uma pizza ao pedido. Se não for possível, ignora a operação.
         /// </summary>
         /// <param name="pizza">A pizza a ser incluída no pedido</param>
@@ -92,7 +89,7 @@ namespace XulambsFoods_2025_1.src {
             return _pizzas.Count;
         }
 
-        /// <summary>
+      /// <summary>
         /// Fecha o pedido, caso ele tenha pelo menos 1 pizza. Caso contrário,
         /// ignora a operação.
         /// </summary>
@@ -130,12 +127,13 @@ namespace XulambsFoods_2025_1.src {
         protected string RodapeNota() {
             return $"=========================\nValor a pagar: {PrecoAPagar():C2}";
         }
+      
         /// <summary>
         /// Relatório do pedido, contendo seu identificador, data,
         /// detalhamento das pizzas e preço a pagar.
         /// </summary>
         /// <returns>Uma string, multilinhas, com a informação descrita</returns>
-        public virtual string Relatorio() {
+        public override string ToString() {
             return $"Pedido Local {DetalhamentoNota()}\n{RodapeNota()}";
         }
 
@@ -144,8 +142,13 @@ namespace XulambsFoods_2025_1.src {
         /// (faremos melhor que isso em breve)
         /// </summary>
         /// <returns>Identificador do pedido (inteiro positivo)</returns>
-        public int GetID() {
+        public override int GetHashCode() {
             return _idPedido;
+        }
+
+        public override bool Equals(object? obj) {
+            Pedido outroPedido = obj as Pedido;
+            return this._idPedido == outroPedido._idPedido;
         }
     }
 }
