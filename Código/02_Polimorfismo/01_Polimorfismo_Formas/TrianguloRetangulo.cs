@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace PoliFiguras {
     internal class TrianguloRetangulo : PoligonoReto{
 
-        public TrianguloRetangulo(double cateto1, double cateto2):
-                base("Triângulo Retângulo", cateto1, cateto2) {
+        public TrianguloRetangulo(double cateto1, double cateto2, int posX, int posY):
+                base("Triângulo Retângulo", cateto1, cateto2, posX, posY) {
 
         }
 

@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 
 namespace PoliFiguras {
     internal abstract class FormaGeometrica{
-        static int ordinal = 1;
+        protected int _coordX;
+        protected int _coordY;
         protected string _descricao;
-        protected int _ordinal;
+        
 
-        protected FormaGeometrica(string desc) {
+        protected FormaGeometrica(string desc, int posX, int posY) {
+            _coordX = posX > 0 ? posX : 1;
+            _coordY = posY > 0 ? posY : 1;
             _descricao = desc;
-            _ordinal = ordinal++;
+            
         }
 
-        public string Nome() {
-            return _descricao;
+        
+        public bool TemAreaMaiorQue(FormaGeometrica outra) {
+            return Area() > outra.Area();
         }
 
         public override string ToString() {
@@ -24,10 +28,14 @@ namespace PoliFiguras {
         }
 
         public override int GetHashCode() {
-            return _ordinal; 
+            return (_descricao+_coordX.ToString()+_coordY.ToString()).GetHashCode(); 
         }
 
-        
+        public override bool Equals(object? obj) {
+            FormaGeometrica outro = obj as FormaGeometrica;
+            return (Area() == outro.Area()
+                    && _descricao.Equals(outro._descricao));
+        }
 
         public abstract double Area();
         public abstract double Perimetro();

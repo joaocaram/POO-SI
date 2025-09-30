@@ -10,7 +10,8 @@ namespace PoliFiguras {
         protected double _basePoligono;
         protected double _alturaPoligono;
 
-        protected PoligonoReto(string desc, double b, double h): base(desc) {
+        protected PoligonoReto(string desc, double b, double h, int posX, int posY): 
+            base(desc, posX, posY) {
             _basePoligono = _alturaPoligono = 0.1;
             if (b > 0.1)
                 _basePoligono = b;
@@ -18,19 +19,7 @@ namespace PoliFiguras {
                 _alturaPoligono = h;
         }
 
-        public override bool Equals(object? obj)
-        {
-            try { 
-            PoligonoReto outro = (PoligonoReto)obj;
-            return (_basePoligono == outro._basePoligono
-                    && _alturaPoligono == outro._alturaPoligono
-                    && _descricao.Equals(outro._descricao));
-            }
-            catch(InvalidCastException ic)
-            {
-                return false;
-            }
-         }
+        
 
     }
 }

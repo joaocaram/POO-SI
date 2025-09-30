@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace PoliFiguras {
     internal class Retangulo : PoligonoReto {
 
-        public Retangulo(double b, double h) : base("Retângulo", b, h) {
+        public Retangulo(double b, double h, int posX, int posY) : base("Retângulo", b, h, posX, posY) {
 
         }
 
