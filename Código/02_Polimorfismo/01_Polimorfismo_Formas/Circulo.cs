@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal class Circulo : FormaGeometrica{
+    public class Circulo : FormaGeometrica{
         private double _raio;
 
-        public Circulo(double raio, int posX, int posY): base("Círculo", posX, posY)
+        public Circulo(double raio, int posX, int posY): 
+            base("Círculo", posX, posY)
         {
-            this._raio = 0.1;
+            _raio = 0.1;
             if (raio > 0.1)
-                this._raio = raio;
+                _raio = raio;
         }
 
         public override double Area() {

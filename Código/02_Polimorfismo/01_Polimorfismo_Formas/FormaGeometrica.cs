@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal abstract class FormaGeometrica{
-        protected int _coordX;
-        protected int _coordY;
-        protected string _descricao;
-        
+    public abstract class FormaGeometrica{
+        private int _coordX;
+        private int _coordY;
+        private string _descricao;
 
         protected FormaGeometrica(string desc, int posX, int posY) {
             _coordX = posX > 0 ? posX : 1;
@@ -24,7 +23,7 @@ namespace PoliFiguras {
         }
 
         public override string ToString() {
-            return $"{_descricao,19} -> Área: {Area():00.00} | Perímetro: {Perimetro():F2}";
+            return $"{_descricao,10} -> Área: {Area():00.00} | Perímetro: {Perimetro():F2}";
         }
 
         public override int GetHashCode() {

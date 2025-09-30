@@ -5,9 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal class Retangulo : PoligonoReto {
+    public sealed class Retangulo : PoligonoReto {
 
-        public Retangulo(double b, double h, int posX, int posY) : base("Retângulo", b, h, posX, posY) {
+        public Retangulo(double b, double h, int posX, int posY):
+            base("Retângulo", b, h, posX, posY) {
 
         }
 

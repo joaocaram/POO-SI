@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal abstract class PoligonoReto : FormaGeometrica {
+    public abstract class PoligonoReto : FormaGeometrica {
        
         protected double _basePoligono;
         protected double _alturaPoligono;
