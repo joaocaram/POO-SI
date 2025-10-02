@@ -28,11 +28,10 @@ namespace XulambsFoods_2025_1.src {
     public class XulambsPizza {
 
         static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
-        static int quantPedidos = 0;
 
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA v0.3\n================");
+            Console.WriteLine("XULAMBS PIZZA v0.31\n================");
         }
 
         static void Pausa() {
@@ -87,7 +86,7 @@ namespace XulambsFoods_2025_1.src {
         }
 
         static Pedido CriarPedidoLocal() {
-            return new Pedido();
+            return new PedidoLocal();
         }
 
         static Pedido CriarPedidoEntrega() {
