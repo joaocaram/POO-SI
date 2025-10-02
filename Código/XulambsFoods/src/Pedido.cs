@@ -29,7 +29,7 @@ namespace XulambsFoods_2025_1.src {
     /// Um pedido pode agrupar várias pizzas. Deve exibir um relatório descritivo 
     /// com o detalhamento das pizzas e o valor total a pagar.
     /// </summary>
-    public class Pedido {
+    public abstract class Pedido {
         /// <summary>
         /// Static para geração do id do pedido seguinte.
         /// </summary>
@@ -59,7 +59,7 @@ namespace XulambsFoods_2025_1.src {
         /// Cria um pedido vazio, com a data de hoje e identificador gerado
         /// automaticamente.
         /// </summary>
-        public Pedido() {
+        protected Pedido() {
             s_ultimoPedido++;
             _idPedido = s_ultimoPedido;
             _data = DateOnly.FromDateTime(DateTime.Now);
@@ -75,8 +75,41 @@ namespace XulambsFoods_2025_1.src {
         protected virtual bool PodeAdicionar() {
             return _aberto;
         }
-     
-      /// <summary>
+
+        /// <summary>
+        /// Detalhamento do pedido (id, data, detalhes das pizzas)
+        /// comum a todos os pedidos.
+        /// </summary>
+        /// <returns>String multilinha com as informações acima</returns>
+        protected string DetalhamentoNota() {
+            StringBuilder relat = new StringBuilder($"nº{_idPedido} - {_data}\n");
+            relat.AppendLine("==============================");
+            foreach (Pizza pizza in _pizzas) {
+                relat.AppendLine(pizza.NotaDeCompra());
+            }
+            return relat.ToString();
+        }
+
+        /// <summary>
+        /// Rodapé da nota de compra, com "bigode" e valor a pagar.
+        /// </summary>
+        /// <returns></returns>
+        protected string RodapeNota() {
+            return $"-------------------------\nVALOR A PAGAR: {PrecoAPagar():C2}\n=========================";
+        }
+
+        /// <summary>
+        /// Retorna o preço a pagar pelos itens do pedido, sem qualquer taxa incluída (valor double positivo).
+        /// </summary>
+        /// <returns>Double com o valor a pagar pelos itens do pedido.</returns>
+        protected double ValorItens() {
+            double valor = 0d;
+            foreach (Pizza p in _pizzas)
+                valor += p.ValorFinal();
+            return valor;
+        }
+
+        /// <summary>
         /// Tenta adicionar uma pizza ao pedido. Se não for possível, ignora a operação.
         /// </summary>
         /// <param name="pizza">A pizza a ser incluída no pedido</param>
@@ -102,41 +135,8 @@ namespace XulambsFoods_2025_1.src {
         /// Retorna o preço a pagar por um pedido (valor double positivo).
         /// </summary>
         /// <returns>Double com o valor a pagar pelo pedido.</returns>
-        public virtual double PrecoAPagar() {
-            double valor = 0d;
-            foreach (Pizza p in _pizzas)
-                valor += p.ValorFinal();
-            return valor;
-        }
-
-        /// <summary>
-        /// Detalhamento do pedido (id, data, detalhes das pizzas)
-        /// comum a todos os pedidos.
-        /// </summary>
-        /// <returns>String multilinha com as informações acima</returns>
-        protected string DetalhamentoNota(){
-            StringBuilder relat = new StringBuilder($"nº{ _idPedido} - { _data}\n");
-            relat.AppendLine("==============================");
-            foreach(Pizza pizza in _pizzas)
-            {
-                relat.AppendLine(pizza.NotaDeCompra());
-            }
-            return relat.ToString();
-        }
-
-        protected string RodapeNota() {
-            return $"=========================\nValor a pagar: {PrecoAPagar():C2}";
-        }
-      
-        /// <summary>
-        /// Relatório do pedido, contendo seu identificador, data,
-        /// detalhamento das pizzas e preço a pagar.
-        /// </summary>
-        /// <returns>Uma string, multilinhas, com a informação descrita</returns>
-        public override string ToString() {
-            return $"Pedido Local {DetalhamentoNota()}\n{RodapeNota()}";
-        }
-
+        public abstract double PrecoAPagar();
+        
         /// <summary>
         /// Retorna o id do pedido, para fins de comparação 
         /// (faremos melhor que isso em breve)
@@ -148,7 +148,7 @@ namespace XulambsFoods_2025_1.src {
 
         public override bool Equals(object? obj) {
             Pedido outroPedido = obj as Pedido;
-            return this._idPedido == outroPedido._idPedido;
+            return _idPedido == outroPedido._idPedido;
         }
     }
 }

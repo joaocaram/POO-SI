@@ -87,7 +87,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>Valor a ser pago pelo pedido. (double positivo)</returns>
         public override double PrecoAPagar() {
-            return base.PrecoAPagar() + ValorTaxa();
+            return ValorItens() + ValorTaxa();
         }
 
         /// <summary>
