@@ -44,7 +44,6 @@ namespace XulambsFoods_2025_1.src {
         /// Data do pedido, para uso futuro
         /// </summary>
         private DateOnly _data;
-
         /// <summary>
         /// Armazenando as pizzas em um vetor. Pode ser melhorado futuramente.
         /// </summary>
@@ -54,8 +53,7 @@ namespace XulambsFoods_2025_1.src {
         /// Estado do pedido: aberto pode ser modificado, fechado não pode.
         /// </summary>
         private bool _aberto;
-       
-        /// <summary>
+       /// <summary>
         /// Cria um pedido vazio, com a data de hoje e identificador gerado
         /// automaticamente.
         /// </summary>
@@ -135,8 +133,7 @@ namespace XulambsFoods_2025_1.src {
         /// Retorna o preço a pagar por um pedido (valor double positivo).
         /// </summary>
         /// <returns>Double com o valor a pagar pelo pedido.</returns>
-        public abstract double PrecoAPagar();
-        
+        public abstract double PrecoAPagar();       
         /// <summary>
         /// Retorna o id do pedido, para fins de comparação 
         /// (faremos melhor que isso em breve)
