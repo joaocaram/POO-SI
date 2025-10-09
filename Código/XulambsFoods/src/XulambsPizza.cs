@@ -1,4 +1,6 @@
 
+using System.Linq;
+
 namespace XulambsFoods_2025_1.src {
 
     /** 
@@ -106,10 +108,28 @@ namespace XulambsFoods_2025_1.src {
             return int.Parse(Console.ReadLine());
         }
 
+        static int ExibirMenuBordas() {
+            Cabecalho();
+            int i = 1;
+            Console.WriteLine("Escolha sua borda: ");
+            foreach(string nome in Enum.GetNames<EBorda>()) {
+                Console.WriteLine($"{i} - {nome}"); 
+            }
+            Console.Write("Digite sua escolha: ");
+            return int.Parse(Console.ReadLine());
+        }
+
+        static void EscolherBorda(Pizza pizza) {
+            int opcao = ExibirMenuBordas();
+            EBorda borda = Enum.GetValues<EBorda>().ElementAt(opcao - 1);
+            pizza.AdicionarBorda(borda);
+        }
+
         static Pizza ComprarPizza() {
             Cabecalho();
             Console.WriteLine("Comprando uma nova pizza:");
             Pizza novaPizza = new Pizza();
+            EscolherBorda(novaPizza);
             EscolherIngredientes(novaPizza);
             Console.WriteLine();
             MostrarNota(novaPizza);

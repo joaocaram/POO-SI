@@ -35,7 +35,7 @@ namespace XulambsFoods_2025_1.src {
         private const int MaxIngredientes = 8;
         private const string Descricao = "Pizza";
 	    private const double PrecoBase = 29d;
-        private const double ValorAdicional = 5d;
+        private const double ValorPorAdicional = 5d;
         
         private int _quantidadeIngredientes;
 
@@ -68,7 +68,7 @@ namespace XulambsFoods_2025_1.src {
         /// </summary>
         /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
         private double ValorAdicionais() {
-            return _quantidadeIngredientes * ValorAdicional;
+            return _quantidadeIngredientes * ValorPorAdicional;
         }
 
         /// <summary>
