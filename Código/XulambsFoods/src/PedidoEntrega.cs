@@ -25,30 +25,32 @@
     * SOFTWARE.
     */
 
-namespace XulambsFoods_2025_1.src {
-        
+namespace XulambsFoods_2025_1.src
+{
+
     /// <summary>
     /// Pedido para entrega: há limite de quantidade de pizzas e há uma taxa de
     /// entrega, que pode ser de valor 0.
     /// </summary>
-	public class PedidoEntrega : Pedido {
+    public class PedidoEntrega : Pedido
+    {
         /// <summary>
         /// Constante: máximo de pizzas em um pedido para entrega
         /// </summary>
         private const int MaxEntrega = 8;
-        
+
         /// <summary>
         /// Vetor 'constante' com os valores da taxa de entrega.
         /// Pergunta: isso pode ser melhor?
         /// </summary>
-        private readonly double[] TaxasEntrega = [ 0, 5, 8 ];
-        
+        private readonly double[] TaxasEntrega = [0d, 5d, 8d];
+
         /// <summary>
         /// Vetor 'constante' com as distâncias de entrega correspondentes
         /// às taxas. Pergunta: isso pode ser melhor?
         /// </summary>
         private readonly double[] DistanciasEntrega = [4, 8, Double.MaxValue];
-       
+
         /// <summary>
         /// Distância da entrega. Deve ser maior que 0.
         /// </summary>
@@ -59,19 +61,16 @@ namespace XulambsFoods_2025_1.src {
         /// deve ser um valor positivo.
         /// </summary>
         /// <param name="distancia">Distância da entrega (double > 0)</param>
-        public PedidoEntrega(double distancia): base() {
+        public PedidoEntrega(double distancia) : base()
+        {
             if (distancia < 0.1)
                 distancia = 0.1;
             _distanciaEntrega = distancia;
         }
 
-        /// <summary>
-        /// Sobrescreve a regra de adicionar comidas, para incluir a verificação
-        /// de tamanho máximo
-        /// </summary>
-        /// <returns>TRUE/FALSE conforme seja possível ou não incluir uma comida</returns>
-        protected override bool PodeAdicionar() {
-            return base.PodeAdicionar() && _comidas.Count < MaxEntrega;
+        protected override bool PodeAdicionar()
+        {
+            return base.PodeAdicionar() && _pizzas.Count < MaxEntrega;
         }
 
         /// <summary>
@@ -79,20 +78,21 @@ namespace XulambsFoods_2025_1.src {
         /// do pedido. O valor é um double não negativo.
         /// </summary>
         /// <returns>Valor da taxa de entrega (double não negativo)</returns>
-        private double ValorTaxa() {
-            int i = 0;
-            while (_distanciaEntrega > DistanciasEntrega[i])
-                i++;
-            return TaxasEntrega[i];
+        private double ValorTaxa()
+        {
+            int pos = 0;
+            while (_distanciaEntrega > DistanciasEntrega[pos])
+                pos++;
+            return TaxasEntrega[pos];
         }
 
-        
         /// <summary>
         /// Preço a pagar pelo pedido de entrega: valor de um pedido +
         /// o valor da taxa de entrega.
         /// </summary>
         /// <returns>Valor a ser pago pelo pedido. (double positivo)</returns>
-        public override double PrecoAPagar() {
+        public override double PrecoAPagar()
+        {
             return ValorItens() + ValorTaxa();
         }
 
@@ -101,15 +101,12 @@ namespace XulambsFoods_2025_1.src {
         /// detalhamento das pizzas, valor da taxa de entrega e valor do pedido.
         /// </summary>
         /// <returns>String multilinhas com o detalhamento descrito do pedido.</returns>
-        public override string ToString() {
-            StringBuilder relat = new StringBuilder($"Pedido para Entrega ({_distanciaEntrega:F1}km) {DetalhesPedido()}");
-            
-            relat.AppendLine($"\nValor dos itens: {ValorItens():C2}");
+        public override string ToString()
+        {
+            StringBuilder relat = new StringBuilder($"Pedido para Entrega ({_distanciaEntrega:F1}km) {DetalhamentoNota()}");
             relat.AppendLine($"Taxa de entrega: {ValorTaxa():C2}");
-            relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
+            relat.Append(RodapeNota());
             return relat.ToString();
         }
     }
 }
-
-

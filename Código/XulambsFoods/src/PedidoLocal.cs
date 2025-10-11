@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace XulambsFoods_2025_1.src
+{
+    public class PedidoLocal : Pedido
+    {
+        private const double PctServico = 0.1;
 
-namespace XulambsFoods_2025_1.src {
-    public class PedidoLocal : Pedido{
+        public PedidoLocal() : base() { }
 
-        public PedidoLocal() : base(){
-
+        private double TaxaServico()
+        {
+            return ValorItens() * PctServico;
         }
 
-        public override double PrecoAPagar() {
-            return ValorItens();
+        public override double PrecoAPagar()
+        {
+            return ValorItens() + TaxaServico();
         }
 
         /// <summary>
@@ -20,10 +21,9 @@ namespace XulambsFoods_2025_1.src {
         /// detalhamento das pizzas e preço a pagar.
         /// </summary>
         /// <returns>Uma string, multilinhas, com a informação descrita</returns>
-        public override string ToString() {
-            StringBuilder relat = new StringBuilder($"Pedido Local {DetalhesPedido()}");
-            relat.Append($"Valor a pagar: {PrecoAPagar():C2}");
-            return relat.ToString();
+        public override string ToString()
+        {
+            return $"Pedido Local {DetalhamentoNota()}Serviço: {TaxaServico():C2}\n{RodapeNota()}";
         }
     }
 }
