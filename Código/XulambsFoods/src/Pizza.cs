@@ -1,5 +1,4 @@
-﻿
-namespace XulambsFoods_2025_1.src
+﻿namespace XulambsFoods_2025_1.src
 {
     /** 
     * MIT License
@@ -40,15 +39,17 @@ namespace XulambsFoods_2025_1.src
         private const double ValorAdicional = 5d;
 
         private int _quantidadeIngredientes;
+        private EBorda _borda;
 
         /// <summary>
         /// Inicializador privado da pizza: valida a quantidade de adicionais. Em caso de não validação, a pizza será criada sem adicionais.
         /// </summary>
         /// <param name="quantosAdicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
-        private void init(int quantosAdicionais)
+        private void init(int quantosAdicionais, EBorda borda)
         {
             if (PodeAlterarIngredientes(quantosAdicionais))
                 _quantidadeIngredientes = quantosAdicionais;
+            _borda = borda;
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace XulambsFoods_2025_1.src
         /// </summary>
         public Pizza()
         {
-            init(0);
+            init(0, EBorda.TRADICIONAL);
         }
 
         /// <summary>
@@ -65,8 +66,29 @@ namespace XulambsFoods_2025_1.src
         /// <param name="quantosAdicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
         public Pizza(int quantosAdicionais)
         {
-            init(quantosAdicionais);
+            init(quantosAdicionais, EBorda.TRADICIONAL);
         }
+
+        /// <summary>
+        /// Cria uma pizza com a borda desejada.
+        /// </summary>
+        /// <param name="borda">Borda da pizza</param>
+        public Pizza(EBorda borda)
+        {
+            init(0, borda);
+        }
+
+        /// <summary>
+        /// Cria uma pizza com a quantidade de adicionais pré-definida.Em caso de valor inválido, a pizza será criada sem adicionais.
+        /// </summary>
+        /// 
+        /// <param name="quantosAdicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
+        /// <param name="borda">Borda da pizza</param>
+        public Pizza(int quantosAdicionais, EBorda borda)
+        {
+            init(quantosAdicionais, borda);
+        }
+
 
         /// <summary>
         /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
@@ -77,13 +99,20 @@ namespace XulambsFoods_2025_1.src
             return _quantidadeIngredientes * ValorAdicional;
         }
 
+
+
+        public void AdicionarBorda(EBorda borda)
+        {
+            _borda = borda;
+        }
+
         /// <summary>
         /// Retorna o valor final da pizza, incluindo seus adicionais.
         /// </summary>
         /// <returns>Double com o valor final da pizza.</returns>
         public double ValorFinal()
         {
-            return PrecoBase + ValorAdicionais();
+            return PrecoBase + ValorAdicionais() + _borda.Preco();
         }
 
         /// <summary>
@@ -113,16 +142,7 @@ namespace XulambsFoods_2025_1.src
                     quantos + _quantidadeIngredientes <= MaxIngredientes);
         }
 
-        /// <summary>
-        /// Tenta retirar ingredientes na pizza.Caso a adição seja inválida(resultando em  valores negativos), mantém
-        /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
-        /// </summary>
-        /// <param name="quantos">Quantos ingredientes a serem retirados (>0)</param>
-        /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
-        public int RetirarIngredientes(int quantos)
-        {
-            return AdicionarIngredientes(0 - quantos);
-        }
+        
 
 
         /// <summary>
@@ -131,10 +151,7 @@ namespace XulambsFoods_2025_1.src
         /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
         public override string ToString()
         {
-            return $"{Descricao} ({PrecoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
+            return $"{Descricao} ({PrecoBase:C2}) com borda {_borda.Nome()} ({_borda.Preco():C2}) e {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
         }
-
-
     }
-
 }
