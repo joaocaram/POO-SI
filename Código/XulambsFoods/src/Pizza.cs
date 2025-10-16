@@ -59,6 +59,7 @@
         /// <summary>
         /// Cria uma pizza com a quantidade de adicionais pré-definida.Em caso de valor inválido, a pizza será criada sem adicionais.
         /// </summary>
+        /// 
         /// <param name="quantosAdicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
         public Pizza(int quantosAdicionais) {
             init(quantosAdicionais, EBorda.TRADICIONAL);
@@ -87,7 +88,8 @@
         /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
         /// </summary>
         /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
-        private double ValorAdicionais() {
+        private double ValorAdicionais()
+        {
             return _quantidadeIngredientes * ValorAdicional;
         }
 
@@ -111,8 +113,10 @@
         /// </summary>
         /// <param name="quantos">Quantos ingredientes a serem adicionados (>0)</param>
         /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
-        public int AdicionarIngredientes(int quantos) {
-            if (PodeAlterarIngredientes(quantos)) {
+        public int AdicionarIngredientes(int quantos)
+        {
+            if (PodeAlterarIngredientes(quantos))
+            {
                 _quantidadeIngredientes += quantos;
             }
             return _quantidadeIngredientes;
