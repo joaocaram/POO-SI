@@ -83,7 +83,7 @@ namespace XulambsFoods_2025_1.src {
             StringBuilder relat = new StringBuilder($"nº{_idPedido} - {_data}\n");
             relat.AppendLine("==============================");
             foreach (Pizza pizza in _pizzas) {
-                relat.AppendLine(pizza.NotaDeCompra());
+                relat.AppendLine(pizza.ToString());
             }
             return relat.ToString();
         }
