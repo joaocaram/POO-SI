@@ -16,7 +16,8 @@ namespace XulambsFoods_2025_1.src {
             };
         }
 
-        public static string ToString(this EBorda borda) {
+
+        public static string Nome(this EBorda borda) {
             string nome = borda.ToString().ToLower();
             return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(nome);
         }
