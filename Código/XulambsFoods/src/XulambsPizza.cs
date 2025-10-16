@@ -33,7 +33,7 @@ namespace XulambsFoods_2025_1.src {
 
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA v0.31\n================");
+            Console.WriteLine("XULAMBS PIZZA v0.4\n================");
         }
 
         static void Pausa() {
@@ -113,7 +113,8 @@ namespace XulambsFoods_2025_1.src {
             int i = 1;
             Console.WriteLine("Escolha sua borda: ");
             foreach(string nome in Enum.GetNames<EBorda>()) {
-                Console.WriteLine($"{i} - {nome}"); 
+                Console.WriteLine($"{i} - {nome}");
+                i++;
             }
             Console.Write("Digite sua escolha: ");
             return int.Parse(Console.ReadLine());
@@ -147,7 +148,7 @@ namespace XulambsFoods_2025_1.src {
 
         static void MostrarNota(Pizza pizza) {
             Console.WriteLine("Comprando: ");
-            Console.WriteLine(pizza.NotaDeCompra());
+            Console.WriteLine(pizza);
         }
 
         static void MostrarPedido(Pedido pedido) {
