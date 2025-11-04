@@ -34,12 +34,26 @@ namespace XulambsFoods_2025_1.src {
 
             static void Cabecalho() {
                 Console.Clear();
-                Console.WriteLine("XULAMBS PIZZA v0.4\n================");
+                Console.WriteLine("XULAMBS PIZZA v0.5\n================");
             }
 
             static void Pausa() {
                 Console.WriteLine("Digite enter para continuar...");
                 Console.ReadLine();
+            }
+
+            static int lerInteiro(string mensagem) {
+                int opcao;
+                try {
+                    Console.Write(mensagem+": ");
+                    opcao = int.Parse(Console.ReadLine());
+                }
+                catch (FormatException) {
+                    Console.WriteLine("Opção inválida");
+                    Pausa();
+                    opcao = -1;
+                }
+                return opcao;
             }
 
             static int ExibirMenuPrincipal() {
@@ -50,13 +64,11 @@ namespace XulambsFoods_2025_1.src {
                 Console.WriteLine("4 - Fechar Pedido");
                 Console.WriteLine("5 - Valor do último pedido");
                 Console.WriteLine("0 - Finalizar");
-                Console.Write("Digite sua escolha: ");
-                return int.Parse(Console.ReadLine());
+                return lerInteiro("Digite sua escolha");
             }
 
             static void AdicionarPizzas(Pedido pedido) {
                 string conf;
-
                 do {
                     Pizza novaPizza = ComprarPizza();
                     pedido.Adicionar(novaPizza);
@@ -85,8 +97,7 @@ namespace XulambsFoods_2025_1.src {
                 Console.WriteLine("Escolha o tipo de pedido:");
                 Console.WriteLine("1 - Local (padrão)");
                 Console.WriteLine("2 - Pedido para entrega");
-                Console.Write("Sua opção: ");
-                return int.Parse(Console.ReadLine());
+                return lerInteiro("Sua opção");
             }
 
             static Pedido CriarPedidoLocal() {
@@ -106,8 +117,8 @@ namespace XulambsFoods_2025_1.src {
                 MostrarNota(pizza);
                 Console.WriteLine("\n1 - Acrescentar ingredientes");
                 Console.WriteLine("0 - Não quero alterar");
-                Console.Write("Digite sua escolha: ");
-                return int.Parse(Console.ReadLine());
+
+                return lerInteiro("Digite sua escolha");
             }
 
             static int ExibirMenuBordas() {
@@ -118,14 +129,26 @@ namespace XulambsFoods_2025_1.src {
                     Console.WriteLine($"{i} - {nome}");
                     i++;
                 }
-                Console.Write("Digite sua escolha: ");
-                return int.Parse(Console.ReadLine());
+                
+                return lerInteiro("Digite sua escolha");
             }
 
             static void EscolherBorda(Pizza pizza) {
                 int opcao = ExibirMenuBordas();
-                EBorda borda = Enum.GetValues<EBorda>().ElementAt(opcao - 1);
-                pizza.AdicionarBorda(borda);
+                try {
+                    EBorda borda = Enum.GetValues<EBorda>().ElementAt(opcao - 1);
+                    pizza.AdicionarBorda(borda);
+                }
+                catch (ArgumentNullException) {
+                    Console.WriteLine("Escolha inválida. Tente novamente.");
+                    Pausa();
+                    EscolherBorda(pizza);
+                }
+                catch (ArgumentOutOfRangeException) {
+                    Console.WriteLine("Opção inválida. Escolha uma do menu.");
+                    Pausa();
+                    EscolherBorda(pizza);
+                }    
             }
 
             static Pizza ComprarPizza() {
@@ -142,24 +165,22 @@ namespace XulambsFoods_2025_1.src {
             static void EscolherIngredientes(Pizza pizza) {
                 int opcao = ExibirMenuIngredientes(pizza);
                 if (opcao == 1) {
-                    Console.Write("Quantos ingredientes? ");
-                    int adicionais = int.Parse(Console.ReadLine());
-                    pizza.AdicionarIngredientes(adicionais);
+                    
+                    int adicionais = lerInteiro("Digite a quantidade de adicionais");
+                    try {
+                        pizza.AdicionarIngredientes(adicionais);
+                    }
+                    catch (ArgumentOutOfRangeException) {
+                        //lógica para ler novamente um número positivo.
+                    }
+                    catch (InvalidOperationException) {
+                        //lógica para deixar a pizza com o máximo de ingredientes.
+                    }
+                    
                 }
             }
 
-
-            static int ExibirMenuBorda() {
-                Cabecalho();
-                Console.WriteLine("Escolha a borda da pizza:");
-                int i = 1;
-                foreach (string nomeBorda in Enum.GetNames<EBorda>()) {
-                    Console.WriteLine($"{i} - {nomeBorda}");
-                    i++;
-                }
-                Console.Write("Digite sua escolha: ");
-                return int.Parse(Console.ReadLine());
-            }
+                        
 
             static void MostrarNota(Pizza pizza) {
                 Console.WriteLine("Comprando: ");
@@ -178,8 +199,7 @@ namespace XulambsFoods_2025_1.src {
             static Pedido LocalizarPedido() {
                 Cabecalho();
                 Console.WriteLine("Localizando um pedido");
-                Console.Write("Digite o número do pedido: ");
-                int numero = int.Parse(Console.ReadLine());
+                int numero = lerInteiro("Digite o número do pedido");
                 foreach (Pedido ped in pedidos) {
                     if (ped.GetHashCode() == numero)
                         return ped;
@@ -200,8 +220,13 @@ namespace XulambsFoods_2025_1.src {
             static void FecharPedido() {
                 Pedido pedidoParaFechar = LocalizarPedido();
                 if (pedidoParaFechar != null) {
-                    pedidoParaFechar.FecharPedido();
-                    MostrarPedido(pedidoParaFechar);
+                    try {
+                        pedidoParaFechar.FecharPedido();
+                        MostrarPedido(pedidoParaFechar);
+                    }
+                    catch (PedidoVazioException excecao) {
+                        Console.WriteLine(excecao.Message);
+                    }
                 }
                 else
                     Console.WriteLine("Pedido não encontrado");

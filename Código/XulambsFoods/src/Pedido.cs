@@ -124,7 +124,6 @@ namespace XulambsFoods_2025_1.src
             if (PodeAdicionar())
             {
                 _pizzas.AddLast(pizza);
-
             }
             return _pizzas.Count;
         }
@@ -133,10 +132,11 @@ namespace XulambsFoods_2025_1.src
         /// Fecha o pedido, caso ele tenha pelo menos 1 pizza. Caso contrário,
         /// ignora a operação.
         /// </summary>
-        public void FecharPedido()
-        {
+        public void FecharPedido(){
             if (_pizzas.Count > 0)
-                _aberto = false;
+                throw new PedidoVazioException();
+
+            _aberto = false;
         }
 
         /// <summary>

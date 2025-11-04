@@ -94,8 +94,14 @@
         }
 
 
-
+        /// <summary>
+        /// Adiciona uma borda na pizza. Esta borda deve ser escolhida a partir dos
+        /// valores de EBorda e não pode ser nula. 
+        /// </summary>
+        /// <param name="borda">Borda escolhida para a pizza (enumerador EBorda)</param>
         public void AdicionarBorda(EBorda borda) {
+            if (borda == null)
+                throw new ArgumentNullException("Borda inválida. Favor escolher um valor válido.");
             _borda = borda;
         }
 
@@ -113,12 +119,14 @@
         /// </summary>
         /// <param name="quantos">Quantos ingredientes a serem adicionados (>0)</param>
         /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
-        public int AdicionarIngredientes(int quantos)
-        {
-            if (PodeAlterarIngredientes(quantos))
-            {
-                _quantidadeIngredientes += quantos;
-            }
+        public int AdicionarIngredientes(int quantos){
+            if (quantos <= 0)
+                throw new ArgumentOutOfRangeException("Quantidade de ingredientes deve ser positiva");
+
+            if (!PodeAlterarIngredientes(quantos))
+                throw new InvalidOperationException("Máximo de adicionais ultrapassado.");
+
+            _quantidadeIngredientes += quantos;
             return _quantidadeIngredientes;
         }
 

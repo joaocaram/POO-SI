@@ -1,6 +1,6 @@
 ﻿namespace XulambsFoods_2025_1.src
 {
-    public enum EBorda
+    public enum EBorda 
     {
         TRADICIONAL,
         CHEDDAR,
