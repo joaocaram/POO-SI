@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace XulambsFoods_2025_1.src
 {
-    public static class ExtensaoBorda
+    public static class ExtensaoCardapio
     {
+        public static double Preco(this ESobremesa sobre)
+        {
+            return sobre switch
+            {
+                ESobremesa.Brigadeiro => 8,
+                ESobremesa.Pudim => 10,
+                ESobremesa.Doce_de_leite => 9
+            };
+        }
         public static double Preco(this EBorda borda)
         {
             return borda switch

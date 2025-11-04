@@ -1,6 +1,7 @@
 namespace XulambsFoods_2025_1.src {
-
+    using System.ComponentModel.Design;
     using System.Linq;
+    using System.Threading.Channels;
 
     namespace XulambsFoods_2025_1.src {
 
@@ -34,7 +35,7 @@ namespace XulambsFoods_2025_1.src {
 
             static void Cabecalho() {
                 Console.Clear();
-                Console.WriteLine("XULAMBS PIZZA v0.5\n================");
+                Console.WriteLine("XULAMBS PIZZA v0.6\n================");
             }
 
             static void Pausa() {
@@ -67,19 +68,68 @@ namespace XulambsFoods_2025_1.src {
                 return lerInteiro("Digite sua escolha");
             }
 
-            static void AdicionarPizzas(Pedido pedido) {
+            Menu<ESobremesa> menuSobremesas;
+            Menu<EBorda> menuBordas;
+            Menu<EBebida> menuBebidas;
+
+            static int ExibirMenuSobremesa()
+            {
+                Cabecalho();
+                int i = 1;
+                Console.WriteLine("Escolha sua sobremesa: ");
+                foreach (ESobremesa nome in Enum.GetValues<ESobremesa>())
+                {
+                    Console.WriteLine($"{i} - {nome.ToString()}");
+                    i++;
+                }
+
+                return lerInteiro("Digite sua escolha");
+            }
+
+            static Sobremesa ComprarSobremesa()
+            {
+                return menuSobremesas.escolher();
+                int opcao = ExibirMenuSobremesa();
+                ESobremesa sobre = ESobremesa.Brigadeiro;
+                try
+                {
+                    sobre = Enum.GetValues<ESobremesa>().ElementAt(opcao - 1);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Opção inválida. Escolha uma do menu.");
+                    Pausa();
+                    ComprarSobremesa();
+                }
+                return new Sobremesa(sobre);
+            }
+           
+            static IProduto EscolherProduto()
+            {
+                Cabecalho();
+                Console.WriteLine("1 - Pizza");
+                Console.WriteLine("2 - Sobremesa");
+                int opcao = lerInteiro("Digite sua escolha");
+                return opcao switch { 
+                    1 => ComprarPizza(),
+                    2 => ComprarSobremesa()
+                };
+            }
+            
+            static void AdicionarProdutos(Pedido pedido) {
                 string conf;
                 do {
-                    Pizza novaPizza = ComprarPizza();
-                    pedido.Adicionar(novaPizza);
-                    Console.Write("\nQuer uma nova pizza (S/N)? ");
+                    IProduto produto = EscolherProduto();
+                    
+                    pedido.Adicionar(produto);
+                    Console.Write("\nQuer algo mais(S/N)? ");
                     conf = Console.ReadLine().ToUpper();
                 } while (conf.Equals("S"));
             }
 
             static Pedido AbrirPedido() {
                 Pedido novoPedido = EscolherTipoPedido();
-                AdicionarPizzas(novoPedido);
+                AdicionarProdutos(novoPedido);
                 MostrarPedido(novoPedido);
                 return novoPedido;
             }
@@ -210,7 +260,7 @@ namespace XulambsFoods_2025_1.src {
             static void AlterarPedido() {
                 Pedido pedidoParaAlteracao = LocalizarPedido();
                 if (pedidoParaAlteracao != null) {
-                    AdicionarPizzas(pedidoParaAlteracao);
+                    AdicionarProdutos(pedidoParaAlteracao);
                     MostrarPedido(pedidoParaAlteracao);
                 }
                 else

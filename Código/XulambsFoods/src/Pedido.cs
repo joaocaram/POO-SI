@@ -49,7 +49,7 @@ namespace XulambsFoods_2025_1.src
         /// <summary>
         /// Armazenando as pizzas em um vetor. Pode ser melhorado futuramente.
         /// </summary>
-        protected LinkedList<Pizza> _pizzas;
+        protected LinkedList<IProduto> _itens;
 
         /// <summary>
         /// Estado do pedido: aberto pode ser modificado, fechado não pode.
@@ -64,7 +64,7 @@ namespace XulambsFoods_2025_1.src
             s_ultimoPedido++;
             _idPedido = s_ultimoPedido;
             _data = DateOnly.FromDateTime(DateTime.Now);
-            _pizzas = new LinkedList<Pizza>();
+            _itens = new LinkedList<IProduto>();
             _aberto = true;
         }
 
@@ -87,8 +87,8 @@ namespace XulambsFoods_2025_1.src
         {
             StringBuilder relat = new StringBuilder($"nº{_idPedido} - {_data}\n");
             relat.AppendLine("==============================");
-            foreach (Pizza pizza in _pizzas) {
-                relat.AppendLine(pizza.ToString());
+            foreach (IProduto p in _itens) {
+                relat.AppendLine(p.ToString());
             }
             return relat.ToString();
         }
@@ -109,31 +109,31 @@ namespace XulambsFoods_2025_1.src
         protected double ValorItens()
         {
             double valor = 0d;
-            foreach (Pizza p in _pizzas)
+            foreach (IProduto p in _itens)
                 valor += p.ValorFinal();
             return valor;
         }
 
         /// <summary>
-        /// Tenta adicionar uma pizza ao pedido. Se não for possível, ignora a operação.
+        /// Tenta adicionar uma p ao pedido. Se não for possível, ignora a operação.
         /// </summary>
-        /// <param name="pizza">A pizza a ser incluída no pedido</param>
+        /// <param name="item">A p a ser incluída no pedido</param>
         /// <returns>Quantidade de pizzas no pedido após a execução.</returns>
-        public int Adicionar(Pizza pizza)
+        public int Adicionar(IProduto item)
         {
             if (PodeAdicionar())
             {
-                _pizzas.AddLast(pizza);
+                _itens.AddLast(item);
             }
-            return _pizzas.Count;
+            return _itens.Count;
         }
 
         /// <summary>
-        /// Fecha o pedido, caso ele tenha pelo menos 1 pizza. Caso contrário,
+        /// Fecha o pedido, caso ele tenha pelo menos 1 p. Caso contrário,
         /// ignora a operação.
         /// </summary>
         public void FecharPedido(){
-            if (_pizzas.Count > 0)
+            if (_itens.Count > 0)
                 throw new PedidoVazioException();
 
             _aberto = false;

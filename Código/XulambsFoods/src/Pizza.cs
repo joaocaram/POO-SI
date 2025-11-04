@@ -29,7 +29,7 @@
     /// </summary>
 
 
-    public class Pizza {
+    public class Pizza : IProduto{
 
         private const int MaxIngredientes = 8;
         private const string Descricao = "Pizza";

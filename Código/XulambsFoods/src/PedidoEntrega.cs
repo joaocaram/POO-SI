@@ -70,7 +70,7 @@ namespace XulambsFoods_2025_1.src
 
         protected override bool PodeAdicionar()
         {
-            return base.PodeAdicionar() && _pizzas.Count < MaxEntrega;
+            return base.PodeAdicionar() && _itens.Count < MaxEntrega;
         }
 
         /// <summary>
