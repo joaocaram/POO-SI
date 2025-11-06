@@ -12,7 +12,8 @@ namespace POO_C__Interfaces_Amplexa {
          */
         public static Dispositivo criarDispositivo(String qual) {
             Dispositivo novo = qual.ToLower() switch {
-                "lampada" => new Lampada("L" + numero)
+                "lampada" => new Lampada("L" + numero),
+                "cafeteira" => new Cafeteira("C" + numero)
             };
             numero++;
             return novo;
@@ -38,7 +39,13 @@ namespace POO_C__Interfaces_Amplexa {
             Console.WriteLine(assistente);
             Console.ReadLine();
 
-            
+            Console.WriteLine("=====ADICIONANDO E LIGANDO CAFETEIRAS=====");
+            assistente.AddDispositivo(criarDispositivo("cafeteira"));
+            assistente.AddDispositivo(criarDispositivo("cafeteira"));
+            assistente.Ligar("C7");
+            Console.WriteLine(assistente);
+            Console.ReadLine();
+
             Console.ReadLine();
         }
     }

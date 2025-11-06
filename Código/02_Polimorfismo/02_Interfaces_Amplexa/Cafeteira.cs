@@ -5,24 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace POO_C__Interfaces_Amplexa {
-    public class Lampada : Dispositivo{
-
+    internal class Cafeteira : Dispositivo {
         
+        private int _potencia;
 
-        public Lampada(string nome) : base(nome) {
+        public Cafeteira(string nome) : base(nome) {
             Desligar();
         }
 
         public override bool Ligar() {
             _ligado = true;
-            SetEstado("Lâmpada acesa.");
+            SetEstado("Cafeteira ligada");
             return _ligado;
         }
 
         public override bool Desligar() {
             _ligado = false;
-            SetEstado("Lâmpada apagada.");
+            SetEstado("Cafeteira desligada");
             return _ligado;
         }
+
+        
     }
 }
