@@ -46,7 +46,7 @@ namespace POO_C__Interfaces_Amplexa {
             Console.WriteLine(assistente);
             Console.ReadLine();
 
-            Console.ReadLine();
+            
         }
     }
 }
