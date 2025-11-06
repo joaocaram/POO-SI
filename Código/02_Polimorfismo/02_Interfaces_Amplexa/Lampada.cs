@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 namespace POO_C__Interfaces_Amplexa {
     public class Lampada : Dispositivo{
 
-        private bool _ligado;
-
+        
         public Lampada(string nome) : base(nome) {
-            SetEstado("Lâmpada desligada.");
+            Desligar();
         }
 
         public override bool Ligar() {

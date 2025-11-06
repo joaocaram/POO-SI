@@ -8,7 +8,8 @@ namespace POO_C__Interfaces_Amplexa {
     public abstract class Dispositivo {
         private string _nome;
         private string _estado;
-      
+        protected bool _ligado;
+
         protected Dispositivo(string nome) {
             _nome = nome;
         }
