@@ -10,17 +10,15 @@ namespace POO_C__Interfaces_Amplexa {
         private string _estado;
       
         protected Dispositivo(string nome) {
-            Nome = nome;
+            _nome = nome;
         }
 
-        public string Nome {
-            get => _nome;
-            set => _nome = value;
+        public void SetEstado(string estado) {
+            _estado = estado;
         }
-        
-        protected string Estado {
-            set => _estado = value;
-        }
+
+        public abstract bool Ligar();
+        public abstract bool Desligar();
 
         public override bool Equals(object? obj) {
             Dispositivo outro = (Dispositivo)obj;
@@ -29,6 +27,10 @@ namespace POO_C__Interfaces_Amplexa {
 
         public override string ToString() {
             return this._nome+": "+this._estado;
+        }
+
+        public override int GetHashCode() {
+            return _nome.GetHashCode();
         }
     }
 }

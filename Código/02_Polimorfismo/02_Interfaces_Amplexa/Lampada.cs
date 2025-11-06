@@ -5,23 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace POO_C__Interfaces_Amplexa {
-    public class Lampada : Dispositivo, IDesligavel{
+    public class Lampada : Dispositivo{
 
         private bool _ligado;
 
         public Lampada(string nome) : base(nome) {
-            Estado = "Lâmpada desligada.";
+            SetEstado("Lâmpada desligada.");
         }
 
-        public  bool Ligar() {
+        public override bool Ligar() {
             _ligado = true;
-            Estado = "Lâmpada ligada.";
+            SetEstado("Lâmpada ligada.");
             return _ligado;
         }
 
-        public bool Desligar() {
+        public override bool Desligar() {
             _ligado = false;
-            Estado = "Lâmpada desligada.";
+            SetEstado("Lâmpada desligada.");
             return _ligado;
         }
     }

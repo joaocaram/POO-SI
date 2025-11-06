@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace POO_C__Interfaces_Amplexa {
     internal class Amplexa {
-        private Dictionary<string, Dispositivo> _dispositivos;
+        private Dictionary<int, Dispositivo> _dispositivos;
         private string _nome;
 
         public Amplexa(string nome) {
             this._nome = nome;
-            this._dispositivos = new Dictionary<string, Dispositivo>();
+            this._dispositivos = new Dictionary<int, Dispositivo>();
         }
 
         public bool Ligar(string nome) {
-            IDesligavel? disp = (IDesligavel?)Localizar(nome);
+            Dispositivo? disp = Localizar(nome);
 
             bool resposta = false;
 
@@ -29,7 +29,7 @@ namespace POO_C__Interfaces_Amplexa {
         }
 
         public bool Desligar(string nome) {
-            IDesligavel? disp = (IDesligavel?)Localizar(nome);
+            Dispositivo? disp = Localizar(nome);
 
             bool resposta = false;
 
@@ -40,23 +40,14 @@ namespace POO_C__Interfaces_Amplexa {
             return resposta;
         }
 
-        public void Regular(string nome, int potencia) {
-            IRegulavel? disp = (IRegulavel?)Localizar(nome);
-
-            if (disp != null) {
-                disp.Regular(potencia);
-            }
-
-
-        }
-
+        
         public void AddDispositivo(Dispositivo novo) {
-            _dispositivos.Add(novo.getNome(), novo);
+            _dispositivos.Add(novo.GetHashCode(), novo);
         }
 
         private Dispositivo? Localizar(string nome) {
             Dispositivo? disp;
-            _dispositivos.TryGetValue(nome, out disp);
+            _dispositivos.TryGetValue(nome.GetHashCode(), out disp);
             return disp;
         }
         
