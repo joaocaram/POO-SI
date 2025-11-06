@@ -11,28 +11,27 @@ namespace POO_C__Interfaces_Amplexa {
         
         public Cafeteira(string nome) : base(nome) {
             Regular(0);
-            Estado = "Cafeteira desligada";
+            SetEstado("Cafeteira desligada");
         }
 
         public bool Ligar() {
             _ligado = true;
             Regular(50);
-            Estado = $"Cafeteira ligada com potência {_potencia}.";
             return _ligado;
         }
 
         public bool Desligar() {
             _ligado = false;
-            Estado = "Cafeteira desligada.";
+            SetEstado("Cafeteira desligada.");
             return _ligado;
         }
 
         public void Regular(int potencia) {
             if (_ligado) {
                 if (potencia >= 0 && potencia < 101)
-                    this._potencia = potencia;
+                    _potencia = potencia;
             }
-            Estado = $"Cafeteira ligada com potência {_potencia}.";
+            SetEstado($"Cafeteira ligada com potência {_potencia}.");
         }
     }
 }

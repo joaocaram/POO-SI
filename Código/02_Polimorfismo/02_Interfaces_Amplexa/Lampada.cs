@@ -10,18 +10,18 @@ namespace POO_C__Interfaces_Amplexa {
         private bool _ligado;
 
         public Lampada(string nome) : base(nome) {
-            Estado = "Lâmpada desligada.";
+            Desligar();
         }
 
         public  bool Ligar() {
             _ligado = true;
-            Estado = "Lâmpada ligada.";
+            SetEstado("Lâmpada acesa.");
             return _ligado;
         }
 
         public bool Desligar() {
             _ligado = false;
-            Estado = "Lâmpada desligada.";
+            SetEstado("Lâmpada apagada.");
             return _ligado;
         }
     }
