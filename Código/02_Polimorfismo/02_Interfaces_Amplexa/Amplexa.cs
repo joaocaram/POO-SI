@@ -18,11 +18,11 @@ namespace POO_C__Interfaces_Amplexa {
 
         public bool Ligar(string nome) {
             Dispositivo? disp = Localizar(nome);
-
+            IDesligavel desligavel = disp as IDesligavel;
             bool resposta = false;
 
-            if (disp != null) {
-                resposta = disp.Ligar();
+            if (desligavel != null) {
+                resposta = desligavel.Ligar();
             }
 
             return resposta;
@@ -30,11 +30,11 @@ namespace POO_C__Interfaces_Amplexa {
 
         public bool Desligar(string nome) {
             Dispositivo? disp = Localizar(nome);
-
+            IDesligavel desligavel = disp as IDesligavel;
             bool resposta = false;
 
-            if (disp != null) {
-                resposta = disp.Desligar();
+            if (desligavel != null) {
+                resposta = desligavel.Desligar();
             }
 
             return resposta;

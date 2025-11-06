@@ -8,7 +8,7 @@ namespace POO_C__Interfaces_Amplexa {
     public abstract class Dispositivo {
         private string _nome;
         private string _estado;
-        protected bool _ligado;
+        
       
         protected Dispositivo(string nome) {
             _nome = nome;
@@ -18,9 +18,7 @@ namespace POO_C__Interfaces_Amplexa {
             _estado = estado;
         }
 
-        public abstract bool Ligar();
-        public abstract bool Desligar();
-
+        
         public override bool Equals(object? obj) {
             Dispositivo outro = (Dispositivo)obj;
             return this._nome.Equals(outro._nome);

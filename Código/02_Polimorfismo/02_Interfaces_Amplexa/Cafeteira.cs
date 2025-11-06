@@ -5,21 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace POO_C__Interfaces_Amplexa {
-    internal class Cafeteira : Dispositivo {
-        
-        private int _potencia;
+    internal class Cafeteira : Dispositivo, IDesligavel {
+
+        private bool _ligado;
 
         public Cafeteira(string nome) : base(nome) {
             Desligar();
         }
 
-        public override bool Ligar() {
+        public bool Ligar() {
             _ligado = true;
             SetEstado("Cafeteira ligada");
             return _ligado;
         }
 
-        public override bool Desligar() {
+        public bool Desligar() {
             _ligado = false;
             SetEstado("Cafeteira desligada");
             return _ligado;
