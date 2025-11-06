@@ -123,6 +123,7 @@ namespace PoliFiguras {
                         break;
                     
                 }
+                Console.WriteLine("Enter para continuar. . .");
                 Console.ReadKey();
                 opcao = MenuPrincipal();
 

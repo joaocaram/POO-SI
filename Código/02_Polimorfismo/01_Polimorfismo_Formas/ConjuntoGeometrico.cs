@@ -12,7 +12,7 @@ namespace PoliFiguras
             capacidade = 1;
             if (tamanho > 1)
                 capacidade = tamanho;
-            formas = new List<FormaGeometrica>();
+            formas = new List<FormaGeometrica>(capacidade);
         }
 
         public void AddForma(FormaGeometrica nova)
