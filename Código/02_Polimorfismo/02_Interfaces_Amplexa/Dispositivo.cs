@@ -9,7 +9,6 @@ namespace POO_C__Interfaces_Amplexa {
         private string _nome;
         private string _estado;
         
-      
         protected Dispositivo(string nome) {
             _nome = nome;
         }
@@ -18,7 +17,6 @@ namespace POO_C__Interfaces_Amplexa {
             _estado = estado;
         }
 
-        
         public override bool Equals(object? obj) {
             Dispositivo outro = (Dispositivo)obj;
             return this._nome.Equals(outro._nome);
