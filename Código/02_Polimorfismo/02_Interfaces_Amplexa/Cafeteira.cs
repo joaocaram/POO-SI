@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace POO_C__Interfaces_Amplexa {
     internal class Cafeteira : Dispositivo {
         
-        private int _potencia;
 
         public Cafeteira(string nome) : base(nome) {
             Desligar();
