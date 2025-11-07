@@ -12,8 +12,8 @@ namespace POO_C__Interfaces_Amplexa {
         private string _nome;
 
         public Amplexa(string nome) {
-            this._nome = nome;
-            this._dispositivos = new Dictionary<int, Dispositivo>();
+            _nome = nome;
+            _dispositivos = new Dictionary<int, Dispositivo>();
         }
 
         public bool Ligar(string nome) {
@@ -40,7 +40,6 @@ namespace POO_C__Interfaces_Amplexa {
             return resposta;
         }
 
-        
         public void AddDispositivo(Dispositivo novo) {
             _dispositivos.Add(novo.GetHashCode(), novo);
         }
