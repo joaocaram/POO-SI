@@ -19,11 +19,11 @@ namespace POO_C__Interfaces_Amplexa {
 
         public override bool Equals(object? obj) {
             Dispositivo outro = (Dispositivo)obj;
-            return this._nome.Equals(outro._nome);
+            return _nome.Equals(outro._nome);
         }
 
         public override string ToString() {
-            return this._nome+": "+this._estado;
+            return _nome+": "+_estado;
         }
 
         public override int GetHashCode() {

@@ -24,7 +24,5 @@ namespace POO_C__Interfaces_Amplexa {
             SetEstado("Cafeteira desligada");
             return _ligado;
         }
-
-        
     }
 }

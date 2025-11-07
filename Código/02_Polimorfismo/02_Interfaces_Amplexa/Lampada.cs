@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 namespace POO_C__Interfaces_Amplexa {
     public class Lampada : Dispositivo, IDesligavel{
 
-        private bool _ligado;
+        private bool _acesa;
 
         public Lampada(string nome) : base(nome) {
             Desligar();
         }
 
         public bool Ligar() {
-            _ligado = true;
+            _acesa = true;
             SetEstado("Lâmpada acesa.");
-            return _ligado;
+            return _acesa;
         }
 
-        public  bool Desligar() {
-            _ligado = false;
+        public bool Desligar() {
+            _acesa = false;
             SetEstado("Lâmpada apagada.");
-            return _ligado;
+            return _acesa;
         }
     }
 }
