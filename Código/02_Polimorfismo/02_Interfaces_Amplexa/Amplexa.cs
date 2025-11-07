@@ -41,7 +41,7 @@ namespace POO_C__Interfaces_Amplexa {
         }
 
         public void Regular(string nome, int potencia) {
-            Dispositivo d = Localizar(nome);
+            Dispositivo? d = Localizar(nome);
             IRegulavel? disp = d as IRegulavel;
 
             if (disp != null) {

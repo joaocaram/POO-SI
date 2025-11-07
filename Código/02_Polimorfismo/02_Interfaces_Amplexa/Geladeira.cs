@@ -10,7 +10,6 @@ namespace POO_C__Interfaces_Amplexa {
 
         public Geladeira(string nome) : base(nome) {
             Regular(60);
-            SetEstado($"Geladeira ligada com potência {_potencia}.");
         }
 
         public void Regular(int potencia) {
