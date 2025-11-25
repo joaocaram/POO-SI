@@ -68,6 +68,11 @@ namespace XulambsFoods_2025_1.src {
             return _id;
         }
 
+        public string GetNome()
+        {
+            return _nome;
+        }
+
         public int CompareTo(Cliente? other) {
             int resultado = 0;
             if (this.TotalGasto() > other.TotalGasto())
