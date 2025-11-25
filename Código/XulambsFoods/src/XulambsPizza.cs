@@ -124,7 +124,8 @@ namespace XulambsFoods_2025_1.src {
                 Console.WriteLine("====== PEDIDOS ======");
                 Console.WriteLine("12 - Relatório simplificado de pedidos");
                 Console.WriteLine("13 - Valor médio de pedido");
-                
+                Console.WriteLine("14 - Relatório ordenado de pedidos");
+
 
                 Console.WriteLine("\n0 - Finalizar");
                 return lerInteiro("Digite sua escolha");
@@ -345,14 +346,15 @@ namespace XulambsFoods_2025_1.src {
                     Console.WriteLine("Pedido não existente");
             }
 
-            private static void RelatorioSimplificado<T>(BaseDados<T> dados) where T : IComparable<T> {
+            private static void RelatorioSimplificado<T>(BaseDados<T> dados){
                 Cabecalho();
                 Console.WriteLine(dados.SimpleReport());
             }
 
-            private static void RelatorioOrdenado<T>(BaseDados<T> dados) where T : IComparable<T> {
+            private static void RelatorioOrdenado<T>(BaseDados<T> dados, 
+                                                        Comparison<T> comp){
                 Cabecalho();
-                Console.WriteLine(dados.SortedReport());
+                Console.WriteLine(dados.SortedReport(comp));
             }
             static void ValorUltimoPedido() {
                 Cabecalho();
@@ -386,25 +388,40 @@ namespace XulambsFoods_2025_1.src {
                             RelatorioSimplificado(clientes);
                             break;
                         case 7:
-                            RelatorioOrdenado(clientes);
+                            Comparison<Cliente> compNome =
+                                (cli1, cli2) => cli1.GetNome().CompareTo(cli2.GetNome());
+                            RelatorioOrdenado(clientes, compNome);
                             break;
                         case 8:
                             
                             break;
                         case 9:
-
+                            RelatorioFiltradoClientes();
                             break;
                         case 10:
+                            Cabecalho();
+                            Func<Cliente, double> func = cli => cli.TotalGasto();
+                            Console.WriteLine($"Total gasto na pizzaria: {clientes.Sum(func):C2}");
 
                             break;
-                        case 11: 
-
+                        case 11:
+                            Action<Cliente> action =
+                                (cli) => cli.AtualizarCategoria();
+                            clientes.Update(action);
                             break;
                         case 12:
                             RelatorioSimplificado(pedidos);
                             break;
                         case 13:
-                            RelatorioSimplificado(pedidos);
+                            Cabecalho();
+                            Func<Pedido, double> funcPedido = ped=> ped.PrecoAPagar();
+                            Console.WriteLine($"Valor por pedido: {pedidos.Sum(funcPedido)/pedidos.Size():C2}");
+
+                            break;
+                        case 14:
+                            Comparison<Pedido> ped =
+                                (p1, p2) => p1.PrecoAPagar() > p2.PrecoAPagar() ? 1 : -1;
+                            RelatorioOrdenado(pedidos, ped);
                             break;
                         case 0:
                             Console.WriteLine("FLW VLW OBG VLT SMP.");
@@ -414,7 +431,15 @@ namespace XulambsFoods_2025_1.src {
                 } while (opcao != 0);
             }
 
-            
+            private static void RelatorioFiltradoClientes()
+            {
+                Cabecalho();
+                Console.Write("Valor para o filtro de clientes: R$ ");
+                double valor = double.Parse(Console.ReadLine());
+                Predicate<Cliente> pred =
+                        cli => (cli.TotalGasto() > valor);
+                Console.WriteLine(clientes.FilteredReport(pred));
+            }
         }
     }
 }
