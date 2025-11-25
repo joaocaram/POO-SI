@@ -31,12 +31,12 @@ namespace XulambsFoods_2025_1.src {
 
         public class XulambsPizza {
 
-            static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
-            static Dictionary<int, Cliente> clientes = new Dictionary<int, Cliente>();
+            static BaseDados<Pedido> pedidos = new BaseDados<Pedido>(5000);
+            static BaseDados<Cliente> clientes = new BaseDados<Cliente>(80);
 
             static void Cabecalho() {
                 Console.Clear();
-                Console.WriteLine("XULAMBS PIZZA v0.8\n================");
+                Console.WriteLine("XULAMBS PIZZA v0.8\n~~~~~~~~~~~~~~~~~~");
             }
 
             static void Pausa() {
@@ -59,12 +59,12 @@ namespace XulambsFoods_2025_1.src {
             }
 
             static void gerarClientes() {
-                clientes.Add(0, new Cliente(0, "Anônimo"));
+                clientes.Add(new Cliente(0, "Anônimo"));
                 string[] nomes = File.ReadAllLines("medalhistas.txt");
                 int doc = 1;
                 foreach (string nome in nomes) {
                     Cliente novo = new Cliente(doc, nome);
-                    clientes.Add(novo.GetHashCode(), novo);
+                    clientes.Add(novo);
                     doc++;
                 }
             }
@@ -94,26 +94,39 @@ namespace XulambsFoods_2025_1.src {
                         else comida = new Sobremesa(Enum.GetValues<ESobremesa>()[aleat.Next(3)]);
                         pedido.Adicionar(comida);
                     }
-                    Cliente quem = clientes[aleat.Next(quantCli)];
+                    Cliente quem = clientes.Get(aleat.Next(quantCli));
                     quem.RegistrarPedido(pedido);
                     pedido.FecharPedido();
-                    pedidos.AddLast(pedido);
+                    pedidos.Add(pedido);
                 }
             }
 
             static void config() {
                 gerarClientes();
-                gerarPedidos(clientes.Count);
+                gerarPedidos(clientes.Size());
             }
 
             static int ExibirMenuPrincipal() {
                 Cabecalho();
+                Console.WriteLine("====== VENDAS ======");
                 Console.WriteLine("1 - Abrir Pedido");
                 Console.WriteLine("2 - Alterar Pedido");
                 Console.WriteLine("3 - Relatório de Pedido");
                 Console.WriteLine("4 - Fechar Pedido");
                 Console.WriteLine("5 - Valor do último pedido");
-                Console.WriteLine("0 - Finalizar");
+                Console.WriteLine("====== CLIENTES ======");
+                Console.WriteLine("6 - Relatório simplificado de clientes");
+                Console.WriteLine("7 - Relatório ordenado de clientes (padrão)");
+                Console.WriteLine("8 - Relatório ordenado de clientes (escolhido)");
+                Console.WriteLine("9 - Clientes filtrado por gastos");
+                Console.WriteLine("10 - Total gasto por clientes");
+                Console.WriteLine("11 - Atualizar fidelidades");
+                Console.WriteLine("====== PEDIDOS ======");
+                Console.WriteLine("12 - Relatório simplificado de pedidos");
+                Console.WriteLine("13 - Valor médio de pedido");
+                
+
+                Console.WriteLine("\n0 - Finalizar");
                 return lerInteiro("Digite sua escolha");
             }
 
@@ -286,22 +299,18 @@ namespace XulambsFoods_2025_1.src {
             }
 
             static void ArmazenarPedido(Pedido pedido) {
-                pedidos.AddLast(pedido);
+                pedidos.Add(pedido);
             }
 
-            static Pedido LocalizarPedido() {
+            static T LocalizarDado<T>(BaseDados<T> dados, string classe) where T : IComparable<T> { 
                 Cabecalho();
-                Console.WriteLine("Localizando um pedido");
-                int numero = lerInteiro("Digite o número do pedido");
-                foreach (Pedido ped in pedidos) {
-                    if (ped.GetHashCode() == numero)
-                        return ped;
-                }
-                return null;
+                Console.WriteLine($"Localizando um {classe}");
+                int numero = lerInteiro("Digite o número identificador");
+                return dados.Get(numero);
             }
 
             static void AlterarPedido() {
-                Pedido pedidoParaAlteracao = LocalizarPedido();
+                Pedido pedidoParaAlteracao = LocalizarDado(pedidos, nameof(Pedido));
                 if (pedidoParaAlteracao != null) {
                     AdicionarProdutos(pedidoParaAlteracao);
                     MostrarPedido(pedidoParaAlteracao);
@@ -311,11 +320,14 @@ namespace XulambsFoods_2025_1.src {
             }
 
             static void FecharPedido() {
-                Pedido pedidoParaFechar = LocalizarPedido();
+                Pedido pedidoParaFechar = LocalizarDado(pedidos, nameof(Pedido));
                 if (pedidoParaFechar != null) {
                     try {
+                        Cliente cliente = LocalizarDado(clientes, nameof(Cliente));
+                        cliente.RegistrarPedido(pedidoParaFechar);
                         pedidoParaFechar.FecharPedido();
                         MostrarPedido(pedidoParaFechar);
+                        Console.WriteLine($"\nRegistrado para {cliente.ToString()}\n");
                     }
                     catch (PedidoVazioException excecao) {
                         Console.WriteLine(excecao.Message);
@@ -326,17 +338,26 @@ namespace XulambsFoods_2025_1.src {
             }
 
             static void RelatorioDePedido() {
-                Pedido localizado = LocalizarPedido();
+                Pedido localizado = LocalizarDado(pedidos, nameof(Pedido));
                 if (localizado != null)
                     MostrarPedido(localizado);
                 else
                     Console.WriteLine("Pedido não existente");
             }
 
+            private static void RelatorioSimplificado<T>(BaseDados<T> dados) where T : IComparable<T> {
+                Cabecalho();
+                Console.WriteLine(dados.SimpleReport());
+            }
+
+            private static void RelatorioOrdenado<T>(BaseDados<T> dados) where T : IComparable<T> {
+                Cabecalho();
+                Console.WriteLine(dados.SortedReport());
+            }
             static void ValorUltimoPedido() {
                 Cabecalho();
-                Pedido ultimo = pedidos.Last();
-                Console.WriteLine($"Valor do último pedido: {ultimo.PrecoAPagar():C2}");
+                //Pedido ultimo = pedidos.Last();
+                //Console.WriteLine($"Valor do último pedido: {ultimo.PrecoAPagar():C2}");
             }
 
             static void Main(string[] args) {
@@ -361,6 +382,30 @@ namespace XulambsFoods_2025_1.src {
                         case 5:
                             ValorUltimoPedido();
                             break;
+                        case 6:
+                            RelatorioSimplificado(clientes);
+                            break;
+                        case 7:
+                            RelatorioOrdenado(clientes);
+                            break;
+                        case 8:
+                            
+                            break;
+                        case 9:
+
+                            break;
+                        case 10:
+
+                            break;
+                        case 11: 
+
+                            break;
+                        case 12:
+                            RelatorioSimplificado(pedidos);
+                            break;
+                        case 13:
+                            RelatorioSimplificado(pedidos);
+                            break;
                         case 0:
                             Console.WriteLine("FLW VLW OBG VLT SMP.");
                             break;
@@ -368,6 +413,8 @@ namespace XulambsFoods_2025_1.src {
                     Pausa();
                 } while (opcao != 0);
             }
+
+            
         }
     }
 }

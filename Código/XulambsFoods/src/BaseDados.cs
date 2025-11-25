@@ -31,7 +31,7 @@ namespace XulambsFoods_2025_1.src {
             return _dados.Count;
         }
 
-        private string SortedReport() {
+        public string SortedReport() {
             List<Classe> dadosOrdenados = _dados.Values.ToList();
             dadosOrdenados.Sort();
             

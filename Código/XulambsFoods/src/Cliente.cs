@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace XulambsFoods_2025_1.src {
-    public class Cliente {
+    public class Cliente : IComparable<Cliente>{
         private int _id;
         private string _nome;
         private IFidelidade _categoria;
@@ -66,6 +66,15 @@ namespace XulambsFoods_2025_1.src {
 
         public override int GetHashCode() {
             return _id;
+        }
+
+        public int CompareTo(Cliente? other) {
+            int resultado = 0;
+            if (this.TotalGasto() > other.TotalGasto())
+                resultado = 1;
+            else if (this.TotalGasto() < other.TotalGasto())
+                resultado = -1;
+            return resultado;
         }
     }
 }

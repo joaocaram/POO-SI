@@ -23,7 +23,7 @@
         /// <returns>Uma string, multilinhas, com a informação descrita</returns>
         public override string ToString()
         {
-            return $"Pedido Local {DetalhamentoNota()}Serviço: {TaxaServico():C2}\n{RodapeNota()}";
+            return $"Pedido Local {DetalhesPedido()}Serviço: {TaxaServico():C2}\n{RodapeNotinha()}";
         }
     }
 }

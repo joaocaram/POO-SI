@@ -29,7 +29,7 @@ namespace XulambsFoods_2025_1.src {
     /// Um pedido pode agrupar várias pizzas. Deve exibir um relatório descritivo 
     /// com o detalhamento das pizzas e o valor total a pagar.
     /// </summary>
-    public abstract class Pedido {
+    public abstract class Pedido : IComparable<Pedido>{
         static DateTime dataBase = new DateTime(2025, 02, 01, 12, 0, 0);
         static Random sorteio = new Random(42);
 
@@ -95,6 +95,9 @@ namespace XulambsFoods_2025_1.src {
             init(data);
         }
 
+        protected Pedido() {
+            init(DateOnly.FromDateTime(DateTime.Now));
+        }
         /// <summary>
         /// Verifica se ainda é possível adicionar pizzas ao pedido, por seu estado
         /// e quantidade de pizzas.
@@ -198,6 +201,8 @@ namespace XulambsFoods_2025_1.src {
                     this._data.Equals(outroPedido._data);
         }
 
+        
+
         /// <summary>
         /// Retorna o id do pedido, para fins de comparação 
         /// (faremos melhor que isso em breve)
@@ -208,13 +213,12 @@ namespace XulambsFoods_2025_1.src {
         }
 
         public int CompareTo(Pedido? other) {
-            int resposta = -1;
-            double precoDeste = this.PrecoAPagar();
-            double precoOutro = other.PrecoAPagar();
-            if (precoDeste == precoOutro)
-                resposta = 0;
-            else if (precoDeste > precoOutro)
+            int resposta = 0;
+            double diferenca = this.PrecoAPagar() - other.PrecoAPagar();
+            if (diferenca > 0 )
                 resposta = 1;
+            else if (diferenca < 0)
+                resposta = -1;
             return resposta;
 
         }
