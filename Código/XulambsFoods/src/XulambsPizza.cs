@@ -36,7 +36,7 @@ namespace XulambsFoods_2025_1.src {
 
             static void Cabecalho() {
                 Console.Clear();
-                Console.WriteLine("XULAMBS PIZZA v0.7\n================");
+                Console.WriteLine("XULAMBS PIZZA v0.8\n================");
             }
 
             static void Pausa() {
