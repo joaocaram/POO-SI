@@ -32,10 +32,11 @@ namespace XulambsFoods_2025_1.src {
         public class XulambsPizza {
 
             static LinkedList<Pedido> pedidos = new LinkedList<Pedido>();
+            static Dictionary<int, Cliente> clientes = new Dictionary<int, Cliente>();
 
             static void Cabecalho() {
                 Console.Clear();
-                Console.WriteLine("XULAMBS PIZZA v0.6\n================");
+                Console.WriteLine("XULAMBS PIZZA v0.7\n================");
             }
 
             static void Pausa() {
@@ -57,6 +58,54 @@ namespace XulambsFoods_2025_1.src {
                 return opcao;
             }
 
+            static void gerarClientes() {
+                clientes.Add(0, new Cliente(0, "Anônimo"));
+                string[] nomes = File.ReadAllLines("medalhistas.txt");
+                int doc = 1;
+                foreach (string nome in nomes) {
+                    Cliente novo = new Cliente(doc, nome);
+                    clientes.Add(novo.GetHashCode(), novo);
+                    doc++;
+                }
+            }
+
+            static void gerarPedidos(int quantCli) {
+                Random aleat = new Random(42);
+                Pedido pedido;
+                IProduto comida;
+                for (int i = 0; i < quantCli * 16; i++) {
+                    int tipo = aleat.Next() % 2;
+                    if (tipo == 0) pedido = new PedidoLocal();
+                    else pedido = new PedidoEntrega(aleat.Next(14));
+
+                    int quantComidas = aleat.Next(1000);
+                    if (quantComidas > 950)
+                        quantComidas = 4;
+                    else if (quantComidas > 750)
+                        quantComidas = 3;
+                    else if (quantComidas > 500)
+                        quantComidas = 2;
+                    else quantComidas = 1;
+
+                    for (int j = 0; j < quantComidas; j++) {
+                        tipo = aleat.Next() % 2;
+                        int quantAdic = aleat.Next(5);
+                        if (tipo == 0) comida = new Pizza(quantAdic);           
+                        else comida = new Sobremesa(Enum.GetValues<ESobremesa>()[aleat.Next(3)]);
+                        pedido.Adicionar(comida);
+                    }
+                    Cliente quem = clientes[aleat.Next(quantCli)];
+                    quem.RegistrarPedido(pedido);
+                    pedido.FecharPedido();
+                    pedidos.AddLast(pedido);
+                }
+            }
+
+            static void config() {
+                gerarClientes();
+                gerarPedidos(clientes.Count);
+            }
+
             static int ExibirMenuPrincipal() {
                 Cabecalho();
                 Console.WriteLine("1 - Abrir Pedido");
@@ -67,10 +116,6 @@ namespace XulambsFoods_2025_1.src {
                 Console.WriteLine("0 - Finalizar");
                 return lerInteiro("Digite sua escolha");
             }
-
-            Menu<ESobremesa> menuSobremesas;
-            Menu<EBorda> menuBordas;
-            Menu<EBebida> menuBebidas;
 
             static int ExibirMenuSobremesa()
             {
@@ -88,7 +133,7 @@ namespace XulambsFoods_2025_1.src {
 
             static Sobremesa ComprarSobremesa()
             {
-                return menuSobremesas.escolher();
+                
                 int opcao = ExibirMenuSobremesa();
                 ESobremesa sobre = ESobremesa.Brigadeiro;
                 try
@@ -230,8 +275,6 @@ namespace XulambsFoods_2025_1.src {
                 }
             }
 
-                        
-
             static void MostrarNota(Pizza pizza) {
                 Console.WriteLine("Comprando: ");
                 Console.WriteLine(pizza);
@@ -297,6 +340,7 @@ namespace XulambsFoods_2025_1.src {
             }
 
             static void Main(string[] args) {
+                config();
                 int opcao = -1;
                 do {
                     opcao = ExibirMenuPrincipal();
@@ -326,5 +370,4 @@ namespace XulambsFoods_2025_1.src {
             }
         }
     }
-
 }
