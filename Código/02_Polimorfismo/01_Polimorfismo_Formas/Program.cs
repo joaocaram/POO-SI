@@ -148,6 +148,30 @@ namespace PoliFiguras {
 
         }
 
+        static void Somar(ConjuntoGeometrico conjunto) {
+            Func<FormaGeometrica, double> quemEuQuero;
+            Console.WriteLine("1 - area");
+            Console.WriteLine("2 - perimetro");
+            int opcao = int.Parse(Console.ReadLine());
+            quemEuQuero = opcao switch {
+                1 => (f =>f.Area()),
+                2 => (f => f.Perimetro())
+            };
+            Console.WriteLine(conjunto.Somar(quemEuQuero));
+        }
+
+        static void Maior(ConjuntoGeometrico conjunto) {
+            Comparison<FormaGeometrica> comparacao;
+            Console.WriteLine("1 - area");
+            Console.WriteLine("2 - perimetro");
+            int opcao = int.Parse(Console.ReadLine());
+            comparacao= opcao switch {
+                1 => ((f1, f2) => f1.Area() > f2.Area() ? 1 : -1),
+                2 => ((f1, f2) => f1.Perimetro() > f2.Perimetro() ? 1 : -1),
+            };
+            Console.WriteLine(conjunto.Maior(comparacao));
+        }
+
         static void FiltroComInformacoes(IEnumerable<FormaGeometrica> conjunto) {
             Console.Write("Qual é a área mínima para o filtro? ");
             double min = double.Parse(Console.ReadLine());

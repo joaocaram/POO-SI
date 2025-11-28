@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal abstract class FormaGeometrica{
+    public abstract class FormaGeometrica{
         static int ordinal = 1;
         protected string _descricao;
         protected int _ordinal;
@@ -27,7 +27,15 @@ namespace PoliFiguras {
             return _ordinal; 
         }
 
-        
+        public override bool Equals(object? obj) {
+            bool resposta = false;
+            FormaGeometrica outra = obj as FormaGeometrica;
+            if(outra != null) {
+                resposta = (this._descricao.Equals(outra._descricao) &&
+                            this.Area() == outra.Area());
+            }
+            return resposta;    
+        }
 
         public abstract double Area();
         public abstract double Perimetro();
