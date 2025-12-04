@@ -71,12 +71,17 @@ namespace XulambsFoods_2025_1.src {
 
             static void gerarPedidos(int quantCli) {
                 Random aleat = new Random(42);
+                int totalPedidos = quantCli * 16;
+                int diasPedidos = 64;
                 Pedido pedido;
                 IProduto comida;
-                for (int i = 0; i < quantCli * 16; i++) {
+                DateOnly dataBase = DateOnly.FromDateTime(DateTime.Now.AddDays(diasPedidos*-1));
+                for (int i = 0; i < totalPedidos ; i++) {
+                    if (i % (totalPedidos / diasPedidos) == 0)
+                        dataBase = dataBase.AddDays(1);
                     int tipo = aleat.Next() % 2;
-                    if (tipo == 0) pedido = new PedidoLocal();
-                    else pedido = new PedidoEntrega(aleat.Next(14));
+                    if (tipo == 0) pedido = new PedidoLocal(dataBase);
+                    else pedido = new PedidoEntrega(dataBase, aleat.Next(14)+0.1);
 
                     int quantComidas = aleat.Next(1000);
                     if (quantComidas > 950)

@@ -6,6 +6,8 @@
 
         public PedidoLocal() : base() { }
 
+        public PedidoLocal(DateOnly quando) : base(quando) { }
+
         private double TaxaServico()
         {
             return ValorItens() * PctServico;

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 
 
 /** 
@@ -56,6 +57,16 @@ namespace XulambsFoods_2025_1.src
         /// </summary>
         private double _distanciaEntrega;
 
+        private void init(double distancia) {
+            if (distancia < 0.1)
+                throw new ArgumentOutOfRangeException("Distância inválida: " + distancia);
+            _distanciaEntrega = distancia;
+        }
+
+        public PedidoEntrega(DateOnly data, double distancia) : base(data) {
+            init(distancia);
+        }
+
         /// <summary>
         /// Construtor do pedido para entrega. Recebe uma distância, que
         /// deve ser um valor positivo.
@@ -63,9 +74,7 @@ namespace XulambsFoods_2025_1.src
         /// <param name="distancia">Distância da entrega (double > 0)</param>
         public PedidoEntrega(double distancia) : base()
         {
-            if (distancia < 0.1)
-                distancia = 0.1;
-            _distanciaEntrega = distancia;
+            init(distancia);
         }
 
         protected override bool PodeAdicionar()
