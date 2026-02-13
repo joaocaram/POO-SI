@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36811.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Retangulo_POO", "Retangulo_POO.csproj", "{EEAE691C-3780-4A9B-9056-6E6A415D514F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEAE691C-3780-4A9B-9056-6E6A415D514F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEAE691C-3780-4A9B-9056-6E6A415D514F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEAE691C-3780-4A9B-9056-6E6A415D514F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEAE691C-3780-4A9B-9056-6E6A415D514F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73C61C4C-C44D-446C-93C7-B89E58023131}
+	EndGlobalSection
+EndGlobal
