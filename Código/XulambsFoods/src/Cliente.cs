@@ -40,6 +40,18 @@ namespace XulambsFoods_2025_1.src {
             return relat.ToString();
         }
 
+        public string RelatPedidos() {
+            StringBuilder relat = new StringBuilder($"{_nome} ({_id}) - {_categoria}\nRelatório de Pedidos\n");
+            IComparer<Pedido> compPreco = Comparer<Pedido>.Create(
+                    (ped1, ped2) => ped1.PrecoAPagar() - ped2.PrecoAPagar() > 0 ? 1 : -1
+            );
+            relat.AppendLine(_pedidos.Order(compPreco)
+                                     .Select(p => p.ToString())
+                                     .Aggregate((s1, s2) => $"{s1}\n{s2}"));
+
+            return relat.ToString();
+        }
+
         public double TotalGasto() {
             double total = 0d;
             foreach (Pedido pedido in _pedidos) {

@@ -31,6 +31,11 @@ namespace XulambsFoods_2025_1.src {
             return _dados.Count;
         }
 
+        public int Size(Predicate<T> pred) {
+           return  _dados.Values.Where(dado => pred.Invoke(dado))
+                         .Count();
+        }
+
         public string SortedReport(Comparison<T> comparacao) {
             List<T> dadosOrdenados = _dados.Values.ToList();
             dadosOrdenados.Sort();
@@ -62,6 +67,23 @@ namespace XulambsFoods_2025_1.src {
             return resultado;
         }
 
+        public double Sum(Func<T, double> function, Predicate<T> cond) {
+            return _dados.Values.Where(dado => cond.Invoke(dado))
+                                .Select(dado => function.Invoke(dado))
+                                .Sum();
+        }
+
+        public double Average(Func<T, double> function) {
+            return _dados.Values.Select(dado => function.Invoke(dado))
+                                .Average();
+        }
+
+        public double Average(Func<T, double> function, Predicate<T> cond) {
+            return _dados.Values.Where(dado => cond.Invoke(dado))
+                                .Select(dado => function.Invoke(dado))
+                                .Average(); 
+        }
+
         public string FilteredReport(Predicate<T> condicao) {
             StringBuilder sb = new StringBuilder($"Relatório filtrado de {nameof(T)}:\n");
             foreach (T dado in _dados.Values)
@@ -69,6 +91,21 @@ namespace XulambsFoods_2025_1.src {
                     sb.AppendLine(dado + "\n");
 
             return sb.ToString();
+        }
+
+        public string FilteredReport(Predicate<T> condicao, Comparison<T> comparacao) {
+            IComparer<T> comparador = Comparer<T>.Create(comparacao);
+            string? relat = _dados.Values.Where(dado => condicao.Invoke(dado))
+                                        .Order(comparador)
+                                        .Select(dado => dado.ToString())
+                                        .Aggregate((s1, s2) => $"{s1}\n{s2}");
+            return $"Relatório filtrado e ordenado:\n" + relat;
+        }
+
+        public T Max(Predicate<T> condicao, Comparison<T> comparacao) {
+            IComparer<T> comparador = Comparer<T>.Create(comparacao);
+            return _dados.Values.Where(d => condicao.Invoke(d))
+                         .Max(comparador);
         }
 
     }

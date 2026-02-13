@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
 
 /** 
 * MIT License
@@ -115,10 +116,15 @@ namespace XulambsFoods_2025_1.src {
         protected string DetalhesPedido() {
             StringBuilder relat = new StringBuilder($"nº{_idPedido} - {_data}\n");
             relat.AppendLine("==============================");
-            foreach (IProduto item in _itens) {
-                relat.AppendLine(item.ToString());
-            }
-            relat.AppendLine($"\nValor dos itens: {ValorItens():C2}");
+
+            
+            IComparer<IProduto> compAlfab = Comparer<IProduto>.Create(
+                    (ped1, ped2) => ped1.ToString().CompareTo(ped2.ToString())
+            );
+            relat.AppendLine(_itens.Order(compAlfab)
+                                     .Select(p => p.ToString())
+                                     .Aggregate((s1, s2) => $"{s1}\n{s2}"));
+
             return relat.ToString();
         }
 
