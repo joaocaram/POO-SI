@@ -1,68 +1,47 @@
-namespace XulambsFoods_2025_1.src {
-    internal class XulambsPizza {
+namespace XulambsFoods {
+    public class XulambsPizza {
         static void Cabecalho() {
             Console.Clear();
-            Console.WriteLine("XULAMBS PIZZA v0.1 \n====================");
+            Console.WriteLine("XULAMBS PIZZA V0.1");
+            Console.WriteLine("==================");
         }
 
-        static void Pausa() {
-            Console.WriteLine("Digite enter para continuar...");
-            Console.ReadLine();
-        }
-
-        static int ExibirMenuPrincipal() {
+        static int MenuPrincipal() {
             Cabecalho();
-            Console.WriteLine("1 - Comprar pizza");
+            Console.WriteLine("1 - Comprar uma pizza");
             Console.WriteLine("0 - Finalizar");
-            Console.Write("Digite sua escolha: ");
+            Console.Write("Sua opção: ");
             return int.Parse(Console.ReadLine());
         }
 
-        static int ExibirMenuIngredientes(Pizza pizza) {
+        static void ImprimirDadosPizza(Pizza pizza) {
+            Console.WriteLine();
+            Console.WriteLine("Pizza comprada:\n ");
+            Console.WriteLine(pizza.GerarCupom());
+            Console.WriteLine("\nDigite enter para continuar.");
+            Console.ReadKey();
+        }
+
+        static Pizza ComprarPizza() {
             Cabecalho();
-            Console.WriteLine("Personalizar a Pizza\n");
-            MostrarNota(pizza);
-            Console.WriteLine("\n1 - Acrescentar ingredientes");         
-            Console.WriteLine("0 - Não quero alterar");
-            Console.Write("Digite sua escolha: ");
-            return int.Parse(Console.ReadLine());
-        }
-
-        static void ComprarPizza() {
-            Cabecalho();
-            Console.WriteLine("Comprando uma nova pizza:");
-            Pizza novaPizza = new Pizza();
-            EscolherIngredientes(novaPizza);
-            MostrarNota(novaPizza);
-        }
-
-        static void EscolherIngredientes(Pizza pizza) {
-            int opcao = ExibirMenuIngredientes(pizza);
-            if (opcao != 0) { 
-                Console.Write("Quantos ingredientes? ");
-                int adicionais = int.Parse(Console.ReadLine());
-                pizza.AdicionarIngredientes(adicionais);
-            }
-        }
-
-        static void MostrarNota(Pizza pizza) {
-            Console.WriteLine("Comprando:");
-            Console.WriteLine(pizza.NotaDeCompra());
+            Console.WriteLine("Comprando uma pizza:");
+            Console.Write("Quantos ingredientes você deseja (0-8)? ");
+            int quantos = int.Parse(Console.ReadLine());
+            Pizza novaPizza = new Pizza(quantos);
+            ImprimirDadosPizza(novaPizza);
+            return novaPizza;
         }
 
         static void Main(string[] args) {
-            int opcao = -1;
+            int opcao;
             do {
-                opcao = ExibirMenuPrincipal();
-                switch (opcao) {
-                    case 1:
-                        ComprarPizza();
-                        break;
-                    case 0: Console.WriteLine("FLW VLW OBG VLT SMP.");
-                        break;
-                }
-                Pausa();
+                opcao = MenuPrincipal();
+                Pizza? pizza = opcao switch {
+                    1 => ComprarPizza(),
+                    _ => null
+                };
             } while (opcao != 0);
         }
     }
+
 }

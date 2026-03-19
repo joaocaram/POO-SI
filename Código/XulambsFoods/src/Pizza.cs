@@ -1,19 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.Intrinsics.X86;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Net.WebRequestMethods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace XulambsFoods_2025_1.src {
+﻿
+namespace XulambsFoods {
     /** 
     * MIT License
     *
@@ -44,89 +30,75 @@ namespace XulambsFoods_2025_1.src {
     /// </summary>
 
     public class Pizza {
-        #region Atributos   
-        private int _maxIngredientes;
-        private double _precoBase;
-        private int _quantidadeIngredientes;
-        private double _valorPorAdicional;
-        private string _descricao;
+
+        //Regra 0 -- não entre em pânico
+        //Regra 1 -- não viaje
+        //Regra 2 -- não interessa
+        //Regra 3 -- isto não é um cachimbo
+
+        #region constantes
+        private const double PrecoBase = 29d;
+        private const double PrecoIngrediente = 5d;
+        private const int MaxIngredientes = 8;
         #endregion
 
-        #region Construtores
-        /// <summary>
-        /// Inicializador privado da pizza: valida a quantidade de adicionais. Em caso de não validação, a pizza será criada sem adicionais.
-        /// </summary>
-        /// <param name="adicionais">Quantos adicionais para iniciar a pizza. Em caso de não validação, a pizza será criada sem adicionais.</param>
-        private void Init(int adicionais) {
-            _maxIngredientes = 8;
-            _descricao = "Pizza";
-            _precoBase = 29d;
-            _valorPorAdicional = 5d;
-            AdicionarIngredientes(adicionais);
+        #region atributos
+        private int _quantIngredientes;
+        private string? _descricao;
+        #endregion
+
+        #region construtores
+        private void Inicializador(int quantos) {
+
+            AdicionarIngredientes(quantos);
+            _descricao = $"Pizza com {_quantIngredientes} adicionais";
         }
 
-       /// <summary>
-       /// Construtor padrão.Cria uma pizza sem adicionais.
-       /// </summary>
         public Pizza() {
-            Init(0);            
+            Inicializador(0);
         }
 
-       /// <summary>
-        /// Cria uma pizza com a quantidade de adicionais pré-definida.Em caso de valor inválido, a pizza será criada sem adicionais.
-        /// </summary>
-        /// <param name="adicionais">Quantidade de adicionais (entre 0 e 8, limites inclusivos)</param>
-        public Pizza(int adicionais) {
-            Init(adicionais);
+        public Pizza(int quantos) {
+            Inicializador(quantos);
         }
         #endregion
 
-        #region Métodos de negócio
-        /// <summary>
-        /// Calcula o valor dos adicionais para o preço final da pizza. Atualmente o valor dos adicionais é a multiplicação da quantidade de adicionais por seu valor unitário
-        /// </summary>
-        /// <returns>Double com o valor a ser cobrado pelos adicionais.</returns>
+        #region métodos privados
         private double ValorAdicionais() {
-            return _quantidadeIngredientes * _valorPorAdicional;
+            return PrecoIngrediente * _quantIngredientes;
         }
 
-        /// <summary>
-        /// Retorna o valor final da pizza, incluindo seus adicionais.
-        /// </summary>
-        /// <returns>Double com o valor final da pizza.</returns>
-        public double ValorFinal() {
-            return _precoBase + ValorAdicionais();
+        private void ModificarDescricao() {
+            _descricao = $"Pizza com {_quantIngredientes} adicionais";
         }
 
-      /// <summary>
-        /// Tenta adicionar ingredientes na pizza.Caso a adição seja inválida(ultrapassando limites ou com valores negativos), mantém
-        /// a quantidade atual de ingredientes.Retorna a quantidade de ingredientes após a execução do método.
-        /// </summary>
-        /// <param name="quantos">Quantos ingredientes a serem adicionados (>0)</param>
-        /// <returns>Quantos ingredientes a pizza tem após a execução</returns>
-        public int AdicionarIngredientes(int quantos) {
-            if (PodeAdicionar(quantos)) {
-                _quantidadeIngredientes += quantos;
-            }
-            return _quantidadeIngredientes;
-        }
-
-       /// <summary>
-        ///Faz a verificação de limites para adicionar ingredientes na pizza.Retorna TRUE/FALSE conforme seja possível ou não adicionar 
-        ///esta quantidade de ingredientes.
-        /// </summary>
-        /// <param name="quantos">Quantidade de ingredientes a adicionar.</param>
-        /// <returns>TRUE/FALSE conforme seja possível ou não adicionar esta quantidade de ingredientes.</returns>
-        private bool PodeAdicionar(int quantos) {
-            return (quantos > 0 && quantos + _quantidadeIngredientes <= _maxIngredientes);
-        }
-                            /// <summary>
-        /// Nota simplificada de compra: descrição da pizza, dos ingredientes e do preço.
-        /// </summary>
-        /// <returns>String no formato "<DESCRICAO> <PRECO> com <QUANTIDADE> ingredientes <PRECO></PRECO>, no valor total de <VALOR>"</returns>
-        public string NotaDeCompra() {
-            return $"{_descricao} ({_precoBase:C2}) com {_quantidadeIngredientes} ingredientes ({ValorAdicionais():C2}), no valor total de {ValorFinal():C2}.";
+        private bool IngredientesSaoValidos(int quantos) {
+            int novosIngredientes = _quantIngredientes + quantos;
+            return (novosIngredientes <= MaxIngredientes && quantos > 0);
         }
         #endregion
+
+        #region métodos públicos
+        public double CalcularValorFinal() {
+            return PrecoBase + ValorAdicionais();
+        }
+
+        public int AdicionarIngredientes(int quantos) {
+            if (IngredientesSaoValidos(quantos)) {
+                _quantIngredientes = _quantIngredientes + quantos;
+                ModificarDescricao();
+            }
+            return _quantIngredientes;
+        }
+
+        public string GerarCupom() {
+            return $"--- CUPOM XULAMBS PIZZA ---\n" +
+            $"{_descricao}\n" +
+            $"\tPizza Simples:  {PrecoBase:C2}\n" +
+            $"\tAdicionais:  {ValorAdicionais():C2}\n" +
+            $"---------------------------\nTOTAL:  {CalcularValorFinal():C2}\n---------------------------";
+        }
+        #endregion
+
     }
 }
