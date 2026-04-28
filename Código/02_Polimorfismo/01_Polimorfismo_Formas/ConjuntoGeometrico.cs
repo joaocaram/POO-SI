@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PoliFiguras
 {
     public class ConjuntoGeometrico {
-        private ICollection<FormaGeometrica> formas;
+        private IEnumerable<FormaGeometrica> formas;
         private int capacidade;
 
         public ConjuntoGeometrico() {
@@ -24,21 +24,30 @@ namespace PoliFiguras
             formas = new List<FormaGeometrica>(tamanho);
         }
 
+        public ConjuntoGeometrico(IEnumerable<FormaGeometrica> colecao)
+        {
+            formas = colecao;
+            capacidade = colecao.Count();
+        }
+
 
         public void AddForma(FormaGeometrica nova)
         {
-            if (nova != null && formas.Count < capacidade)
+            if (nova != null && formas.Count() < capacidade)
             {
-                formas.Add(nova);
+                formas = formas.Append(nova);
             }
+            else
+                throw new InvalidOperationException("Conjunto cheio");
         }
 
         public FormaGeometrica Buscar(FormaGeometrica outra) {
-            foreach (FormaGeometrica f in formas) {
-                if (f.Equals(outra))
-                    return f;
-            }
-            return null;
+            //foreach (FormaGeometrica f in formas) {
+            //    if (f.Equals(outra))
+            //        return f;
+            //}
+            FormaGeometrica achou = formas.First(f => f.Equals(outra));
+            return achou;
         }
 
         public double Somar(Func<FormaGeometrica, double> oQue) {
@@ -57,22 +66,25 @@ namespace PoliFiguras
             return formas.Max(comp);
         }
 
+        public double Maior(Func<FormaGeometrica, double> oQue)
+        {
+            return formas.Select(oQue)
+                         .Max();
+        }
 
         public FormaGeometrica Buscar(int posicao) {
-            if (posicao < 0 || posicao >= formas.Count)
+            if (posicao < 0 || posicao >= formas.Count())
                 throw new ArgumentOutOfRangeException("Posição inválida.");
             return formas.ElementAt(posicao);
         }
 
         public override string ToString()
         {
-            StringBuilder relat = new StringBuilder($"Conjunto com {formas.Count} formas geométricas\n");
+            StringBuilder relat = new StringBuilder($"Conjunto com {formas.Count()} formas geométricas\n");
             foreach(FormaGeometrica f in formas){
                 relat.AppendLine(f.ToString());
             }
             return relat.ToString();
         }
-
-          
     }
 }

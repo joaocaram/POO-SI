@@ -8,7 +8,7 @@ namespace PoliFiguras {
     internal class TrianguloRetangulo : PoligonoReto{
 
         public TrianguloRetangulo(double cateto1, double cateto2):
-                base("Triângulo Retângulo", cateto1, cateto2) {
+                base("Triângulo", cateto1, cateto2) {
 
         }
 

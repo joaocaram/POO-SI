@@ -20,7 +20,7 @@ namespace PoliFiguras {
         }
 
         public override string ToString() {
-            return $"{_descricao,19} -> Área: {Area():00.00} | Perímetro: {Perimetro():F2}";
+            return $"{_descricao,12} -> Área: {Area():00.00} | Perímetro: {Perimetro():F2}";
         }
 
         public override int GetHashCode() {

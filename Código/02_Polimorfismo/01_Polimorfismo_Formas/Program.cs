@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Threading.Channels;
 
 namespace PoliFiguras {
     internal class Program {
@@ -88,8 +90,8 @@ namespace PoliFiguras {
             if (conjunto == null)
                 conjunto = GerarConjunto(10);
             FormaGeometrica quadradinhoDe8 = new Quadrado(8);
-            conjunto.Append(quadradinhoDe8);
-            conjunto.Prepend(quadradinhoDe8);
+            conjunto = conjunto.Append(quadradinhoDe8);
+            conjunto = conjunto.Prepend(quadradinhoDe8);
         }
 
         static string Relatorio(IEnumerable<FormaGeometrica> conjunto) {
@@ -116,7 +118,34 @@ namespace PoliFiguras {
                 Console.WriteLine("Posição inexistente");
             }
         }
+        static void FiltroDeFormasOrdenado(IEnumerable<FormaGeometrica> formas)
+        {
+            Console.Write("Qual é a área mínima para o filtro? ");
+            double minimo = double.Parse(Console.ReadLine());
 
+            Comparer<FormaGeometrica> comparer =
+                Comparer<FormaGeometrica>.Create((f1, f2) => f1.Area() > f2.Area() ? 1 : -1);
+            //LINQ Method
+            Console.WriteLine(
+                        formas.Where(f => f.Area() >= minimo)
+                                .Order(comparer)
+                                .Select(f => f.ToString())   
+                                .Aggregate((s1, s2) => $"{s1}\n{s2}")
+            );            
+        }
+
+        static void FiltroDeFormasDistintas(IEnumerable<FormaGeometrica> formas)
+        {
+            Console.Write("Qual é a área mínima para o filtro? ");
+            double minimo = double.Parse(Console.ReadLine());
+             //LINQ Method
+            Console.WriteLine(
+                        formas.Where(f => f.Area() >= minimo)
+                                .Distinct()
+                                .Select(f => f.ToString())
+                                .Aggregate((s1, s2) => $"{s1}\n{s2}")
+            );
+        }
         static void FiltroDeFormas(IEnumerable<FormaGeometrica> formas) {
             Console.Write("Qual é a área mínima para o filtro? ");
             double minimo = double.Parse(Console.ReadLine());
@@ -142,7 +171,10 @@ namespace PoliFiguras {
             IEnumerable<string> formasMaiores =
                                     formas.Where(f => f.Area() >= minimo)
                                           .Select(f => f.ToString());
+            
+            int quantas = formasMaiores.Count();
 
+            Console.WriteLine($"São {quantas} formas com área maior que {minimo}:"); 
             foreach (string f in formasMaiores)
                 Console.WriteLine(f);
 
@@ -247,11 +279,12 @@ namespace PoliFiguras {
 
             int opcao = MenuPrincipal();
             IEnumerable<FormaGeometrica> formas = null;
-
+            ConjuntoGeometrico conj = null;
             while (opcao != 0) {
                 switch (opcao) {
                     case 1:
                         formas = GerarNovoConjunto();
+                        conj = new ConjuntoGeometrico(formas);
                         break;
                     case 2:
                         AdicionarFormaFixa(formas);
@@ -276,19 +309,21 @@ namespace PoliFiguras {
                         FormasDistintasPorArea(formas);
                         break;
                     case 9:
-                        Console.WriteLine($"Maior pela área: {MaiorDeTodas(formas)}");
+                        Maior(conj);
                         break;
                     case 10:
                         Console.WriteLine($"Menor perímetro: {MenorPerimetro(formas)}");
                         break;
                     case 11:
-                        Console.WriteLine($"Soma = {formas.Sum(f => f.Area())}");
+                        
+                          Somar(conj);
                         break;
                     case 12:
                         Console.WriteLine($"Média = {formas.Average(f => f.Perimetro())}");
                         break;
                     case 13:
-                        FormasOrdenadas(formas);
+                        FiltroDeFormasOrdenado(formas);
+                        //FormasOrdenadas(formas);
                         break;
                 }
                 Console.ReadKey();
