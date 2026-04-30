@@ -72,7 +72,6 @@ namespace HerancaPessoa
                 _cargaHoraria = cargaHoraria;
         }
 
-
         /// <summary>
         /// Retorna a idade da pessoa. 
         /// </summary>
@@ -81,7 +80,7 @@ namespace HerancaPessoa
         {
             DateOnly hoje = DateOnly.FromDateTime(DateTime.Now);
             int idade = (hoje.Year - _dataNasc.Year);
-            if (hoje.DayOfYear > _dataNasc.DayOfYear)
+            if (hoje.DayOfYear < _dataNasc.DayOfYear)
                 idade--;
             return idade;
         }
@@ -101,7 +100,7 @@ namespace HerancaPessoa
         /// <returns>String com nome e idade (em anos) da pessoa</returns>
         public virtual string Relatorio()
         {
-            return $"{_nome}: {Idade()} anos.";
+            return $"{_nome}: {Idade()} anos";
         }
     }
 
