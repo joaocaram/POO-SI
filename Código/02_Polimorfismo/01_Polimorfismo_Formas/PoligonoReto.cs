@@ -18,8 +18,5 @@ namespace PoliFiguras {
             if (h > 0.1)
                 _alturaPoligono = h;
         }
-
-        
-
     }
 }

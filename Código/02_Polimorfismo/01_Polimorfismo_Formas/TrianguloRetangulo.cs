@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal class TrianguloRetangulo : PoligonoReto{
+    public class TrianguloRetangulo : PoligonoReto{
 
         public TrianguloRetangulo(double cateto1, double cateto2, int posX, int posY):
-                base("Tri Ret", cateto1, cateto2, posX, posY) {
+                base("Triângulo", cateto1, cateto2, posX, posY) {
 
         }
 
@@ -21,7 +21,8 @@ namespace PoliFiguras {
         }
 
         private double Hipotenusa() {
-            return Math.Sqrt(Math.Pow(_basePoligono, 2) + Math.Pow(_alturaPoligono, 2));
+            double soma = Math.Pow(_basePoligono, 2) + Math.Pow(_alturaPoligono, 2);
+            return Math.Sqrt(soma);
         }
 
         public override string ToString() {

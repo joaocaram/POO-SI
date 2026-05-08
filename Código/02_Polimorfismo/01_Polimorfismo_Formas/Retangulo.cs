@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    public sealed class Retangulo : PoligonoReto {
+    public class Retangulo : PoligonoReto {
 
         public Retangulo(double b, double h, int posX, int posY):
             base("Retângulo", b, h, posX, posY) {
-
         }
 
+       
         public override double Area() {
             return _basePoligono * _alturaPoligono;
         }
