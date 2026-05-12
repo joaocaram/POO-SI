@@ -20,7 +20,7 @@ namespace PoliFiguras {
             return 2 * _basePoligono + 2 * _alturaPoligono;
         }
 
-        public override string ToString() {
+        public sealed override string ToString() {
             return $"{base.ToString()}  | Base: {_basePoligono:F2} | Altura: {_alturaPoligono:F2}";
         }
     }
