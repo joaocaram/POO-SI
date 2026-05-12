@@ -44,8 +44,7 @@ namespace HerancaPessoa
         /// <param name="documento">Um documento identificador</param>
         /// <param name="email">O email de contato da pessoa</param>
         /// <param name="valorMatricula">Matrícula paga (>=1000)</param>
-        public Aluno(string nome, DateOnly nascimento, string documento, string email,
-                        double valorMatricula) :
+        public Aluno(string nome, DateOnly nascimento, string documento, string email, double valorMatricula) :
                 base(nome, nascimento, documento, email)
         {
             if (valorMatricula < 1000d)

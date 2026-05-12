@@ -36,7 +36,7 @@ namespace HerancaPessoa
             Pessoa aluno = new Aluno("Aluno Espantado", DateOnly.Parse("04-11-2006"), "Al1", "aluno@aluno.com", 1250d);
             aluno.SetCargaHoraria(430);
 
-            Pessoa prof = new Professor("Professor", DateOnly.Parse("05-07-1989"), "Pr1", "prof@prof.com");
+            Pessoa prof = new Professor("Professor Pardal", DateOnly.Parse("05-01-1986"), "Pr1", "prof@prof.com");
             prof.SetCargaHoraria(32);
 
             pessoas.Add(aluno);

@@ -21,25 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace HerancaPessoa
-{
-    public class Administrativo : Pessoa
-    {
+namespace HerancaPessoa {
+    public class Administrativo : Pessoa {
 
+        private static double _salarioBase;
+        private double _valorGratificacao;
 
-    private static double salarioBase;
-    private double valorGratificacao;
+        public Administrativo(string nome, DateOnly nascimento, string documento, string email, double salario) :
+                base(nome, nascimento, documento, email) {
+            if (salario > 0)
+                _salarioBase = salario;
+        }
 
-    public Administrativo(string nome, DateOnly nascimento, string documento, string email): 
-            base(nome, nascimento, documento, email)
-    {
+        public double Salario() {
+            return _salarioBase + _valorGratificacao;
+        }
+
+        /// <summary>
+        /// Resumo do administrativo: nome, idade (vindo da classe mãe) e salário.
+        /// </summary>
+        /// <returns>String de uma linha com as informações acima</returns>
+        public override string Relatorio() {
+            return $"{base.Relatorio()}, com salário {Salario():C2} ({_salarioBase:C2} + {_valorGratificacao:C2}).";
+        }
 
     }
-
-    public double salarioBruto()
-    {
-            return salarioBase + valorGratificacao;
-    }
-
-}
 }

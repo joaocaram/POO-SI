@@ -2,65 +2,72 @@
 
 namespace PoliFiguras
 {
-    internal class ConjuntoGeometrico
+    public class ConjuntoGeometrico
     {
-        private List<FormaGeometrica> formas;
-        private int capacidade;
+        private List<FormaGeometrica> _formas;
+        private int _capacidade;
 
+        /// <summary>
+        /// Cria um conjunto de formas geométricas com capacidade máxima.
+        /// </summary>
+        /// <param name="tamanho">Capacidade do conjunto (1 ou mais)</param>
         public ConjuntoGeometrico(int tamanho)
         {
-            capacidade = 1;
+            _capacidade = 1;
             if (tamanho > 1)
-                capacidade = tamanho;
-            formas = new List<FormaGeometrica>(capacidade);
+                _capacidade = tamanho;
+            _formas = new List<FormaGeometrica>(_capacidade);
         }
 
-        public void AddForma(FormaGeometrica nova)
+        public int AddForma(FormaGeometrica nova)
         {
-            if (nova != null && formas.Count < capacidade)
+            if (nova != null && _formas.Count < _capacidade)
             {
-                formas.Add(nova);
+                _formas.Add(nova);
             }
+            return _formas.Count;
         }
 
         public FormaGeometrica Buscar(FormaGeometrica outra) 
         {
-            bool achou = false;
             int pos = 0;
             FormaGeometrica achada = null;
-            while(!achou && pos < formas.Count)
+            while(achada == null && pos < _formas.Count)
             {
-                if (formas.ElementAt(pos).Equals(outra)) {
-                    achou = true;
-                    achada = formas.ElementAt(pos);
+                if (_formas.ElementAt(pos).Equals(outra)) {
+                    achada = _formas.ElementAt(pos);
                 }
-                else
-                    pos++;
+                pos++;
             }
             return achada;
         }
 
+        public int Remover(FormaGeometrica qual) {
+            _formas.Remove(qual);
+            return _formas.Count;
+        }
+
         public FormaGeometrica MaiorDeTodas() {
-            FormaGeometrica resposta = null;
-            if(formas.Count > 0) {
-                resposta = formas.ElementAt(0);
-                for(int i=1; i< formas.Count; i++) {
-                    if (formas.ElementAt(i).TemAreaMaiorQue(resposta))
-                        resposta = formas.ElementAt(i);
+            FormaGeometrica maior = null;
+            if(_formas.Count > 0) {
+                maior = _formas.ElementAt(0);
+                for(int i=1; i< _formas.Count; i++) {
+                    FormaGeometrica candidata = _formas.ElementAt(i);
+                    if (candidata.TemAreaMaiorQue(maior))
+                        maior = candidata;
                 }
             }
-            return resposta;
-
+            return maior;
         }
 
         public override string ToString()
         {
-            StringBuilder relat = new StringBuilder("Conjunto com " + formas.Count + " formas geométricas\n");
-            foreach(FormaGeometrica forma in formas)
+            StringBuilder relatorio = new StringBuilder($"Conjunto com {_formas.Count} formas geométricas\n");
+            foreach(FormaGeometrica forma in _formas)
             {
-                relat.AppendLine(forma.ToString());
+                relatorio.AppendLine($"{forma}");
             }
-            return relat.ToString();
+            return relatorio.ToString();
         }
 
           

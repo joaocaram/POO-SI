@@ -26,7 +26,7 @@ namespace PoliFiguras {
 
         public override string ToString()
         {
-            return $"{base.ToString()}  | Raio: {_raio:F2}";
+            return $"{base.ToString()} | Raio: {_raio:F2}";
         }
 
         

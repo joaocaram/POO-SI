@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PoliFiguras {
-    internal class Quadrado : PoligonoReto {
+    public class Quadrado : PoligonoReto {
 
         public Quadrado(double lado, int posX, int posY) : 
             base("Quadrado", lado, lado, posX, posY) {
-
         }
 
         public override double Area() {
