@@ -90,7 +90,7 @@ namespace CursosLivres {
         /// </summary>
         /// <returns>Total de faltas do aluno, incluindo esta</returns>
         public int LancarFalta() {
-            if (_curso != null && _faltas <= _curso.QuantidadeAulas())
+            if (_curso != null && _faltas < _curso.QuantidadeAulas())
                 _faltas++;
 
             return _faltas;
