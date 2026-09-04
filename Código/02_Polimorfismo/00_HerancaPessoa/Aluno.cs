@@ -25,7 +25,8 @@ namespace HerancaPessoa
 {
     public class Aluno : Pessoa
     {
-        private static double s_horaAula;
+
+        private static double s_horaAula ;
         private double _valorMatricula;
 
         static Aluno()
@@ -64,7 +65,7 @@ namespace HerancaPessoa
 
         public override string Relatorio()
         {
-            return $"{base.Relatorio()}, com carga horária de {_cargaHoraria}h no semestre. Mensalidade: {ValorMensalidade():C2}";
+            return $"{base.Relatorio()} - Carga horária de {_cargaHoraria}h no semestre. Mensalidade: {ValorMensalidade():C2}";
         }
     }
 

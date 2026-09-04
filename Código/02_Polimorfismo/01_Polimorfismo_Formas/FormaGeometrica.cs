@@ -16,7 +16,6 @@ namespace PoliFiguras {
             _descricao = desc;   
         }
 
-        
         public bool TemAreaMaiorQue(FormaGeometrica outra) {
             return Area() > outra.Area();
         }

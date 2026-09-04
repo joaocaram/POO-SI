@@ -27,29 +27,29 @@ namespace HerancaPessoa
     {
         static void Main(string[] args)
         {
-            List<Pessoa> pessoas = new List<Pessoa>(8);
 
-            Pessoa aluno = new Aluno("Aluno Espantado", DateOnly.Parse("01-01-2006"), "Al1", "aluno@aluno.com", 1250d);
+            List<Pessoa> pessoas = new List<Pessoa>(20);
+
+            pessoas.Add(new Pessoa("Pessoa Feliz", DateOnly.Parse("05-04-2004"), "Pe1", "pessoa@pessoa.com"));
+
+
+            Pessoa aluno = new Aluno("Aluno Espantado", DateOnly.Parse("04-11-2006"), "Al1", "aluno@aluno.com", 1250d);
             aluno.SetCargaHoraria(430);
 
             Pessoa prof = new Professor("Professor Pardal", DateOnly.Parse("05-01-1986"), "Pr1", "prof@prof.com");
             prof.SetCargaHoraria(32);
 
-            pessoas.Add(new Pessoa("Pessoa Feliz", DateOnly.Parse("05-06-2006"), "Pe1", "pessoa@pessoa.com"));
-            
+            pessoas.Add(aluno);
             pessoas.Add(prof);
-            pessoas.Add(aluno);            
 
             Console.WriteLine("Todo mundo:");
-            foreach (Pessoa p in pessoas)
+            foreach (Pessoa pessoa in pessoas)
             {
-                Console.WriteLine(p.Relatorio());
+               Console.WriteLine(pessoa.Relatorio());
             }
-            Console.WriteLine("=============");
-
-            Professor ultimo = pessoas.Last() as Professor;     
-            if(ultimo!=null)
-                Console.WriteLine(ultimo.SalarioBruto());
+            
+            Aluno eu = (Aluno)pessoas.Last();
+            Console.WriteLine(eu.ValorMensalidade());
         }
     }
 }

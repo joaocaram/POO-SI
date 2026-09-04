@@ -58,7 +58,7 @@ namespace HerancaPessoa
         /// <returns>String de uma linha com as informações acima</returns>
         public override string Relatorio()
         {
-            return $"{base.Relatorio()}, com salário {SalarioBruto():C2}.";
+            return $"{base.Relatorio()} - Salário de {SalarioBruto():C2}.";
         }
 
     }
