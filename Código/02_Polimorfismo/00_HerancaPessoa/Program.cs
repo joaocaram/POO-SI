@@ -52,8 +52,8 @@ namespace HerancaPessoa
                Console.WriteLine(pessoa.Relatorio());
             }
             
-            Aluno eu = (Aluno)pessoas.Last();
-            Console.WriteLine(eu.ValorMensalidade());
+            //Aluno eu = (Aluno)pessoas.Last();
+            //Console.WriteLine(eu.ValorMensalidade());
         }
     }
 }

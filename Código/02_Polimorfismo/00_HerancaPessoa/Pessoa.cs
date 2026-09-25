@@ -39,7 +39,7 @@ namespace HerancaPessoa
         protected int _id;
         protected string _nome;
         protected string _documento;
-        protected DateOnly _dataNasc;
+        protected DateOnly _dataNascimento;
         protected string _email;
         protected int _cargaHoraria;
 
@@ -55,7 +55,7 @@ namespace HerancaPessoa
         public Pessoa(string nome, DateOnly nascimento, string documento, string email)
         {
             _nome = nome;
-            _dataNasc = nascimento;
+            _dataNascimento = nascimento;
             _documento = documento;
             _id = s_sorteio.Next() % 1_000_000;
             _email = email;
@@ -79,8 +79,8 @@ namespace HerancaPessoa
         public int Idade()
         {
             DateOnly hoje = DateOnly.FromDateTime(DateTime.Now);
-            int idade = (hoje.Year - _dataNasc.Year);
-            if (hoje.DayOfYear < _dataNasc.DayOfYear)
+            int idade = (hoje.Year - _dataNascimento.Year);
+            if (hoje.DayOfYear < _dataNascimento.DayOfYear)
                 idade--;
             return idade;
         }

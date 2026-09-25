@@ -40,7 +40,7 @@ namespace HerancaPessoa
         public Professor(string nome, DateOnly nascimento, string documento, string email) :
                 base(nome, nascimento, documento, email)
         {
-            _cargaHoraria = 12;
+            SetCargaHoraria(12);
         }
 
         /// <summary>

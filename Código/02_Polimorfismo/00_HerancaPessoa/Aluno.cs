@@ -25,7 +25,6 @@ namespace HerancaPessoa
 {
     public class Aluno : Pessoa     //Aluno é uma especialização de Pessoa.
     {
-
         private static double s_horaAula ;
         private double _valorMatricula;
 
@@ -44,8 +43,7 @@ namespace HerancaPessoa
         /// <param name="documento">Um documento identificador</param>
         /// <param name="email">O email de contato da pessoa</param>
         /// <param name="valorMatricula">Matrícula paga (>=1000)</param>
-        public Aluno(string nome, DateOnly nascimento, string documento, string email, double valorMatricula) :
-                base(nome, nascimento, documento, email)
+        public Aluno(string nome, DateOnly nascimento, string documento, string email, double valorMatricula) : base(nome, nascimento, documento, email)
         {
             if (valorMatricula < 1000d)
                 valorMatricula = 1000d;

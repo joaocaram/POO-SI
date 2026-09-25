@@ -31,8 +31,8 @@ namespace HerancaPessoa {
             s_salarioBase = 3000d;
         }
 
-        public Administrativo(string nome, DateOnly nascimento, string documento, string email, double gratificacao) :
-                base(nome, nascimento, documento, email) {
+        public Administrativo(string nome, DateOnly nascimento, string documento, string email, double gratificacao) : base(nome, nascimento, documento, email) 
+        {
             if (gratificacao > 0)
                 _valorGratificacao  = gratificacao;
         }
