@@ -24,17 +24,24 @@
 namespace HerancaPessoa {
     public class Administrativo : Pessoa {
 
-        private static double _salarioBase;
+        private static double s_salarioBase;
         private double _valorGratificacao;
 
-        public Administrativo(string nome, DateOnly nascimento, string documento, string email, double salario) :
+        static Administrativo(){
+            s_salarioBase = 3000d;
+        }
+
+        public Administrativo(string nome, DateOnly nascimento, string documento, string email, double gratificacao) :
                 base(nome, nascimento, documento, email) {
-            if (salario > 0)
-                _salarioBase = salario;
+            if (gratificacao > 0)
+                _valorGratificacao  = gratificacao;
         }
 
         public double Salario() {
-            return _salarioBase + _valorGratificacao;
+            double valor = s_salarioBase;
+            if (_cargaHoraria == 20)
+                valor = valor / 2;
+            return valor + _valorGratificacao;
         }
 
         /// <summary>
@@ -42,7 +49,7 @@ namespace HerancaPessoa {
         /// </summary>
         /// <returns>String de uma linha com as informações acima</returns>
         public override string Relatorio() {
-            return $"{base.Relatorio()}, com salário {Salario():C2} ({_salarioBase:C2} + {_valorGratificacao:C2}).";
+            return $"{base.Relatorio()}, com salário {Salario():C2} ({s_salarioBase:C2} + {_valorGratificacao:C2}).";
         }
 
     }

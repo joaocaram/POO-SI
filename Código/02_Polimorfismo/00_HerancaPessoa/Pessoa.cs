@@ -92,6 +92,7 @@ namespace HerancaPessoa
         public void EnviarEmail(string texto)
         {
             //fingindo que estou usando um serviço bacanudo para enviar emails
+            //servidor.Enviar(_email, texto);
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace HerancaPessoa
         /// <returns>String com nome e idade (em anos) da pessoa</returns>
         public virtual string Relatorio()
         {
-            return $"{_nome}: {Idade()} anos";
+            return $"{_nome} ({_documento}): {Idade()} anos";
         }
     }
 

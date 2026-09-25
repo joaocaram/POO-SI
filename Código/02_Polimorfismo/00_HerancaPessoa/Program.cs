@@ -32,6 +32,8 @@ namespace HerancaPessoa
 
             pessoas.Add(new Pessoa("Pessoa Feliz", DateOnly.Parse("05-04-2004"), "Pe1", "pessoa@pessoa.com"));
 
+            Administrativo admin = new Administrativo("Administrador Preocupado", DateOnly.Parse("05-04-1995"), "Adm1", "admin@admin.com", 200);
+            admin.SetCargaHoraria(40);
 
             Pessoa aluno = new Aluno("Aluno Espantado", DateOnly.Parse("04-11-2006"), "Al1", "aluno@aluno.com", 1250d);
             aluno.SetCargaHoraria(430);
@@ -39,8 +41,10 @@ namespace HerancaPessoa
             Pessoa prof = new Professor("Professor Pardal", DateOnly.Parse("05-01-1986"), "Pr1", "prof@prof.com");
             prof.SetCargaHoraria(32);
 
-            pessoas.Add(aluno);
             pessoas.Add(prof);
+            pessoas.Add(admin);
+            pessoas.Add(aluno);
+            
 
             Console.WriteLine("Todo mundo:");
             foreach (Pessoa pessoa in pessoas)

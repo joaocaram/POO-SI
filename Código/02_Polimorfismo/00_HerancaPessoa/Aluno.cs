@@ -23,7 +23,7 @@
  */
 namespace HerancaPessoa
 {
-    public class Aluno : Pessoa
+    public class Aluno : Pessoa     //Aluno é uma especialização de Pessoa.
     {
 
         private static double s_horaAula ;
