@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XulambsFoods\XulambsFoods_2025-1.csproj" />
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+    <ProjectReference Include="..\XulambsFoods\XulambsFoods.csproj" />
   </ItemGroup>
 
 </Project>

@@ -17,7 +17,7 @@ namespace XulambsFoods_2024_2.src.Tests {
         public void SetUp() {
             pizzaCom2Ingredientes = new Pizza(2);
             pizzaSemIngredientes = new Pizza();
-            pedido = new PedidoLocal();
+            pedido = new Pedido(0);
         }
 
         [TestMethod()]
@@ -29,14 +29,15 @@ namespace XulambsFoods_2024_2.src.Tests {
         public void naoAdicionaPizzaEmPedidoFechado() {
             pedido.Adicionar(pizzaCom2Ingredientes);
             pedido.FecharPedido();
-            Assert.AreEqual(1, pedido.Adicionar(pizzaSemIngredientes));
+            Assert.ThrowsException<InvalidOperationException>(
+                () => pedido.Adicionar(pizzaSemIngredientes));
         }
 
         [TestMethod()]
         public void calculaPrecoCorretamente() {
             pedido.Adicionar(pizzaCom2Ingredientes);
             pedido.Adicionar(pizzaSemIngredientes);
-            Assert.AreEqual(68d, pedido.PrecoAPagar(), 0.01);
+            Assert.AreEqual(74.8d, pedido.PrecoAPagar(), 0.01);
         }
 
         [TestMethod()]
@@ -46,7 +47,7 @@ namespace XulambsFoods_2024_2.src.Tests {
             string relatorio = pedido.Relatorio();
             Assert.IsTrue(relatorio.Contains("29,00"));
             Assert.IsTrue(relatorio.Contains("39,00"));
-            Assert.IsTrue(relatorio.Contains("68,00"));
+            Assert.IsTrue(relatorio.Contains("74,80"));
         }
     }
 }
